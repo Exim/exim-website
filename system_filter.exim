@@ -1,6 +1,6 @@
 # Exim filter
-## Version: 0.16
-#	$Id: system_filter.exim,v 1.8 2001/09/19 10:20:22 nigel Exp $
+## Version: 0.17
+#	$Id: sysfilter.tmpl,v 1.4 2001/09/19 10:19:42 nigel Exp $
 
 ## Exim system filter to refuse potentially harmful payloads in
 ## mail messages
@@ -80,7 +80,7 @@ endif
 ## -----------------------------------------------------------------------
 # Look for single part MIME messages with suspicious name extensions
 # Check Content-Type header using quoted filename [content_type_quoted_fn_match]
-if $header_content-type: matches "(?:file)?name=(\"[^\"]+\\\\.(?:ad[ep]|ba[st]|chm|cmd|com|cpl|crt|eml|exe|hlp|hta|in[fs]|isp|jse?|lnk|md[be]|ms[cipt]|pcd|pif)|reg|scr|sct|shs|url|vb[se]|ws[fhc])\")"
+if $header_content-type: matches "(?:file)?name=(\"[^\"]+\\\\.(?:ad[ep]|ba[st]|chm|cmd|com|cpl|crt|eml|exe|hlp|hta|in[fs]|isp|jse?|lnk|md[be]|ms[cipt]|pcd|pif|reg|scr|sct|shs|url|vb[se]|ws[fhc])\")"
 then
   fail text "This message has been rejected because it has\n\
 	     potentially executable content $1\n\
@@ -91,7 +91,7 @@ then
   seen finish
 endif
 # same again using unquoted filename [content_type_unquoted_fn_match]
-if $header_content-type: matches "(?:file)?name=(\\\\S+\\\\.(?:ad[ep]|ba[st]|chm|cmd|com|cpl|crt|eml|exe|hlp|hta|in[fs]|isp|jse?|lnk|md[be]|ms[cipt]|pcd|pif)|reg|scr|sct|shs|url|vb[se]|ws[fhc]))"
+if $header_content-type: matches "(?:file)?name=(\\\\S+\\\\.(?:ad[ep]|ba[st]|chm|cmd|com|cpl|crt|eml|exe|hlp|hta|in[fs]|isp|jse?|lnk|md[be]|ms[cipt]|pcd|pif|reg|scr|sct|shs|url|vb[se]|ws[fhc]))"
 then
   fail text "This message has been rejected because it has\n\
 	     potentially executable content $1\n\
@@ -108,7 +108,7 @@ endif
 # in emails.   These were used as the basis for 
 # the ILOVEYOU virus and its variants - many many varients
 # Quoted filename - [body_quoted_fn_match]
-if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))(\"[^\"]+\\\\.(?:ad[ep]|ba[st]|chm|cmd|com|cpl|crt|eml|exe|hlp|hta|in[fs]|isp|jse?|lnk|md[be]|ms[cipt]|pcd|pif)|reg|scr|sct|shs|url|vb[se]|ws[fhc])\")[\\\\s;]"
+if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))(\"[^\"]+\\\\.(?:ad[ep]|ba[st]|chm|cmd|com|cpl|crt|eml|exe|hlp|hta|in[fs]|isp|jse?|lnk|md[be]|ms[cipt]|pcd|pif|reg|scr|sct|shs|url|vb[se]|ws[fhc])\")[\\\\s;]"
 then
   fail text "This message has been rejected because it has\n\
 	     a potentially executable attachment $1\n\
@@ -119,7 +119,7 @@ then
   seen finish
 endif
 # same again using unquoted filename [body_unquoted_fn_match]
-if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))(\\\\S+\\\\.(?:ad[ep]|ba[st]|chm|cmd|com|cpl|crt|eml|exe|hlp|hta|in[fs]|isp|jse?|lnk|md[be]|ms[cipt]|pcd|pif)|reg|scr|sct|shs|url|vb[se]|ws[fhc]))[\\\\s;]"
+if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))(\\\\S+\\\\.(?:ad[ep]|ba[st]|chm|cmd|com|cpl|crt|eml|exe|hlp|hta|in[fs]|isp|jse?|lnk|md[be]|ms[cipt]|pcd|pif|reg|scr|sct|shs|url|vb[se]|ws[fhc]))[\\\\s;]"
 then
   fail text "This message has been rejected because it has\n\
 	     a potentially executable attachment $1\n\
@@ -176,6 +176,8 @@ endif
 #	Changed the . in filename detect to \S (stops it going mad)
 # 0.16 19 September, 2001
 #	Pile of new extensions including the eml in current use
+# 0.17 19 September, 2001
+#	Syntax fix
 #
 #### Install Notes
 #
@@ -247,7 +249,7 @@ endif
 #		|md[be]
 #		|ms[cipt]
 #		|pcd
-#		|pif)
+#		|pif
 #		|reg
 #		|scr
 #		|sct
