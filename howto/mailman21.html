@@ -1,0 +1,404 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>HOWTO - Using exim and Mailman together</title>
+  </head>
+
+  <body bgcolor="#FFFFFF" text="#00005A" link="#FF6600" alink="#FF9933" vlink="#990000">
+    <h1>HOWTO - Using exim and Mailman 2.1 together</h1>
+
+    <p>Mailman is a list manager with web front end and built in
+      archiving functions.  Details can be found at <a href="http://www.list.org/">
+	http://www.list.org/</a>.  This documentation describes the
+      configuration of Exim (version 3 or 4) to work with Mailman
+      version 2.1</p>
+
+
+
+    <h2>Mailman configuration</h2>
+
+    <p>There is no Mailman configuration needed other than the
+    standard options detailed in the Mailman install documentation.
+    The Exim configuration is transparent to Mailman.  The user/group
+    settings for Mailman must match those in the config fragments
+    given below.</p>
+
+
+    <h2>Exim configuration</h2>
+
+    <p>The Exim configuration is built so that a list created within
+    Mailman automatically appears to Exim without the need for
+    defining any additional aliases.</p>
+
+    <p>The drawback of this configuration is that it will work poorly
+    on systems supporting lists in several different mail domains.
+    While Mailman handles virtual domains, it does not yet support
+    having two distinct lists with the same name in different virtual
+    domains, using the same Mailman installation.  This will
+    eventually change.  (But see below for a variation on this scheme
+    that should accomodate virtual domains better.)</p>
+
+    <p>The configuration file excerpts below are for use in an already
+    functional Exim configuration, which accepts mail for the domain
+    in which the list resides.  If this domain is separate from the
+    others handled by your Exim configuration, then you'll need to:</p>
+
+    <ul>
+
+      <li>add the list domain, <tt>"my.list.domain"</tt> to local_domains</li>
+
+      <li>add a <tt>"domains=my.list.domain"</tt> option to the
+      director (router) for the list</li>
+
+      <li>(optional) exclude that domain from the other directors
+      (routers)</li>
+    </ul>
+
+    <p><i>[Note: the instructions in this document should work with
+    either Exim 3 or Exim 4.  In Exim 3, you must have a
+    <tt>'local_domains'</tt> configuration setting; in Exim 4, you
+    most likely have a <tt>'local_domains'</tt> domainlist.  If you
+    don't, you probably know what you're doing and can adjust
+    accordingly.  Similarly, in Exim 4 the concept of "directors" has
+    disappeared -- there are only routers now.  So if you're using
+    Exim 4, whenever this document says "director", read
+    "router".]</i></p>
+
+    <p>Whether you are using Exim 3 or Exim 4, you will need to add
+    some macros to the main section of your Exim config file.  You
+    will also need to define one new transport.  With Exim 3, you'll
+    need to add a new director; with Exim 4, a new router plays
+    the same role.</p>
+
+    <p>Finally, the configuration supplied here should allow
+    co-habiting Mailman 2.0 and 2.1 installations, with the proviso
+    that you'll probably want to use <tt>"mm21"</tt> in place of
+    <tt>"mailman"</tt> -- e.g., <tt>MM21_HOME</tt>,
+    <tt>mm21_transport</tt>, etc.</p>
+
+
+    <h2>Main configuration settings</h2>
+
+    <p>First, you need to add some macros to the top of your Exim
+    config file.  These just make the directors (routers) and
+    transport below a bit cleaner.  Obviously, you'll need to edit
+    these based on how you configured and installed Mailman.</p>
+
+<pre>
+  # Home dir for your Mailman installation -- aka Mailman's prefix
+  # directory.
+  MAILMAN_HOME=/usr/local/mailman
+  MAILMAN_WRAP=MAILMAN_HOME/mail/mailman
+
+  # User and group for Mailman, should match your --with-mail-gid
+  # switch to Mailman's configure script.
+  MAILMAN_UID=mailman
+  MAILMAN_GID=mailman
+</pre>
+
+    <h2>Transport for Exim 3</h2>
+
+    <p>Add this to the transports section of your Exim config file,
+      i.e. somewhere between the first and second "end" line:</p>
+
+<pre>
+  mailman_transport:
+    driver = pipe
+    command = MAILMAN_WRAP \
+              '${if def:local_part_suffix \
+                    {${sg{$local_part_suffix}{-(\\w+)(\\+.*)?}{\$1}}} \
+                    {post}}' \
+              $local_part
+    current_directory = MAILMAN_HOME
+    home_directory = MAILMAN_HOME
+    user = MAILMAN_UID
+    group = MAILMAN_GID
+</pre>
+
+    <p><i>(XXX this is untested by me under Exim 3!  Can someone using
+    Exim 3 please let me know if it works?)</i></p>
+
+
+    <h2>Director for Exim 3</h2>
+
+
+    <p>If you're using Exim 3, you'll need to add the following
+    director to your config file (directors go between the second and
+    third "end" lines).  Also, don't forget that order matters --
+    eg. you can make Mailman lists take precedence over system aliases
+    by putting this directors in front of your aliasfile director, or
+    vice-versa.</p>
+
+<pre>
+  # Handle all addresses related to a list 'foo': the posting address.
+  # Automatically detects list existence by looking
+  # for lists/$local_part/config.pck under MAILMAN_HOME.
+  mailman_director:
+    driver = smartuser
+    require_files = MAILMAN_HOME/lists/$local_part/config.pck
+    suffix_optional
+    suffix = -bounces : -bounces+* : \
+             -confirm+* : -join : -leave : \
+             -owner : -request : -admin
+    transport = mailman_transport
+</pre>
+
+    <h2>Router for Exim 4</h2>
+
+    <p>In Exim 4, there are no such things as directors -- you instead
+    need to add a router.  Also, the canonical order of the
+    configuration file was changed so routers come before transports,
+    so the routers for Exim 4 come first here.  Put these two routers
+    somewhere after the <tt>"begin routers"</tt> line of your config
+    file, and remember that order matters.</p>
+
+<pre>
+  mailman_router:
+    driver = accept
+    require_files = MAILMAN_HOME/lists/$local_part/config.pck
+    local_part_suffix_optional
+    local_part_suffix = -bounces : -bounces+* : \
+                        -confirm+* : -join : -leave : \
+                        -owner : -request : -admin
+    transport = mailman_transport
+</pre>
+
+    <h2>Transports for Exim 4</h2>
+
+    <p>The transport for Exim 4 is the same as for Exim 3; just copy
+    the transport given above to somewhere under the "begin
+    transports" line of your Exim config file.</p>
+
+
+    <h2>Notes</h2>
+
+    <p>Exim should be configured to allow reasonable volume --
+    e.g. don't set max_recipients down to a silly value -- and with
+    normal degrees of security -- specifically, be sure to allow
+    relaying from 127.0.0.1, but pretty much nothing else.  Parallel
+    deliveries and other tweaks can also be used if you like;
+    experiment with your setup to see what works.  Delay warning
+    messages should be switched off or configured to only happen for
+    non-list mail, unless you like receiving tons of mail when some
+    random host is down.</p>
+
+
+    <h2>Problems</h2>
+
+    <ul>
+
+      <li> Mailman will send as many <tt>MAIL FROM/RCPT TO</tt> as it
+      needs. It may result in more than 10 or 100 messages sent in one
+      connection, which will exceed the default value of Exim's
+      smtp_accept_queue_per_connection This is bad because it will
+      cause Exim to switch into queue mode and severely delay delivery
+      of your list messages.  The way to fix this is to set mailman's
+      <tt>SMTP_MAX_SESSIONS_PER_CONNECTION</tt> (in
+      <tt>~mailman/Mailman/mm_cfg.py</tt>) to a smaller value than
+      Exim's <tt>smtp_accept_queue_per_connection</tt></li>
+
+      <li>Mailman should ignore Exim delay warning messages, even
+      though Exim should never send this to list messages.  Mailman
+      2.1's general bounce detection and VERP support should greatly
+      improve the bounce detector's hit rates.</li>
+
+      <li>List existence is determined by the existence of a
+      config.pck file for a list.  If you delete lists by foul means,
+      be aware of this.</li>
+
+      <li>If you are getting Exim or Mailman complaining about user
+      ids when you send mail to a list, check that the
+      <tt>MAILMAN_UID</tt> and <tt>MAILMAN_GID</tt> match those of
+      Mailman itself (i.e. what were used in the configure script).
+      Also make sure you do not have aliases in the main alias file
+      for the list.</li>
+
+    </ul>
+
+
+    <h2>Receiver Verification</h2>
+
+    <P>Exim's receiver verification feature is very useful -- it lets
+    Exim reject unrouteable addresses at SMTP time.  However, this is
+    most useful for externally-originating mail that is addresses to
+    mail in one of your local domains.  For Mailman list traffic, mail
+    originates on your server, and is addressed to random external
+    domains that are not under your control.  Furthermore, each
+    message is addressed to many recipients -- up to 500 if you use
+    Mailman's default configuration, and don't tweak
+    <tt>SMTP_MAX_RCPTS</tt>.</p>
+
+    <p>Doing receiver verification on Mailman list traffic is a recipe
+    for trouble.  In particular, Exim will attempt to route every
+    recipient addresses in outgoing Mailman list posts.  Even though
+    this requires nothing more than a few DNS lookups for each
+    address, it can still introduce significant delays.  Therefore,
+    you should disable recipient verification for Mailman traffic.</p>
+
+    <p>Under Exim 3, put this in your main configuration section:</p>
+<pre>
+  receiver_verify_hosts = !127.0.0.1
+</pre>
+
+    <p>Under Exim 4, this is probably already taken care of for you by
+    the default recipient verification ACL statement (in the "RCPT TO"
+    ACL):</p>
+
+<pre>
+  accept  domains       = +local_domains
+          endpass
+          message       = unknown user
+          verify        = recipient
+</pre>
+
+    <p>which only does recipient verification on addresses in your
+    domain.  (That's not exactly the same as doing recipient
+    verification only on messages coming from non-127.0.0.1 hosts, but
+    it should do the trick for Mailman.)</p>
+
+
+    <h2>SMTP Callback</h2>
+
+    <p>Exim's SMTP callback feature is an even more powerful way to
+    detect bogus sender addresses than normal sender verification.
+    Unfortunately, lots of servers send bounce messages with a bogus
+    address in the header, and there are plenty that sound bounces
+    with bogus envelope senders (even though they're supposed to just
+    use an epmty envelope sender for bounces).</p>
+
+    <p>In order to ensure that Mailman can disable/remove bouncing
+    addresses, you generally want to receive bounces for Mailman
+    lists, even if those bounces are themselves not bouncable.  Thus,
+    you might want to disable SMTP callback on bounce messages.</p>
+
+    <p>If you do header and envelope callbacks, you can disable them
+    for bounces to mailman lists (it is quite common for internal
+    hosts to bounce with a non reachable internal address). The idea
+    is that you typically don't want non bounceable Email, but you'd
+    better accept bounces to mailman lists so that you can unsubscribe
+    the people who are bouncing.</p>
+
+    <p>With Exim 4, you can accomplish this using something like the
+    following in your <tt>"RCPT TO"</tt> ACL:</p>
+
+<pre>
+  # Accept bounces to lists even if callbacks or other checks would fail
+  warn     message      = X-WhitelistedRCPT-nohdrfromcallback: Yes
+           condition    = \
+           ${if and {{match{$local_part}{(.*)-bounces\+.*}}
+                     {exists {MAILMAN_HOME/lists/$1/config.pck}}} \
+                {yes}{no}}
+                {yes}{no}}
+
+  accept   condition    = \
+           ${if and {{match{$local_part}{(.*)-bounces\+.*}}
+                     {exists {MAILMAN_HOME/lists/$1/config.pck}}} \
+                {yes}{no}}
+                {yes}{no}}
+
+  # Now, check sender address with SMTP callback.
+  deny   !verify = sender/callout=90s/check_postmaster
+</pre>
+
+    <p>If you also do SMTP callbacks on header addresses, you'll want
+    something like this in your "DATA" ACL:</p>
+
+<pre>
+  deny   !condition = $header_X-WhitelistedRCPT-nohdrfromcallback:
+         !verify = header_sender/callout=90s/check_postmaster
+</pre>
+
+    <p><i>[XXX all this stuff is completely untested by me!
+    -Greg]</i></p>
+
+
+    <h2>Doing VERP with Exim and Mailman</h2>
+
+    <p>VERP will send one email, with a separate envelope sender
+    (return path), for each of your subscribers -- read the
+    information in <tt>~mailman/Mailman/Default.py</tt> for the
+    options that start with <tt>VERP</tt>.  In a nutshell, all you
+    need to do to enable VERP with Exim is to add these lines to
+    <tt>~mailman/Mailman/mm_cfg.py</tt>:</p>
+
+<pre>
+  VERP_PASSWORD_REMINDERS = 1
+  VERP_PERSONALIZED_DELIVERIES = 1
+  VERP_DELIVERY_INTERVAL = 1
+  VERP_CONFIRMATIONS = 1
+</pre>
+
+    <p>(The directors/routers above are smart enough to deal with VERP
+    bounces.)</p>
+
+
+<h2>Virtual Domains</h2>
+
+    <p>One approach to handling virtual domains is to use a separate
+    Mailman installation for each virtual domain.  (Currently, this is
+    the only way to have lists with the same name in different virtual
+    domains handled by the same machine.)</p>
+
+    <p>In this case, the <tt>MAILMAN_HOME</tt> and
+    <tt>MAILMAN_WRAP</tt> macros are useless -- you can remove them.
+    Change your director (router) to something like this:</p>
+
+<pre>
+  require_files = /virtual/${domain}/mailman/lists/${lc:$local_part}/config.pck
+</pre>
+
+    <p>and change your transport like this:</p>
+
+<pre>
+  command = /virtual/${domain}/mailman/mail/mailman \
+            ${if def:local_part_suffix \
+                 {${sg{$local_part_suffix}{-(\\w+)(\\+.*)?}{\$1}}}
+                 {post}} \
+              $local_part
+  current_directory = /virtual/${domain}/mailman
+  home_directory = /virtual/${domain}/mailman
+</pre>
+
+<h2>List Verification</h2>
+
+    <p>This is how a set of address tests for the Exim lists look on a
+    working system.  The list in question is
+    <tt>quixote-users@mems-exchange.org</tt>, and these commands were
+    run on the <tt>mems-exchange.org</tt> mail server (<tt>"% "</tt>
+    indicates the Unix shell prompt):</p>
+
+<pre>
+  % exim -bt quixote-users
+  quixote-users@mems-exchange.org
+    router = mailman_main_router, transport = mailman_transport
+
+  % exim -bt quixote-users-request
+  quixote-users-request@mems-exchange.org
+    router = mailman_router, transport = mailman_transport
+
+  % exim -bt quixote-users-bounces
+  quixote-users-bounces@mems-exchange.org
+    router = mailman_router, transport = mailman_transport
+
+  % exim -bt quixote-users-bounces+luser=example.com
+  quixote-users-bounces+luser=example.com@mems-exchange.org
+    router = mailman_router, transport = mailman_transport
+</pre>
+
+    <p>If your <tt>"exim -bt"</tt> output looks something like this,
+    that's a start: at least it means Exim will pass the right
+    messages to the right Mailman commands.  It by no means guarantees
+    that your Exim/Mailman installation is functioning perfectly,
+    though!</p>
+
+
+    <h2>Document History</h2>
+
+    <p>Originally written by Nigel Metheringham.  Updated by Marc
+    Merlin for Mailman 2.1, Exim 4.
+    Overhauled/reformatted/clarified/simplified by Greg Ward.</p>
+
+    <hr>
+    <h4>$Id: mailman.html,v 1.3 2002/06/14 10:42:18 nigel Exp $</h4>
+  </body>
+</html>
