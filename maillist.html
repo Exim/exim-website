@@ -24,34 +24,19 @@
 	before posting basic queries.</dd>
       <dd>The mailing list can be searched using <a
 	  href="http://www.htdig.org">ht://Dig WWW Search</a>
-	<form method="post" action="http://www.exim.org/cgi-bin/htsearch">
-	  <font size="-1">
-	    Match: <select name="method">
-	      <option value="and">All
-	      <option value="or">Any
-	      <option value="boolean">Boolean
-	    </select>
-	    Format: <select name="format">
-	      <option value="builtin-long">Long
-	      <option value="builtin-short">Short
-	    </select>
-	    Sort by: <select name="sort">
-	      <option value="score">Score
-	      <option value="time">Time
-	      <option value="title">Title
-	      <option value="revscore">Reverse Score
-	      <option value="revtime">Reverse Time
-	      <option value="revtitle">Reverse Title
-	    </select>
-	  </font>
-	  <input type="hidden" name="config" value="htdig">
-	  <input type="hidden" name="restrict" value="exim-users">
-	  <input type="hidden" name="exclude" value="">
-	  <br>
-	  Search:
-	  <input type="text" size="40" name="words" value="">
-	  <input type="submit" value="Search">
-	</form>
+ <form method="post" action="/cgi-bin/htsearch"> <font size="-1"> Match: <select name="method"> <option value="and">All
+         <option value="or">Any
+         <option value="boolean">Boolean
+       </select> Format: <select name="format"> <option value="short">Short
+         <option value="long">Long
+       </select> Sort by: <select name="sort"> <option value="score">Score
+         <option value="time">Time
+         <option value="title">Title
+         <option value="revscore">Reverse Score
+         <option value="revtime">Reverse Time
+         <option value="revtitle">Reverse Title
+       </select> </font> <input type="hidden" name="config" value="htdig-mailman/exim-users"> <input type="hidden" name="restrict" value=""> <input type="hidden" name="exclude" value=""> <br> Search:
+         <input type="text" size="30" name="words" value=""> <input type="submit" value="Search"> </form>
       </dd>
     </dl>
       <p>There is also an indexed archive at
@@ -60,6 +45,6 @@
     <hr>
     <address><a href="mailto:Postmaster@exim.org">Nigel Metheringham</a></address>
 <!-- Created: Mon Aug 25 15:46:41 BST 1997 -->
-    <h4>$Id: maillist.html,v 1.1.1.1 2000/05/22 19:54:41 nigel Exp $</h4>
+    <h4>$Id: maillist.html,v 1.2 2000/07/25 19:51:52 nigel Exp $</h4>
   </body>
 </html>
