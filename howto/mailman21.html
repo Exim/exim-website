@@ -460,14 +460,15 @@
   mailman_verp_router:
     driver = dnslookup
     # we only consider messages sent in through loopback
-    condition = ${if eq{$sender_host_address}{127.0.0.1}{yes}{no}}
+    condition = ${if or{{eq{$sender_host_address}{127.0.0.1}}
+                        {eq{$sender_host_address}{::1}}}{yes}{no}}
     # we do not do this for traffic going to the local machine
     domains = !+local_domains:!+mm_domains
     ignore_target_hosts = <; 0.0.0.0; \
+                             64.94.110.11; \
                              127.0.0.0/8; \
-                             ::1/128; \
-                             fe80::/10; \
-                             ff00::/8
+                             ::1/128;fe80::/10;fe \
+                             c0::/10;ff00::/8
     # only the un-VERPed bounce addresses are handled
     senders = "*-bounces@*"
     transport = mailman_verp_smtp
@@ -486,13 +487,12 @@
     driver = smtp
     # put recipient address into return_path
     return_path = \
-      ${local_part:$return_path}+$original_local_part=$original_domain@${domain:$return_path}
+      ${local_part:$return_path}+$local_part=$domain@${domain:$return_path}
     # must restrict to one recipient at a time
     max_rcpt = 1
     # Errors-To: may carry old return_path
     headers_remove = Errors-To
-    headers_add = Errors-To: \
-      ${local_part:$return_path}+$original_local_part=$original_domain@${domain:$return_path}
+    headers_add = Errors-To: ${return_path}
 </pre>
 
     <p>Once this has been configured, Mailman can be set to not do
@@ -737,6 +737,10 @@
 	transport which caused locally aliased recipient addresses to
 	have incorrect VERP extensions added.  Followed posting to
 	exim-users list by Arkadiusz Miskiewicz -- <i>Nigel Metheringham</i>.</li>
+      <li><b>19 November 2004</b> Fixed previously unnoticed brainstorm
+	where <tt>reject</tt> had been used as a ACL verb rather than
+	<tt>deny</tt>.  Fixes to the VERP router/transport pair.
+	-- <i>Nigel Metheringham</i></li>
     </ul>
 
 
@@ -749,6 +753,6 @@
     You</i>.</p>
 
     <hr>
-    <h4>$Id: mailman21.html,v 1.5 2004/06/28 13:39:38 nigel Exp $</h4>
+    <h4>$Id: mailman21.html,v 1.6 2004/11/19 14:18:55 nigel Exp $</h4>
   </body>
 </html>
