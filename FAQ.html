@@ -24,8 +24,8 @@ files that can be found in the separately distributed directory called
 
 </P>
 <PRE>
-   <A HREF="ftp://ftp.csx.cam.ac.uk/pub/software/email/exim/config.samples.tar.gz">ftp://ftp.csx.cam.ac.uk/pub/software/email/exim/config.samples.tar.gz</A>
-   <A HREF="ftp://ftp.csx.cam.ac.uk/pub/software/email/exim/config.samples.tar.bz2">ftp://ftp.csx.cam.ac.uk/pub/software/email/exim/config.samples.tar.bz2</A></PRE>
+   <A HREF="ftp://ftp.csx.cam.ac.uk/pub/software/email/exim/exim3/config.samples.tar.gz">ftp://ftp.csx.cam.ac.uk/pub/software/email/exim/exim3/config.samples.tar.gz</A>
+   <A HREF="ftp://ftp.csx.cam.ac.uk/pub/software/email/exim/exim3/config.samples.tar.bz2">ftp://ftp.csx.cam.ac.uk/pub/software/email/exim/exim3/config.samples.tar.bz2</A></PRE>
 <P>
 There are brief descriptions of these files at the end of this document.
 
@@ -452,7 +452,7 @@ Last update: 23-April-2001<BR>
 <LI><A NAME="TOC167" HREF="FAQ.html#SEC167">Q0526</A>: Why does the pipe transport add a line starting with "&#62;From" to
        messages?
 <LI><A NAME="TOC168" HREF="FAQ.html#SEC168">Q0527</A>: I have set <TT>fallback_hosts</TT> on my smtp transport, but after the error
-       <B>"sem@chat.ru</B> cannot be resolved at this time" Exim isn't using them.
+       <B><B>"sem@chat.ru</B></B> cannot be resolved at this time" Exim isn't using them.
 <LI><A NAME="TOC169" HREF="FAQ.html#SEC169">Q0528</A>: After the holidays my ISP has always hundreds of e-mails waiting for me.
        These are forced down Exim's throat in one go. Exim spawns a lot of
        kids, but is there some limit to the number of processes it creates?
@@ -4350,7 +4350,7 @@ A0526: Actually, it adds a line starting with "From", because that is the
 
 </P>
 <A NAME="SEC168" HREF="FAQ.html#TOC168">Q0527</A>: I have set <TT>fallback_hosts</TT> on my smtp transport, but after the error
-       <B>"sem@chat.ru</B> cannot be resolved at this time" Exim isn't using them.
+       <B><B>"sem@chat.ru</B></B> cannot be resolved at this time" Exim isn't using them.
 
 
 <P>
@@ -5875,10 +5875,8 @@ A0902: Make sure you have got the quoting correct in the <B>$mailer</B> setting.
        example,
 
 </P>
-<P>
-       <B>$mailer</B> = "$sendmail_command <B>-oi</B> <B>-oee</B> <B><B>-f$sender\@lists.mydomain.de</B>";</B>
-
-</P>
+<PRE>
+         $mailer = "$sendmail_command -oi -oee -f$sender\@lists.mydomain.de";</PRE>
 <P>
        is not correct. It needs three backslashes, not one, and the $ at the
        start of <B>$sender</B> has to be escaped with a backslash.
@@ -5888,11 +5886,9 @@ A0902: Make sure you have got the quoting correct in the <B>$mailer</B> setting.
        when I try to send it mail. The panic log entry reads:
 
 
-<P>
-       1999-01-05 11:23:34 0zxZGY-0000vB-00 <TT>majordomo_aliases</TT> director:
-       <B><B>/var/lib/majordomo/lists/lists.aliases</B></B> (lsearch lookup): wrong mode
-
-</P>
+<PRE>
+         1999-01-05 11:23:34 0zxZGY-0000vB-00 majordomo_aliases director:
+         /var/lib/majordomo/lists/lists.aliases (lsearch lookup): wrong mode</PRE>
 <P>
 A0903: Check the mode of <B><B>/var/lib/majordomo/lists/lists.aliases</B></B> and compare it
        with the setting of the modemask option in the <TT>majordomo_aliases</TT>
@@ -8321,7 +8317,7 @@ A9803: This is what was done for Exim's own mailing list, using SmartList/
 
 
 <P>
-A9804: See C005.
+A9804: See C006.
 
 </P>
 <A NAME="SEC352" HREF="FAQ.html#TOC352">Q9805</A>: How do I configure Exim to handle local parts with extensions?
