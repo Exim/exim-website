@@ -40,24 +40,26 @@ The FAQ is divided into the following sections:
 <A HREF="FAQ.html#TOC155">Performance</A>,
 <A HREF="FAQ.html#TOC159">Policy controls</A>,
 <A HREF="FAQ.html#TOC193">Majordomo</A>,
-<A HREF="FAQ.html#TOC198">Rewriting</A>,
+<A HREF="FAQ.html#TOC198">Rewriting addresses</A>,
 <A HREF="FAQ.html#TOC206">Headers</A>,
 <A HREF="FAQ.html#TOC211">Fetchmail</A>,
 <A HREF="FAQ.html#TOC215">Perl</A>,
 <A HREF="FAQ.html#TOC218">Dial-up</A>,
-<A HREF="FAQ.html#TOC223">Millennium</A>,
-<A HREF="FAQ.html#TOC225">Miscellaneous</A>,
-<A HREF="FAQ.html#TOC267">HP-UX</A>,
-<A HREF="FAQ.html#TOC269">BSDI</A>,
-<A HREF="FAQ.html#TOC271">IRIX</A>,
-<A HREF="FAQ.html#TOC274">Linux</A>,
-<A HREF="FAQ.html#TOC281">Sun systems</A>,
-<A HREF="FAQ.html#TOC291">Cookbook</A>, and
-<A HREF="FAQ.html#TOC315">List of sample configurations</A>.
+<A HREF="FAQ.html#TOC223">Modifying message bodies</A>,
+<A HREF="FAQ.html#TOC226">Millennium</A>,
+<A HREF="FAQ.html#TOC228">Miscellaneous</A>,
+<A HREF="FAQ.html#TOC270">HP-UX</A>,
+<A HREF="FAQ.html#TOC272">BSDI</A>,
+<A HREF="FAQ.html#TOC274">IRIX</A>,
+<A HREF="FAQ.html#TOC277">Linux</A>,
+<A HREF="FAQ.html#TOC284">Sun systems</A>,
+<A HREF="FAQ.html#TOC294">Cookbook</A>, and
+<A HREF="FAQ.html#TOC318">List of sample configurations</A>.
 <P>
 Philip Hazel <B><B>&#60;ph10@cus.cam.ac.uk</B>&#62;</B><BR>
-Last updated: 15-December-1999
-
+Last update: 13-June-2000 (addition of section 15)<BR>
+Last general update: 15-December-1999<BR>
+<BR>
 </P>
 <HR><BR>
 <A NAME="TOC1" HREF="FAQ.html#SEC1">0. DEBUGGING</A>
@@ -516,7 +518,7 @@ Last updated: 15-December-1999
        when it is passed a message from Exim.
 </UL>
 
-<A NAME="TOC198" HREF="FAQ.html#SEC198">10. REWRITING</A>
+<A NAME="TOC198" HREF="FAQ.html#SEC198">10. REWRITING ADDRESSES</A>
 <UL>
 <LI><A NAME="TOC199" HREF="FAQ.html#SEC199">Q1001</A>: How can I get Exim to strip the hostname from the sender's address?
 <LI><A NAME="TOC200" HREF="FAQ.html#SEC200">Q1002</A>: I have Exim configured to remove the hostname portion of the domain on
@@ -581,207 +583,213 @@ Last updated: 15-December-1999
        new messages that arrive while I'm connected to be delivered immediately?
 </UL>
 
-<A NAME="TOC223" HREF="FAQ.html#SEC223">20. MILLENNIUM</A>
+<A NAME="TOC223" HREF="FAQ.html#SEC223">15. MODIFYING MESSAGE BODIES</A>
 <UL>
-<LI><A NAME="TOC224" HREF="FAQ.html#SEC224">Q2000</A>: Are there any Y2K issues with Exim?
+<LI><A NAME="TOC224" HREF="FAQ.html#SEC224">Q1501</A>: How can I add a disclaimer or an advertisement to a message?
+<LI><A NAME="TOC225" HREF="FAQ.html#SEC225">Q1502</A>: How can I remove attachments from messages?
 </UL>
 
-<A NAME="TOC225" HREF="FAQ.html#SEC225">50. MISCELLANEOUS</A>
+<A NAME="TOC226" HREF="FAQ.html#SEC226">20. MILLENNIUM</A>
 <UL>
-<LI><A NAME="TOC226" HREF="FAQ.html#SEC226">Q5001</A>: What does the error "Unable to get interface configuration: 22 Invalid
+<LI><A NAME="TOC227" HREF="FAQ.html#SEC227">Q2000</A>: Are there any Y2K issues with Exim?
+</UL>
+
+<A NAME="TOC228" HREF="FAQ.html#SEC228">50. MISCELLANEOUS</A>
+<UL>
+<LI><A NAME="TOC229" HREF="FAQ.html#SEC229">Q5001</A>: What does the error "Unable to get interface configuration: 22 Invalid
        argument" mean?
-<LI><A NAME="TOC227" HREF="FAQ.html#SEC227">Q5002</A>: How can I arrange to allow a limited set of users to perform a limited
+<LI><A NAME="TOC230" HREF="FAQ.html#SEC230">Q5002</A>: How can I arrange to allow a limited set of users to perform a limited
        set of Exim administration functions? I don't want to put them all in
        the exim group.
-<LI><A NAME="TOC228" HREF="FAQ.html#SEC228">Q5003</A>: How can I test for a message's size being greater or less than a given
+<LI><A NAME="TOC231" HREF="FAQ.html#SEC231">Q5003</A>: How can I test for a message's size being greater or less than a given
        value in an expansion string?
-<LI><A NAME="TOC229" HREF="FAQ.html#SEC229">Q5004</A>: I want to "tail" the Exim log, but I have a number of other logs I also
+<LI><A NAME="TOC232" HREF="FAQ.html#SEC232">Q5004</A>: I want to "tail" the Exim log, but I have a number of other logs I also
        want to "tail", and the number of tailing windows is getting to be a
        nuisance.
-<LI><A NAME="TOC230" HREF="FAQ.html#SEC230">Q5005</A>: I would like to have Exim log information written to syslog.
-<LI><A NAME="TOC231" HREF="FAQ.html#SEC231">Q5006</A>: What does the error "Failed to create spool file" mean?
-<LI><A NAME="TOC232" HREF="FAQ.html#SEC232">Q5007</A>: Exim keeps crashing with segmentation errors (signal 11 or 139).
-<LI><A NAME="TOC233" HREF="FAQ.html#SEC233">Q5008</A>: Exim's databases keep getting corrupted.
-<LI><A NAME="TOC234" HREF="FAQ.html#SEC234">Q5009</A>: I've been using an autoreply director to try and mimic a bounce message,
+<LI><A NAME="TOC233" HREF="FAQ.html#SEC233">Q5005</A>: I would like to have Exim log information written to syslog.
+<LI><A NAME="TOC234" HREF="FAQ.html#SEC234">Q5006</A>: What does the error "Failed to create spool file" mean?
+<LI><A NAME="TOC235" HREF="FAQ.html#SEC235">Q5007</A>: Exim keeps crashing with segmentation errors (signal 11 or 139).
+<LI><A NAME="TOC236" HREF="FAQ.html#SEC236">Q5008</A>: Exim's databases keep getting corrupted.
+<LI><A NAME="TOC237" HREF="FAQ.html#SEC237">Q5009</A>: I've been using an autoreply director to try and mimic a bounce message,
        but I can't get it to have an envelope from of &#60;&#62;.
-<LI><A NAME="TOC235" HREF="FAQ.html#SEC235">Q5010</A>: I see entries in the log that mention two different IP addresses for the
+<LI><A NAME="TOC238" HREF="FAQ.html#SEC238">Q5010</A>: I see entries in the log that mention two different IP addresses for the
        same connection. Why is this? For example:
-<LI><A NAME="TOC236" HREF="FAQ.html#SEC236">Q5011</A>: How can I persuade Exim to accept ETRN commands without the leading
+<LI><A NAME="TOC239" HREF="FAQ.html#SEC239">Q5011</A>: How can I persuade Exim to accept ETRN commands without the leading
        # character?
-<LI><A NAME="TOC237" HREF="FAQ.html#SEC237">Q5012</A>: I've recently noticed that emails I send with a Bcc: line are being
+<LI><A NAME="TOC240" HREF="FAQ.html#SEC240">Q5012</A>: I've recently noticed that emails I send with a Bcc: line are being
        delivered to their final destination with the Bcc: line still present.
-<LI><A NAME="TOC238" HREF="FAQ.html#SEC238">Q5013</A>: I used gv <B>v3.5.8</B> (ghostview) to try printing <B>spec.ps.</B> After every
+<LI><A NAME="TOC241" HREF="FAQ.html#SEC241">Q5013</A>: I used gv <B>v3.5.8</B> (ghostview) to try printing <B>spec.ps.</B> After every
        printed page, the printer ejects a blank sheet. Is this something to do
        with using "letter" rather than A4 paper?
-<LI><A NAME="TOC239" HREF="FAQ.html#SEC239">Q5014</A>: I would like to have a separate queue per domain for hosts which dial
+<LI><A NAME="TOC242" HREF="FAQ.html#SEC242">Q5014</A>: I would like to have a separate queue per domain for hosts which dial
        in to collect their mail.
-<LI><A NAME="TOC240" HREF="FAQ.html#SEC240">Q5015</A>: A short time after I start Exim I see a &#60;defunct&#62; process. What is
+<LI><A NAME="TOC243" HREF="FAQ.html#SEC243">Q5015</A>: A short time after I start Exim I see a &#60;defunct&#62; process. What is
        causing this?
-<LI><A NAME="TOC241" HREF="FAQ.html#SEC241">Q5016</A>: On a reboot, or a restart of the mail system, I see the message "Mailer
+<LI><A NAME="TOC244" HREF="FAQ.html#SEC244">Q5016</A>: On a reboot, or a restart of the mail system, I see the message "Mailer
        daemons: exim abandoned: unknown, malformed, or incomplete option
        <B>-bz</B> sendmail". What does this mean?
-<LI><A NAME="TOC242" HREF="FAQ.html#SEC242">Q5017</A>: I would like to restrict e-mail usage for some users to the local
+<LI><A NAME="TOC245" HREF="FAQ.html#SEC245">Q5017</A>: I would like to restrict e-mail usage for some users to the local
        machine, ideally on a group basis.
-<LI><A NAME="TOC243" HREF="FAQ.html#SEC243">Q5018</A>: Whenever exim restarts it takes up to 3-5 minutes to start responding on
+<LI><A NAME="TOC246" HREF="FAQ.html#SEC246">Q5018</A>: Whenever exim restarts it takes up to 3-5 minutes to start responding on
        the SMTP port. Why is this?
-<LI><A NAME="TOC244" HREF="FAQ.html#SEC244">Q5019</A>: Why aren't there any man pages for Exim? I don't always carry my printed
+<LI><A NAME="TOC247" HREF="FAQ.html#SEC247">Q5019</A>: Why aren't there any man pages for Exim? I don't always carry my printed
        documentation.
-<LI><A NAME="TOC245" HREF="FAQ.html#SEC245">Q5020</A>: When I send a message using the <B>-t</B> command line option, Exim sends only
+<LI><A NAME="TOC248" HREF="FAQ.html#SEC248">Q5020</A>: When I send a message using the <B>-t</B> command line option, Exim sends only
        to the addresses within the message, not to those on the command line.
-<LI><A NAME="TOC246" HREF="FAQ.html#SEC246">Q5021</A>: If I set up, for example, 
+<LI><A NAME="TOC249" HREF="FAQ.html#SEC249">Q5021</A>: If I set up, for example, 
           <TT>local_domains = *customer.com</TT>, then it matches
        <B>"customer.com"</B> and <B>"abc.customer.com"</B> as required, but it also matches
        <B>"noncustomer.com",</B> which is wrong. How can I get round this?
-<LI><A NAME="TOC247" HREF="FAQ.html#SEC247">Q5022</A>: I want to match all local domains of the form <B>*.oyoy.org</B> but want a few
+<LI><A NAME="TOC250" HREF="FAQ.html#SEC250">Q5022</A>: I want to match all local domains of the form <B>*.oyoy.org</B> but want a few
        exceptions. For instance I don't want <B>foo.oyoy.org</B> or <B>bar.oyoy.org</B> to be
        treated as local. What is the best way to do this?
-<LI><A NAME="TOC248" HREF="FAQ.html#SEC248">Q5023</A>: I can't seem to find a pre-built version of Exim anywhere. The machine
+<LI><A NAME="TOC251" HREF="FAQ.html#SEC251">Q5023</A>: I can't seem to find a pre-built version of Exim anywhere. The machine
        is a Sparc 5 running Solaris 2.6.
-<LI><A NAME="TOC249" HREF="FAQ.html#SEC249">Q5024</A>: Is there a Windows NT version of Exim available?
-<LI><A NAME="TOC250" HREF="FAQ.html#SEC250">Q5025</A>: Does Exim support Delivery Status Notificaion (DSN), Message Status
+<LI><A NAME="TOC252" HREF="FAQ.html#SEC252">Q5024</A>: Is there a Windows NT version of Exim available?
+<LI><A NAME="TOC253" HREF="FAQ.html#SEC253">Q5025</A>: Does Exim support Delivery Status Notificaion (DSN), Message Status
        Notification (MSN), or any other form of delivery acknowledgement?
-<LI><A NAME="TOC251" HREF="FAQ.html#SEC251">Q5026</A>: What does "Exim" stand for?
-<LI><A NAME="TOC252" HREF="FAQ.html#SEC252">Q5027</A>: What does the log message "no immediate delivery: more than 10 messages
+<LI><A NAME="TOC254" HREF="FAQ.html#SEC254">Q5026</A>: What does "Exim" stand for?
+<LI><A NAME="TOC255" HREF="FAQ.html#SEC255">Q5027</A>: What does the log message "no immediate delivery: more than 10 messages
        received in one connection" mean?
-<LI><A NAME="TOC253" HREF="FAQ.html#SEC253">Q5028</A>: Although I haven't set <TT>check_spool_space</TT>, Exim is still checking the
+<LI><A NAME="TOC256" HREF="FAQ.html#SEC256">Q5028</A>: Although I haven't set <TT>check_spool_space</TT>, Exim is still checking the
        amount of space on the spool for incoming SMTP messages that use the
        SIZE option. Can I suppress this?
-<LI><A NAME="TOC254" HREF="FAQ.html#SEC254">Q5029</A>: I just noticed log entries that start off "&#60;= &#60;&#62;". Am I correct in
+<LI><A NAME="TOC257" HREF="FAQ.html#SEC257">Q5029</A>: I just noticed log entries that start off "&#60;= &#60;&#62;". Am I correct in
        assuming that the "&#60;&#62;" indicates that the envelope did not contain any
        "From" data?
-<LI><A NAME="TOC255" HREF="FAQ.html#SEC255">Q5030</A>: I've received a message which does not have my address in the To:
+<LI><A NAME="TOC258" HREF="FAQ.html#SEC258">Q5030</A>: I've received a message which does not have my address in the To:
        line. It is a spam message with the same address in both the From: and
        the To: headers. How can this happen, and why doesn't Exim reject it?
-<LI><A NAME="TOC256" HREF="FAQ.html#SEC256">Q5031</A>: Can (or will) Exim ever handle a message delivery purely in memory,
+<LI><A NAME="TOC259" HREF="FAQ.html#SEC259">Q5031</A>: Can (or will) Exim ever handle a message delivery purely in memory,
        that is, it is handled without it ever hitting the disc?
-<LI><A NAME="TOC257" HREF="FAQ.html#SEC257">Q5032</A>: If I am using dbm files for data that Exim reads, can I rebuild them
+<LI><A NAME="TOC260" HREF="FAQ.html#SEC260">Q5032</A>: If I am using dbm files for data that Exim reads, can I rebuild them
        on the fly, or do I need to restart Exim every time I make a change?
-<LI><A NAME="TOC258" HREF="FAQ.html#SEC258">Q5033</A>: What are the main differences between using an Exim filter and using
+<LI><A NAME="TOC261" HREF="FAQ.html#SEC261">Q5033</A>: What are the main differences between using an Exim filter and using
        procmail?
-<LI><A NAME="TOC259" HREF="FAQ.html#SEC259">Q5034</A>: I need an option that is the opposite of <B>-bpa,</B> that is, a listing of
+<LI><A NAME="TOC262" HREF="FAQ.html#SEC262">Q5034</A>: I need an option that is the opposite of <B>-bpa,</B> that is, a listing of
        those addresses generated from a top-level address that have not yet
        been delivered.
-<LI><A NAME="TOC260" HREF="FAQ.html#SEC260">Q5035</A>: I am getting complaints from a customer who uses my EXIM server for
+<LI><A NAME="TOC263" HREF="FAQ.html#SEC263">Q5035</A>: I am getting complaints from a customer who uses my EXIM server for
        relaying that they are being blocked with a "Too many connections"
        error.
-<LI><A NAME="TOC261" HREF="FAQ.html#SEC261">Q5036</A>: When I try "exim <B>-bf"</B> to test a system filter, I received the following
+<LI><A NAME="TOC264" HREF="FAQ.html#SEC264">Q5036</A>: When I try "exim <B>-bf"</B> to test a system filter, I received the following
        error message: "Filter error: unavailable filtering command "fail" near
        line 8 of filter file".
-<LI><A NAME="TOC262" HREF="FAQ.html#SEC262">Q5037</A>: How can I make Exim receive incoming mail, queue it, but NOT attempt to
+<LI><A NAME="TOC265" HREF="FAQ.html#SEC265">Q5037</A>: How can I make Exim receive incoming mail, queue it, but NOT attempt to
        deliver it? I want to be in this state while moving some mailboxes.
-<LI><A NAME="TOC263" HREF="FAQ.html#SEC263">Q5038</A>: What does the rejection message "reject all recipients: 3 times bad
+<LI><A NAME="TOC266" HREF="FAQ.html#SEC266">Q5038</A>: What does the rejection message "reject all recipients: 3 times bad
        sender" mean?
-<LI><A NAME="TOC264" HREF="FAQ.html#SEC264">Q5039</A>: The menu in Eximon isn't working. It displays, but I can't select
+<LI><A NAME="TOC267" HREF="FAQ.html#SEC267">Q5039</A>: The menu in Eximon isn't working. It displays, but I can't select
        anything from it.
-<LI><A NAME="TOC265" HREF="FAQ.html#SEC265">Q5040</A>: What does "ridiculously long message header" in an error report mean?
-<LI><A NAME="TOC266" HREF="FAQ.html#SEC266">Q5041</A>: What does Exim use for POP as a default?  Do I have to install anything
+<LI><A NAME="TOC268" HREF="FAQ.html#SEC268">Q5040</A>: What does "ridiculously long message header" in an error report mean?
+<LI><A NAME="TOC269" HREF="FAQ.html#SEC269">Q5041</A>: What does Exim use for POP as a default?  Do I have to install anything
        else?
 </UL>
 
-<A NAME="TOC267" HREF="FAQ.html#SEC267">93. HP-UX</A>
+<A NAME="TOC270" HREF="FAQ.html#SEC270">93. HP-UX</A>
 <UL>
-<LI><A NAME="TOC268" HREF="FAQ.html#SEC268">Q9301</A>: I'm trying to compile on an HP machine and I don't have gcc there. So I
+<LI><A NAME="TOC271" HREF="FAQ.html#SEC271">Q9301</A>: I'm trying to compile on an HP machine and I don't have gcc there. So I
        put <TT>CC=cc</TT> in the <B>Local/Makefile</B>, but I got this error:
 </UL>
 
-<A NAME="TOC269" HREF="FAQ.html#SEC269">94. BSDI</A>
+<A NAME="TOC272" HREF="FAQ.html#SEC272">94. BSDI</A>
 <UL>
-<LI><A NAME="TOC270" HREF="FAQ.html#SEC270">Q9401</A>: On BSDI 4.0, Exim built with Perl support exits with the error message
+<LI><A NAME="TOC273" HREF="FAQ.html#SEC273">Q9401</A>: On BSDI 4.0, Exim built with Perl support exits with the error message
        <B>"./exim:</B> can't load library <B>'libperl.so'".</B>
 </UL>
 
-<A NAME="TOC271" HREF="FAQ.html#SEC271">95. IRIX</A>
+<A NAME="TOC274" HREF="FAQ.html#SEC274">95. IRIX</A>
 <UL>
-<LI><A NAME="TOC272" HREF="FAQ.html#SEC272">Q9501</A>: I'm running IRIX 6.2 with a number of alias IP addresses set up, but
+<LI><A NAME="TOC275" HREF="FAQ.html#SEC275">Q9501</A>: I'm running IRIX 6.2 with a number of alias IP addresses set up, but
        Exim doesn't seem to recognize them as local addresses.
-<LI><A NAME="TOC273" HREF="FAQ.html#SEC273">Q9502</A>: The IP addresses for incoming calls are all being given as
+<LI><A NAME="TOC276" HREF="FAQ.html#SEC276">Q9502</A>: The IP addresses for incoming calls are all being given as
        255.255.255.255.
 </UL>
 
-<A NAME="TOC274" HREF="FAQ.html#SEC274">96. LINUX</A>
+<A NAME="TOC277" HREF="FAQ.html#SEC277">96. LINUX</A>
 <UL>
-<LI><A NAME="TOC275" HREF="FAQ.html#SEC275">Q9601</A>: Exim is mysteriously crashing, usually when forking to send a delivery
+<LI><A NAME="TOC278" HREF="FAQ.html#SEC278">Q9601</A>: Exim is mysteriously crashing, usually when forking to send a delivery
        error message.
-<LI><A NAME="TOC276" HREF="FAQ.html#SEC276">Q9602</A>: Exim has created a directory called <B>build-Linux-libc5-i386</B> but is
+<LI><A NAME="TOC279" HREF="FAQ.html#SEC279">Q9602</A>: Exim has created a directory called <B>build-Linux-libc5-i386</B> but is
        trying to reference <B>build-Linux-libc5-i386-linux</B> while building.
-<LI><A NAME="TOC277" HREF="FAQ.html#SEC277">Q9603</A>: I want to use logrotate which is standard with <B>RH5.2</B> Linux to rotate
+<LI><A NAME="TOC280" HREF="FAQ.html#SEC280">Q9603</A>: I want to use logrotate which is standard with <B>RH5.2</B> Linux to rotate
        my mail logs. Anyone worked out the logrotate config file that will
        do this?
-<LI><A NAME="TOC278" HREF="FAQ.html#SEC278">Q9604</A>: I'm seeing the message "<B>inetd</B>[334]: imap/tcp server failing (looping),
+<LI><A NAME="TOC281" HREF="FAQ.html#SEC281">Q9604</A>: I'm seeing the message "<B>inetd</B>[334]: imap/tcp server failing (looping),
        service terminated" on a RedHat 5.2 system, causing imap connections to
        be refused. The imapd in use is Washington Uni vers 12.250. Could this
        be anything to do with Exim?
-<LI><A NAME="TOC279" HREF="FAQ.html#SEC279">Q9605</A>: I get the "too many open files" error especially when a lot of messages
+<LI><A NAME="TOC282" HREF="FAQ.html#SEC282">Q9605</A>: I get the "too many open files" error especially when a lot of messages
        land for majordomo at the same time.
-<LI><A NAME="TOC280" HREF="FAQ.html#SEC280">Q9606</A>: I'm having a problem with an Exim RPM.
+<LI><A NAME="TOC283" HREF="FAQ.html#SEC283">Q9606</A>: I'm having a problem with an Exim RPM.
 </UL>
 
-<A NAME="TOC281" HREF="FAQ.html#SEC281">97. SUN SYSTEMS</A>
+<A NAME="TOC284" HREF="FAQ.html#SEC284">97. SUN SYSTEMS</A>
 <UL>
-<LI><A NAME="TOC282" HREF="FAQ.html#SEC282">Q9701</A>: Exim builds fine with gcc on SunOS 4 but crashes inside <B>sscanf()</B>.
-<LI><A NAME="TOC283" HREF="FAQ.html#SEC283">Q9702</A>: How can I get rid of spurious ^M characters in messages sent from
+<LI><A NAME="TOC285" HREF="FAQ.html#SEC285">Q9701</A>: Exim builds fine with gcc on SunOS 4 but crashes inside <B>sscanf()</B>.
+<LI><A NAME="TOC286" HREF="FAQ.html#SEC286">Q9702</A>: How can I get rid of spurious ^M characters in messages sent from
        CDE <B>dtmail</B>?
-<LI><A NAME="TOC284" HREF="FAQ.html#SEC284">Q9703</A>: On SunOS 4 Exim crashes when looking up domains in the DNS that have
+<LI><A NAME="TOC287" HREF="FAQ.html#SEC287">Q9703</A>: On SunOS 4 Exim crashes when looking up domains in the DNS that have
        more than 10 A records.
-<LI><A NAME="TOC285" HREF="FAQ.html#SEC285">Q9704</A>: The menu in Eximon isn't working on my Sun system.
-<LI><A NAME="TOC286" HREF="FAQ.html#SEC286">Q9705</A>: I am experiencing mailbox locking problems with Sun's <B>mailtool</B> used
+<LI><A NAME="TOC288" HREF="FAQ.html#SEC288">Q9704</A>: The menu in Eximon isn't working on my Sun system.
+<LI><A NAME="TOC289" HREF="FAQ.html#SEC289">Q9705</A>: I am experiencing mailbox locking problems with Sun's <B>mailtool</B> used
        over a network.
-<LI><A NAME="TOC287" HREF="FAQ.html#SEC287">Q9706</A>: Exim has been crashing on my Solaris x86 system, apparently while
+<LI><A NAME="TOC290" HREF="FAQ.html#SEC290">Q9706</A>: Exim has been crashing on my Solaris x86 system, apparently while
        running DBM functions.
-<LI><A NAME="TOC288" HREF="FAQ.html#SEC288">Q9707</A>: The exiwhat utility isn't working for me on a Solaris 2 system.
-<LI><A NAME="TOC289" HREF="FAQ.html#SEC289">Q9708</A>: How do I stop Sun's <B>dtcm</B> from hanging?
-<LI><A NAME="TOC290" HREF="FAQ.html#SEC290">Q9709</A>: I want Exim to use only the resolver (i.e. ignore <B>/etc/hosts</B>), but don't
+<LI><A NAME="TOC291" HREF="FAQ.html#SEC291">Q9707</A>: The exiwhat utility isn't working for me on a Solaris 2 system.
+<LI><A NAME="TOC292" HREF="FAQ.html#SEC292">Q9708</A>: How do I stop Sun's <B>dtcm</B> from hanging?
+<LI><A NAME="TOC293" HREF="FAQ.html#SEC293">Q9709</A>: I want Exim to use only the resolver (i.e. ignore <B>/etc/hosts</B>), but don't
        want to alter the <B>nsswitch.conf</B> file in Solaris 2.
 </UL>
 
-<A NAME="TOC291" HREF="FAQ.html#SEC291">98. COOKBOOK</A>
+<A NAME="TOC294" HREF="FAQ.html#SEC294">98. COOKBOOK</A>
 <UL>
-<LI><A NAME="TOC292" HREF="FAQ.html#SEC292">Q9801</A>: How do I configure Exim as part of TPC <B>(<A HREF="http://www.tpc.int">http://www.tpc.int</A>)?</B>
-<LI><A NAME="TOC293" HREF="FAQ.html#SEC293">Q9802</A>: How do I configure Exim so that it sends mail to the outside world only
+<LI><A NAME="TOC295" HREF="FAQ.html#SEC295">Q9801</A>: How do I configure Exim as part of TPC <B>(<A HREF="http://www.tpc.int">http://www.tpc.int</A>)?</B>
+<LI><A NAME="TOC296" HREF="FAQ.html#SEC296">Q9802</A>: How do I configure Exim so that it sends mail to the outside world only
        from a restricted list of our local users?
-<LI><A NAME="TOC294" HREF="FAQ.html#SEC294">Q9803</A>: How do I configure Exim to run with SmartList?
-<LI><A NAME="TOC295" HREF="FAQ.html#SEC295">Q9804</A>: How do I configure Exim to minic PP's "tripnote" facility?
-<LI><A NAME="TOC296" HREF="FAQ.html#SEC296">Q9805</A>: How do I configure Exim to handle local parts with extensions?
-<LI><A NAME="TOC297" HREF="FAQ.html#SEC297">Q9806</A>: How do I configure Exim so that only a restricted list of users can
+<LI><A NAME="TOC297" HREF="FAQ.html#SEC297">Q9803</A>: How do I configure Exim to run with SmartList?
+<LI><A NAME="TOC298" HREF="FAQ.html#SEC298">Q9804</A>: How do I configure Exim to minic PP's "tripnote" facility?
+<LI><A NAME="TOC299" HREF="FAQ.html#SEC299">Q9805</A>: How do I configure Exim to handle local parts with extensions?
+<LI><A NAME="TOC300" HREF="FAQ.html#SEC300">Q9806</A>: How do I configure Exim so that only a restricted list of users can
        receive mail from external domains?
-<LI><A NAME="TOC298" HREF="FAQ.html#SEC298">Q9807</A>: I have <B><B>someuser@mydomain.com</B></B> that I only want certain users to be able
+<LI><A NAME="TOC301" HREF="FAQ.html#SEC301">Q9807</A>: I have <B><B>someuser@mydomain.com</B></B> that I only want certain users to be able
        to mail to. How do I accomplish this?
-<LI><A NAME="TOC299" HREF="FAQ.html#SEC299">Q9808</A>: A site for which I provide secondary MX is down for some time. Is there
+<LI><A NAME="TOC302" HREF="FAQ.html#SEC302">Q9808</A>: A site for which I provide secondary MX is down for some time. Is there
        a way to run the queue for that destination separately from the main
        queue?
-<LI><A NAME="TOC300" HREF="FAQ.html#SEC300">Q9809</A>: How do I implement VERP (Variable Envelope Return Paths) in Exim?
-<LI><A NAME="TOC301" HREF="FAQ.html#SEC301">Q9810</A>: I'd like to make a copy of all outgoing messages to a local mailbox. Is
+<LI><A NAME="TOC303" HREF="FAQ.html#SEC303">Q9809</A>: How do I implement VERP (Variable Envelope Return Paths) in Exim?
+<LI><A NAME="TOC304" HREF="FAQ.html#SEC304">Q9810</A>: I'd like to make a copy of all outgoing messages to a local mailbox. Is
        there a solution for this using an Exim filter?
-<LI><A NAME="TOC302" HREF="FAQ.html#SEC302">Q9811</A>: I want to make a copy of outgoing messages to a specific file for each
+<LI><A NAME="TOC305" HREF="FAQ.html#SEC305">Q9811</A>: I want to make a copy of outgoing messages to a specific file for each
        user in a specific directory, using a "save" command in a system filter.
        How can I arrange for Exim to write to these files under the correct
        UID/GID?
-<LI><A NAME="TOC303" HREF="FAQ.html#SEC303">Q9812</A>: How can I keep an archive of all mail for some specific local email
+<LI><A NAME="TOC306" HREF="FAQ.html#SEC306">Q9812</A>: How can I keep an archive of all mail for some specific local email
        addresses?
-<LI><A NAME="TOC304" HREF="FAQ.html#SEC304">Q9813</A>: How can I configure Exim to provide a vacation message when there are
+<LI><A NAME="TOC307" HREF="FAQ.html#SEC307">Q9813</A>: How can I configure Exim to provide a vacation message when there are
        no local users on my mail hub?
-<LI><A NAME="TOC305" HREF="FAQ.html#SEC305">Q9814</A>: We want to be able to temporarily lock out a user by disabling the
+<LI><A NAME="TOC308" HREF="FAQ.html#SEC308">Q9814</A>: We want to be able to temporarily lock out a user by disabling the
        password and moving the home directory to another place. How can we
        arrange to reject mail for users in this state?
-<LI><A NAME="TOC306" HREF="FAQ.html#SEC306">Q9815</A>: I need an alias, say "fakeaddress" that should receive a message,
+<LI><A NAME="TOC309" HREF="FAQ.html#SEC309">Q9815</A>: I need an alias, say "fakeaddress" that should receive a message,
        strip all reply-to: headers present, substitute another one pointing to
        "otheraddress" and forward a message to "realaddress".
-<LI><A NAME="TOC307" HREF="FAQ.html#SEC307">Q9816</A>: How can I set up Exim to work with Listar?
-<LI><A NAME="TOC308" HREF="FAQ.html#SEC308">Q9817</A>: I need to take copies of all incoming and outgoing mail for certain
+<LI><A NAME="TOC310" HREF="FAQ.html#SEC310">Q9816</A>: How can I set up Exim to work with Listar?
+<LI><A NAME="TOC311" HREF="FAQ.html#SEC311">Q9817</A>: I need to take copies of all incoming and outgoing mail for certain
        users. For each user there may be a different monitoring address.
-<LI><A NAME="TOC309" HREF="FAQ.html#SEC309">Q9818</A>: How can I add a disclaimer to the end of every message?
-<LI><A NAME="TOC310" HREF="FAQ.html#SEC310">Q9819</A>: I would like to append a simple advertisement text to all outgoing
+<LI><A NAME="TOC312" HREF="FAQ.html#SEC312">Q9818</A>: How can I add a disclaimer to the end of every message?
+<LI><A NAME="TOC313" HREF="FAQ.html#SEC313">Q9819</A>: I would like to append a simple advertisement text to all outgoing
        and local mails.
-<LI><A NAME="TOC311" HREF="FAQ.html#SEC311">Q9820</A>: How can I configure Exim so that all mails adressed to
+<LI><A NAME="TOC314" HREF="FAQ.html#SEC314">Q9820</A>: How can I configure Exim so that all mails adressed to
        <B><B>something@username.domain.net</B></B> get delivered to <B>/var/spool/mail/username</B>?
-<LI><A NAME="TOC312" HREF="FAQ.html#SEC312">Q9821</A>: How do I get exim not to add a Sender: header to locally originated
+<LI><A NAME="TOC315" HREF="FAQ.html#SEC315">Q9821</A>: How do I get exim not to add a Sender: header to locally originated
        mail?
-<LI><A NAME="TOC313" HREF="FAQ.html#SEC313">Q9822</A>: How can I get Exim to work with mailman?
-<LI><A NAME="TOC314" HREF="FAQ.html#SEC314">Q9823</A>: Is there any way to have messages sent to a specific local address
+<LI><A NAME="TOC316" HREF="FAQ.html#SEC316">Q9822</A>: How can I get Exim to work with mailman?
+<LI><A NAME="TOC317" HREF="FAQ.html#SEC317">Q9823</A>: Is there any way to have messages sent to a specific local address
        delayed by - say - 24 hours?
 </UL>
 
-<A NAME="TOC315" HREF="FAQ.html#SEC315">99. LIST OF SAMPLE CONFIGURATIONS</A>
+<A NAME="TOC318" HREF="FAQ.html#SEC318">99. LIST OF SAMPLE CONFIGURATIONS</A>
 <UL>
 </UL>
 <BR><H2><A NAME="SEC1" HREF="FAQ.html#TOC1">0. DEBUGGING
@@ -1415,7 +1423,7 @@ A0033: If your alias entry looks like this:
 
 <P>
 A0034: See 
-        <A HREF="FAQ.html#SEC280">Q9606</A>.
+        <A HREF="FAQ.html#SEC283">Q9606</A>.
 
 </P>
 <A NAME="SEC36" HREF="FAQ.html#TOC36">Q0035</A>: What does the error "Spool file is locked" mean?
@@ -1666,7 +1674,7 @@ A0201: Your configuration specifies that local mailboxes are all held in
 
 <P>
 A0202: See 
-        <A HREF="FAQ.html#SEC286">A9705</A> in the Sun-specific section below.
+        <A HREF="FAQ.html#SEC289">A9705</A> in the Sun-specific section below.
 
 </P>
 <BR><H2><A NAME="SEC51" HREF="FAQ.html#TOC51">3. ROUTING
@@ -2345,7 +2353,7 @@ A0404: You can use the <TT>condition</TT> option on a director or router, with a
 
 <P>
 A0405: You can do it either way. If you use a single file, you must set
-       <TT>include_domains</TT> on the <B>aliasfile</B> director. If you use a separate file
+       <TT>include_domain</TT> on the <B>aliasfile</B> director. If you use a separate file
        for each domain you can use a single director with an option such as
 
 </P>
@@ -3423,7 +3431,7 @@ A0516: This is unlikely in current versions of Exim, because more logging
        possibility, prior to version 2.053, was that the message was injected
        using the <B>-t</B> option, but all the addresses in the message were also on
        the command line. See 
-        <A HREF="FAQ.html#SEC245">A5020</A> for more detail. Current versions of Exim
+        <A HREF="FAQ.html#SEC248">A5020</A> for more detail. Current versions of Exim
        generate a bounce message in this case.
 
 </P>
@@ -4959,7 +4967,7 @@ A0904: A problem like this turned out to be the Perl version that came with
        RedHat 5.2. Rebuilding Perl 5.005x solved it.
 
 </P>
-<BR><H2><A NAME="SEC198" HREF="FAQ.html#TOC198">10. REWRITING
+<BR><H2><A NAME="SEC198" HREF="FAQ.html#TOC198">10. REWRITING ADDRESSES
 
 </A></H2>
 <A NAME="SEC199" HREF="FAQ.html#TOC199">Q1001</A>: How can I get Exim to strip the hostname from the sender's address?
@@ -5290,7 +5298,7 @@ A1203: It will check 127.0.0.1 (not very useful). The point of the RBL is to
 
 <P>
 A1301: If you are using BSDI, see 
-        <A HREF="FAQ.html#SEC270">Q9401</A>.
+        <A HREF="FAQ.html#SEC273">Q9401</A>.
 
 </P>
 <A NAME="SEC217" HREF="FAQ.html#TOC217">Q1302</A>: Exim built with Perl support exits with several error messages of the
@@ -5374,7 +5382,7 @@ A1403: Exim isn't really designed for this, but... The lowest-numbered MX
        the mail for the dial-in hosts into some local files which then get
        transmitted by other software when the host connects. See the manual
        chapter entitled "Intermittently connected hosts" and also 
-        <A HREF="FAQ.html#SEC239">Q5014</A> and
+        <A HREF="FAQ.html#SEC242">Q5014</A> and
        
         <A HREF="FAQ.html#SEC136">Q0521</A>.
 
@@ -5404,10 +5412,129 @@ A1404: (A) Instead of <TT>queue_remote_domains</TT> or <TT>queue_smtp_domains</T
        switch that file appropriately.
 
 </P>
-<BR><H2><A NAME="SEC223" HREF="FAQ.html#TOC223">20. MILLENNIUM
+<BR><H2><A NAME="SEC223" HREF="FAQ.html#TOC223">15. MODIFYING MESSAGE BODIES
 
 </A></H2>
-<A NAME="SEC224" HREF="FAQ.html#TOC224">Q2000</A>: Are there any Y2K issues with Exim?
+<A NAME="SEC224" HREF="FAQ.html#TOC224">Q1501</A>: How can I add a disclaimer or an advertisement to a message?
+
+
+<P>
+A1501: There are a number of technical and potential legal problems that arise
+       in connection with message modification. Some of them are listed below.
+       If, despite these considerations, you still want to modify messages, you
+       can do so using Exim, but not directly in Exim itself. It is not the job
+       of an MTA to modify messages, something that requires understanding of
+       their content and format.
+
+</P>
+<P>
+       Exim provides a hook in the form of a "transport filter" that lets you
+       pass any outgoing message through a program or script of your choice. It
+       is the job of this script to make any changes to the message that you
+       require. By this means, you have full control over what changes are
+       made, and Exim does not need to know anything about message bodies.
+       However, using a transport filter requires additional resources, and may
+       slow down mail delivery.
+
+</P>
+<P>
+       You can use Exim's directors and routers to arrange for those messages
+       that you want to modify to be delivered via a transport filter. For
+       example, suppose you want to do this for messages from addresses in
+       your domain that are being delivered to a remote host. Place the
+       following router before the standard <B>lookuphost</B> router:
+
+</P>
+<PRE>
+         filter_remote:
+           driver = lookuphost
+           transport = remote_smtp_filter
+           condition = ${if eq {$sender_address_domain}{your.domain}{yes}{no}}</PRE>
+<P>
+       This routes the relevant addresses to a transport called
+       <TT>remote_smtp_filter</TT>. Other addresses fall through to the normal router,
+       and are routed to the standard <TT>remote_smtp</TT> transport. Another way to do
+       this would be to use a single router, with an expanded string for the
+       transport setting. The new transport is defined thus:
+
+</P>
+<PRE>
+         remote_smtp_filter:
+           driver = smtp
+           transport_filter = /your/filter/command</PRE>
+<P>
+       The entire message is passed to your filter command on its standard
+       input. It must write the modified version to the standard output, taking
+       care not to break the RFC 822 syntax. The command is run as the Exim
+       user, if one is defined; otherwise it is run as root.
+
+</P>
+<P>
+       There are a number of potential problems in doing this kind of
+       modification in an MTA. Many people believe that to attempt is it wrong,
+       because:
+
+</P>
+<P>
+       1. It breaks digital signatures, which are becoming legally binding
+          in some countries (already in the UK, likely to be 1 October 2000 in
+          the USA).
+
+</P>
+<P>
+       2. It is likely to break MIME encoding, that is, it is likely to wreck
+          attachments, unless great care is taken.
+
+</P>
+<P>
+       3. It is illegal under German and Dutch law to change the body of
+          a mail message in transit. It might potentially be illegal in
+          the UK under European law. This consideration applies to ISPs and
+          other "common carriers". It would presumably not apply in a corporate
+          environment where modification was done only to messages originating
+          from the employees, before they left the company's network. It might
+          also not apply if the senders have explicitly given their consent
+          (e.g. agreed to have advertisements added to their incoming mail).
+
+</P>
+<P>
+       4. Since the delivered message body was produced by the MTA (not the
+          originator, because it was modified), the MTA operator could
+          potentially be sued for any content. This again applies to "common
+          carrier" MTAs. It's interesting that adding a disclaimer of liability
+          could be making you liable for the message, but this case seems
+          more likely to involve adding advertisements than disclaimers. After
+          all, no postal service in the world opens all the mail it carries to
+          add disclaimers.
+
+</P>
+<P>
+       5. Some mail clients (old versions of MS outlook) crash if the message
+          body of an incoming MIME message has been tampered with.
+
+</P>
+<P>
+       An alternative approach to the disclaimer problem would be to insist
+       that all relevant messages have the disclaimer appended by the MUA. The
+       MTA should refuse to accept any that do not. Again, however, the MTA
+       must understand the format of messages in order to do this. Simply
+       checking for appropriate wording at the end of the body is not good
+       enough. It would probably be necessary to run a Perl script from within
+       an Exim system filter in order to adopt this approach.
+
+</P>
+<A NAME="SEC225" HREF="FAQ.html#TOC225">Q1502</A>: How can I remove attachments from messages?
+
+
+<P>
+A1502: The answer to this is essentially the same as for 
+        <A HREF="FAQ.html#SEC224">Q1501</A>.
+
+</P>
+<BR><H2><A NAME="SEC226" HREF="FAQ.html#TOC226">20. MILLENNIUM
+
+</A></H2>
+<A NAME="SEC227" HREF="FAQ.html#TOC227">Q2000</A>: Are there any Y2K issues with Exim?
 
 
 <P>
@@ -5421,10 +5548,10 @@ A2000: The author of Exim believes that it is Y2K-compliant, as long as the
        been done are not available.
 
 </P>
-<BR><H2><A NAME="SEC225" HREF="FAQ.html#TOC225">50. MISCELLANEOUS
+<BR><H2><A NAME="SEC228" HREF="FAQ.html#TOC228">50. MISCELLANEOUS
 
 </A></H2>
-<A NAME="SEC226" HREF="FAQ.html#TOC226">Q5001</A>: What does the error "Unable to get interface configuration: 22 Invalid
+<A NAME="SEC229" HREF="FAQ.html#TOC229">Q5001</A>: What does the error "Unable to get interface configuration: 22 Invalid
        argument" mean?
 
 
@@ -5437,7 +5564,7 @@ A5001: This is an error that occurs when Exim is trying to find out the all the
        connections.
 
 </P>
-<A NAME="SEC227" HREF="FAQ.html#TOC227">Q5002</A>: How can I arrange to allow a limited set of users to perform a limited
+<A NAME="SEC230" HREF="FAQ.html#TOC230">Q5002</A>: How can I arrange to allow a limited set of users to perform a limited
        set of Exim administration functions? I don't want to put them all in
        the exim group.
 
@@ -5452,7 +5579,7 @@ A5002: See <B><A HREF="http://www.chiark.greenend.org.uk/~ian/userv/.">http://ww
        `unparsing' properly in shell or Perl it will be secure.
 
 </P>
-<A NAME="SEC228" HREF="FAQ.html#TOC228">Q5003</A>: How can I test for a message's size being greater or less than a given
+<A NAME="SEC231" HREF="FAQ.html#TOC231">Q5003</A>: How can I test for a message's size being greater or less than a given
        value in an expansion string?
 
 
@@ -5472,7 +5599,7 @@ A5003: This isn't straightforward in versions of Exim prior to 2.10, because
 </P>
 <PRE>
        ${if eq{${expand:\$\{substr_-1000000_$message_size:x\}}} {} {yes} {no}}</PRE>
-<A NAME="SEC229" HREF="FAQ.html#TOC229">Q5004</A>: I want to "tail" the Exim log, but I have a number of other logs I also
+<A NAME="SEC232" HREF="FAQ.html#TOC232">Q5004</A>: I want to "tail" the Exim log, but I have a number of other logs I also
        want to "tail", and the number of tailing windows is getting to be a
        nuisance.
 
@@ -5483,14 +5610,14 @@ A5004: Look for a program called 'xtail' (despite its name, it's not an
        entire directories.
 
 </P>
-<A NAME="SEC230" HREF="FAQ.html#TOC230">Q5005</A>: I would like to have Exim log information written to syslog.
+<A NAME="SEC233" HREF="FAQ.html#TOC233">Q5005</A>: I would like to have Exim log information written to syslog.
 
 
 <P>
 A5005: Support for this is available from version 3.10 onwards.
 
 </P>
-<A NAME="SEC231" HREF="FAQ.html#TOC231">Q5006</A>: What does the error "Failed to create spool file" mean?
+<A NAME="SEC234" HREF="FAQ.html#TOC234">Q5006</A>: What does the error "Failed to create spool file" mean?
 
 
 <P>
@@ -5526,7 +5653,7 @@ A5006: Exim has been unable to create a file in its spool area in which to
        permission must be "s" rather than "x".
 
 </P>
-<A NAME="SEC232" HREF="FAQ.html#TOC232">Q5007</A>: Exim keeps crashing with segmentation errors (signal 11 or 139).
+<A NAME="SEC235" HREF="FAQ.html#TOC235">Q5007</A>: Exim keeps crashing with segmentation errors (signal 11 or 139).
 
 
 <P>
@@ -5534,7 +5661,7 @@ A5007: This might be a problem with the db library. See
         <A HREF="FAQ.html#SEC120">Q0505</A>.
 
 </P>
-<A NAME="SEC233" HREF="FAQ.html#TOC233">Q5008</A>: Exim's databases keep getting corrupted.
+<A NAME="SEC236" HREF="FAQ.html#TOC236">Q5008</A>: Exim's databases keep getting corrupted.
 
 
 <P>
@@ -5542,7 +5669,7 @@ A5008: See
         <A HREF="FAQ.html#SEC120">Q0505</A>.
 
 </P>
-<A NAME="SEC234" HREF="FAQ.html#TOC234">Q5009</A>: I've been using an autoreply director to try and mimic a bounce message,
+<A NAME="SEC237" HREF="FAQ.html#TOC237">Q5009</A>: I've been using an autoreply director to try and mimic a bounce message,
        but I can't get it to have an envelope from of &#60;&#62;.
 
 
@@ -5551,7 +5678,7 @@ A5009: You haven't, by any chance, put "exim" in the list of <TT>never_users</TT
        you?
 
 </P>
-<A NAME="SEC235" HREF="FAQ.html#TOC235">Q5010</A>: I see entries in the log that mention two different IP addresses for the
+<A NAME="SEC238" HREF="FAQ.html#TOC238">Q5010</A>: I see entries in the log that mention two different IP addresses for the
        same connection. Why is this? For example:
 
 
@@ -5571,7 +5698,7 @@ A5010: The actual IP address from which the call came is the final one.
        misleading.
 
 </P>
-<A NAME="SEC236" HREF="FAQ.html#TOC236">Q5011</A>: How can I persuade Exim to accept ETRN commands without the leading
+<A NAME="SEC239" HREF="FAQ.html#TOC239">Q5011</A>: How can I persuade Exim to accept ETRN commands without the leading
        # character?
 
 
@@ -5614,7 +5741,7 @@ A5011: Set the option
        serialization lock (which is set by default) never gets removed.
 
 </P>
-<A NAME="SEC237" HREF="FAQ.html#TOC237">Q5012</A>: I've recently noticed that emails I send with a Bcc: line are being
+<A NAME="SEC240" HREF="FAQ.html#TOC240">Q5012</A>: I've recently noticed that emails I send with a Bcc: line are being
        delivered to their final destination with the Bcc: line still present.
 
 
@@ -5643,7 +5770,7 @@ A5012: Exim removes Bcc lines only if you call it with the <B>-t</B> option (i.e
        Bcc; any MTA software has to leave it alone.
 
 </P>
-<A NAME="SEC238" HREF="FAQ.html#TOC238">Q5013</A>: I used gv <B>v3.5.8</B> (ghostview) to try printing <B>spec.ps.</B> After every
+<A NAME="SEC241" HREF="FAQ.html#TOC241">Q5013</A>: I used gv <B>v3.5.8</B> (ghostview) to try printing <B>spec.ps.</B> After every
        printed page, the printer ejects a blank sheet. Is this something to do
        with using "letter" rather than A4 paper?
 
@@ -5666,7 +5793,7 @@ A5013: This seems to be an effect of using ghostview. Although the PostScript
        ghostview.
 
 </P>
-<A NAME="SEC239" HREF="FAQ.html#TOC239">Q5014</A>: I would like to have a separate queue per domain for hosts which dial
+<A NAME="SEC242" HREF="FAQ.html#TOC242">Q5014</A>: I would like to have a separate queue per domain for hosts which dial
        in to collect their mail.
 
 
@@ -5695,7 +5822,7 @@ A5014: Exim isn't really designed for this kind of operation. The only way to
         <A HREF="FAQ.html#SEC136">Q0521</A>.
 
 </P>
-<A NAME="SEC240" HREF="FAQ.html#TOC240">Q5015</A>: A short time after I start Exim I see a &#60;defunct&#62; process. What is
+<A NAME="SEC243" HREF="FAQ.html#TOC243">Q5015</A>: A short time after I start Exim I see a &#60;defunct&#62; process. What is
        causing this?
 
 
@@ -5708,7 +5835,7 @@ A5015: Your system must be lightly loaded as far as mail is concerned. The
        perfectly normal.
 
 </P>
-<A NAME="SEC241" HREF="FAQ.html#TOC241">Q5016</A>: On a reboot, or a restart of the mail system, I see the message "Mailer
+<A NAME="SEC244" HREF="FAQ.html#TOC244">Q5016</A>: On a reboot, or a restart of the mail system, I see the message "Mailer
        daemons: exim abandoned: unknown, malformed, or incomplete option
        <B>-bz</B> sendmail". What does this mean?
 
@@ -5731,16 +5858,16 @@ A5016: <B>-bz</B> is a Sendmail option requesting it to create a "configuration 
        The first of these lines should be commented out.
 
 </P>
-<A NAME="SEC242" HREF="FAQ.html#TOC242">Q5017</A>: I would like to restrict e-mail usage for some users to the local
+<A NAME="SEC245" HREF="FAQ.html#TOC245">Q5017</A>: I would like to restrict e-mail usage for some users to the local
        machine, ideally on a group basis.
 
 
 <P>
 A5017: See 
-        <A HREF="FAQ.html#SEC293">A9802</A>
+        <A HREF="FAQ.html#SEC296">A9802</A>
 
 </P>
-<A NAME="SEC243" HREF="FAQ.html#TOC243">Q5018</A>: Whenever exim restarts it takes up to 3-5 minutes to start responding on
+<A NAME="SEC246" HREF="FAQ.html#TOC246">Q5018</A>: Whenever exim restarts it takes up to 3-5 minutes to start responding on
        the SMTP port. Why is this?
 
 
@@ -5750,7 +5877,7 @@ A5018: Something else is hanging onto port 25 and not releasing it. One place
        configured there.
 
 </P>
-<A NAME="SEC244" HREF="FAQ.html#TOC244">Q5019</A>: Why aren't there any man pages for Exim? I don't always carry my printed
+<A NAME="SEC247" HREF="FAQ.html#TOC247">Q5019</A>: Why aren't there any man pages for Exim? I don't always carry my printed
        documentation.
 
 
@@ -5784,7 +5911,7 @@ A5019: As well as plain ASCII text, the Exim documentation is provided in two
        This contains some introductory text and the command line options only.
 
 </P>
-<A NAME="SEC245" HREF="FAQ.html#TOC245">Q5020</A>: When I send a message using the <B>-t</B> command line option, Exim sends only
+<A NAME="SEC248" HREF="FAQ.html#TOC248">Q5020</A>: When I send a message using the <B>-t</B> command line option, Exim sends only
        to the addresses within the message, not to those on the command line.
 
 
@@ -5820,7 +5947,7 @@ A5020: By default Exim operates according to the Sendmail documentation, and
        the ambiguity differently.
 
 </P>
-<A NAME="SEC246" HREF="FAQ.html#TOC246">Q5021</A>: If I set up, for example, 
+<A NAME="SEC249" HREF="FAQ.html#TOC249">Q5021</A>: If I set up, for example, 
           <TT>local_domains = *customer.com</TT>, then it matches
        <B>"customer.com"</B> and <B>"abc.customer.com"</B> as required, but it also matches
        <B>"noncustomer.com",</B> which is wrong. How can I get round this?
@@ -5863,7 +5990,7 @@ A5021: (A) You have to specify two entries in the list:
        the same as when it appears directly in a domain list.
 
 </P>
-<A NAME="SEC247" HREF="FAQ.html#TOC247">Q5022</A>: I want to match all local domains of the form <B>*.oyoy.org</B> but want a few
+<A NAME="SEC250" HREF="FAQ.html#TOC250">Q5022</A>: I want to match all local domains of the form <B>*.oyoy.org</B> but want a few
        exceptions. For instance I don't want <B>foo.oyoy.org</B> or <B>bar.oyoy.org</B> to be
        treated as local. What is the best way to do this?
 
@@ -5906,7 +6033,7 @@ A5022: (A) From release 3.00 onwards, you can put negative items in the
        upgrading!
 
 </P>
-<A NAME="SEC248" HREF="FAQ.html#TOC248">Q5023</A>: I can't seem to find a pre-built version of Exim anywhere. The machine
+<A NAME="SEC251" HREF="FAQ.html#TOC251">Q5023</A>: I can't seem to find a pre-built version of Exim anywhere. The machine
        is a Sparc 5 running Solaris 2.6.
 
 
@@ -5942,7 +6069,7 @@ A5023: The problem is that there are a number of build-time options, requiring
        would probably please nobody.
 
 </P>
-<A NAME="SEC249" HREF="FAQ.html#TOC249">Q5024</A>: Is there a Windows NT version of Exim available?
+<A NAME="SEC252" HREF="FAQ.html#TOC252">Q5024</A>: Is there a Windows NT version of Exim available?
 
 
 <P>
@@ -5950,7 +6077,7 @@ A5024: A long time ago somebody took a copy of the Exim source with the aim of
        trying to port it to NT. However, I never heard anything more.
 
 </P>
-<A NAME="SEC250" HREF="FAQ.html#TOC250">Q5025</A>: Does Exim support Delivery Status Notificaion (DSN), Message Status
+<A NAME="SEC253" HREF="FAQ.html#TOC253">Q5025</A>: Does Exim support Delivery Status Notificaion (DSN), Message Status
        Notification (MSN), or any other form of delivery acknowledgement?
 
 
@@ -5959,7 +6086,7 @@ A5025: See
         <A HREF="FAQ.html#SEC132">A0517</A>.
 
 </P>
-<A NAME="SEC251" HREF="FAQ.html#TOC251">Q5026</A>: What does "Exim" stand for?
+<A NAME="SEC254" HREF="FAQ.html#TOC254">Q5026</A>: What does "Exim" stand for?
 
 
 <P>
@@ -5970,7 +6097,7 @@ A5026: Originally, it was "EXperimental Internet Mailer", which was the best I
        to start using it, and told other people about it...
 
 </P>
-<A NAME="SEC252" HREF="FAQ.html#TOC252">Q5027</A>: What does the log message "no immediate delivery: more than 10 messages
+<A NAME="SEC255" HREF="FAQ.html#TOC255">Q5027</A>: What does the log message "no immediate delivery: more than 10 messages
        received in one connection" mean?
 
 
@@ -5979,7 +6106,7 @@ A5027: See
         <A HREF="FAQ.html#SEC133">A0518</A>.
 
 </P>
-<A NAME="SEC253" HREF="FAQ.html#TOC253">Q5028</A>: Although I haven't set <TT>check_spool_space</TT>, Exim is still checking the
+<A NAME="SEC256" HREF="FAQ.html#TOC256">Q5028</A>: Although I haven't set <TT>check_spool_space</TT>, Exim is still checking the
        amount of space on the spool for incoming SMTP messages that use the
        SIZE option. Can I suppress this?
 
@@ -6004,7 +6131,7 @@ A5028: The RFC for the SIZE option says
        <TT>smtp_check_spool_space</TT>.
 
 </P>
-<A NAME="SEC254" HREF="FAQ.html#TOC254">Q5029</A>: I just noticed log entries that start off "&#60;= &#60;&#62;". Am I correct in
+<A NAME="SEC257" HREF="FAQ.html#TOC257">Q5029</A>: I just noticed log entries that start off "&#60;= &#60;&#62;". Am I correct in
        assuming that the "&#60;&#62;" indicates that the envelope did not contain any
        "From" data?
 
@@ -6041,7 +6168,7 @@ A5029: Yes. This indicates a delivery failure report (aka "bounce message").
        uses them when sending out warnings about delivery delays.
 
 </P>
-<A NAME="SEC255" HREF="FAQ.html#TOC255">Q5030</A>: I've received a message which does not have my address in the To:
+<A NAME="SEC258" HREF="FAQ.html#TOC258">Q5030</A>: I've received a message which does not have my address in the To:
        line. It is a spam message with the same address in both the From: and
        the To: headers. How can this happen, and why doesn't Exim reject it?
 
@@ -6069,7 +6196,7 @@ A5030: There is an important distinction between the "envelope" from and to and
        messages forwarded from mailing lists and delivery failure reports.
 
 </P>
-<A NAME="SEC256" HREF="FAQ.html#TOC256">Q5031</A>: Can (or will) Exim ever handle a message delivery purely in memory,
+<A NAME="SEC259" HREF="FAQ.html#TOC259">Q5031</A>: Can (or will) Exim ever handle a message delivery purely in memory,
        that is, it is handled without it ever hitting the disc?
 
 
@@ -6079,7 +6206,7 @@ A5031: It doesn't, and never will. Accepting and delivering a message are two
        writing/reading the message on the disc.
 
 </P>
-<A NAME="SEC257" HREF="FAQ.html#TOC257">Q5032</A>: If I am using dbm files for data that Exim reads, can I rebuild them
+<A NAME="SEC260" HREF="FAQ.html#TOC260">Q5032</A>: If I am using dbm files for data that Exim reads, can I rebuild them
        on the fly, or do I need to restart Exim every time I make a change?
 
 
@@ -6092,7 +6219,7 @@ A5032: Exim re-reads the file every time it consults it, so if you are using a
        inconsistent. On lightly loaded systems this may not matter.
 
 </P>
-<A NAME="SEC258" HREF="FAQ.html#TOC258">Q5033</A>: What are the main differences between using an Exim filter and using
+<A NAME="SEC261" HREF="FAQ.html#TOC261">Q5033</A>: What are the main differences between using an Exim filter and using
        procmail?
 
 
@@ -6121,7 +6248,7 @@ A5033: Exim filters and procmail provide different facilities. Exim filters run
        both.
 
 </P>
-<A NAME="SEC259" HREF="FAQ.html#TOC259">Q5034</A>: I need an option that is the opposite of <B>-bpa,</B> that is, a listing of
+<A NAME="SEC262" HREF="FAQ.html#TOC262">Q5034</A>: I need an option that is the opposite of <B>-bpa,</B> that is, a listing of
        those addresses generated from a top-level address that have not yet
        been delivered.
 
@@ -6140,7 +6267,7 @@ A5034: Exim does not keep this information. It saves only the top-level
        are pipes, files, or autoreplies.
 
 </P>
-<A NAME="SEC260" HREF="FAQ.html#TOC260">Q5035</A>: I am getting complaints from a customer who uses my EXIM server for
+<A NAME="SEC263" HREF="FAQ.html#TOC263">Q5035</A>: I am getting complaints from a customer who uses my EXIM server for
        relaying that they are being blocked with a "Too many connections"
        error.
 
@@ -6149,7 +6276,7 @@ A5034: Exim does not keep this information. It saves only the top-level
 A5035: See <TT>smtp_accept_max</TT> and related options such as <TT>smtp_accept_reserve</TT>.
 
 </P>
-<A NAME="SEC261" HREF="FAQ.html#TOC261">Q5036</A>: When I try "exim <B>-bf"</B> to test a system filter, I received the following
+<A NAME="SEC264" HREF="FAQ.html#TOC264">Q5036</A>: When I try "exim <B>-bf"</B> to test a system filter, I received the following
        error message: "Filter error: unavailable filtering command "fail" near
        line 8 of filter file".
 
@@ -6159,7 +6286,7 @@ A5036: Use the <B>-bF</B> option to test system filters. This gives you access t
        freeze and fail actions.
 
 </P>
-<A NAME="SEC262" HREF="FAQ.html#TOC262">Q5037</A>: How can I make Exim receive incoming mail, queue it, but NOT attempt to
+<A NAME="SEC265" HREF="FAQ.html#TOC265">Q5037</A>: How can I make Exim receive incoming mail, queue it, but NOT attempt to
        deliver it? I want to be in this state while moving some mailboxes.
 
 
@@ -6183,7 +6310,7 @@ A5037: (1) Set <TT>queue_only</TT> in the Exim configuration. (2) Kill off your 
        was not available for use in <B>smartuser</B>.
 
 </P>
-<A NAME="SEC263" HREF="FAQ.html#TOC263">Q5038</A>: What does the rejection message "reject all recipients: 3 times bad
+<A NAME="SEC266" HREF="FAQ.html#TOC266">Q5038</A>: What does the rejection message "reject all recipients: 3 times bad
        sender" mean?
 
 
@@ -6193,7 +6320,7 @@ A5038: See the section of the manual entitled "Sender verification". Exim has
        24 hours.
 
 </P>
-<A NAME="SEC264" HREF="FAQ.html#TOC264">Q5039</A>: The menu in Eximon isn't working. It displays, but I can't select
+<A NAME="SEC267" HREF="FAQ.html#TOC267">Q5039</A>: The menu in Eximon isn't working. It displays, but I can't select
        anything from it.
 
 
@@ -6206,7 +6333,7 @@ A5039: On some X implementations, if the numlock key is pressed (so that the
        encountered.
 
 </P>
-<A NAME="SEC265" HREF="FAQ.html#TOC265">Q5040</A>: What does "ridiculously long message header" in an error report mean?
+<A NAME="SEC268" HREF="FAQ.html#TOC268">Q5040</A>: What does "ridiculously long message header" in an error report mean?
 
 
 <P>
@@ -6228,7 +6355,7 @@ A5040: There has to be some limit to the length of a message's header lines,
        on individual header lines; only the total matters.
 
 </P>
-<A NAME="SEC266" HREF="FAQ.html#TOC266">Q5041</A>: What does Exim use for POP as a default?  Do I have to install anything
+<A NAME="SEC269" HREF="FAQ.html#TOC269">Q5041</A>: What does Exim use for POP as a default?  Do I have to install anything
        else?
 
 
@@ -6238,10 +6365,10 @@ A5041: Yes. Exim provides MTA functionality. That is, it delivers mail. POP is
        provide that functionality.
 
 </P>
-<BR><H2><A NAME="SEC267" HREF="FAQ.html#TOC267">93. HP-UX
+<BR><H2><A NAME="SEC270" HREF="FAQ.html#TOC270">93. HP-UX
 
 </A></H2>
-<A NAME="SEC268" HREF="FAQ.html#TOC268">Q9301</A>: I'm trying to compile on an HP machine and I don't have gcc there. So I
+<A NAME="SEC271" HREF="FAQ.html#TOC271">Q9301</A>: I'm trying to compile on an HP machine and I don't have gcc there. So I
        put <TT>CC=cc</TT> in the <B>Local/Makefile</B>, but I got this error:
 
 
@@ -6273,10 +6400,10 @@ A9301: The bundled compiler is not an ANSI C compiler. You either have to get a
          HP workstation, that usually isn't a problem."
 
 </P>
-<BR><H2><A NAME="SEC269" HREF="FAQ.html#TOC269">94. BSDI
+<BR><H2><A NAME="SEC272" HREF="FAQ.html#TOC272">94. BSDI
 
 </A></H2>
-<A NAME="SEC270" HREF="FAQ.html#TOC270">Q9401</A>: On BSDI 4.0, Exim built with Perl support exits with the error message
+<A NAME="SEC273" HREF="FAQ.html#TOC273">Q9401</A>: On BSDI 4.0, Exim built with Perl support exits with the error message
        <B>"./exim:</B> can't load library <B>'libperl.so'".</B>
 
 
@@ -6313,10 +6440,10 @@ A9401: You probably compiled perl5 yourself, without looking into
        guys did to compile perl5 which comes with BSDI 4.0 distribution.
 
 </P>
-<BR><H2><A NAME="SEC271" HREF="FAQ.html#TOC271">95. IRIX
+<BR><H2><A NAME="SEC274" HREF="FAQ.html#TOC274">95. IRIX
 
 </A></H2>
-<A NAME="SEC272" HREF="FAQ.html#TOC272">Q9501</A>: I'm running IRIX 6.2 with a number of alias IP addresses set up, but
+<A NAME="SEC275" HREF="FAQ.html#TOC275">Q9501</A>: I'm running IRIX 6.2 with a number of alias IP addresses set up, but
        Exim doesn't seem to recognize them as local addresses.
 
 
@@ -6326,7 +6453,7 @@ A9501: This problem was fixed in Exim release 2.03. If you are running an
        all your IP addresses explicitly.
 
 </P>
-<A NAME="SEC273" HREF="FAQ.html#TOC273">Q9502</A>: The IP addresses for incoming calls are all being given as
+<A NAME="SEC276" HREF="FAQ.html#TOC276">Q9502</A>: The IP addresses for incoming calls are all being given as
        255.255.255.255.
 
 
@@ -6341,10 +6468,10 @@ A9502: If you used the gcc compiler 2.8.x there is a known bug with the
        <B><A HREF="http://freeware.sgi.com">http://freeware.sgi.com</A>,</B> but it is not likely to be the latest release.
 
 </P>
-<BR><H2><A NAME="SEC274" HREF="FAQ.html#TOC274">96. LINUX
+<BR><H2><A NAME="SEC277" HREF="FAQ.html#TOC277">96. LINUX
 
 </A></H2>
-<A NAME="SEC275" HREF="FAQ.html#TOC275">Q9601</A>: Exim is mysteriously crashing, usually when forking to send a delivery
+<A NAME="SEC278" HREF="FAQ.html#TOC278">Q9601</A>: Exim is mysteriously crashing, usually when forking to send a delivery
        error message.
 
 
@@ -6360,7 +6487,7 @@ A9601: This has been seen in cases where Exim has been incorrectly built with
        process stops with signal 11, your hardware is to blame.
 
 </P>
-<A NAME="SEC276" HREF="FAQ.html#TOC276">Q9602</A>: Exim has created a directory called <B>build-Linux-libc5-i386</B> but is
+<A NAME="SEC279" HREF="FAQ.html#TOC279">Q9602</A>: Exim has created a directory called <B>build-Linux-libc5-i386</B> but is
        trying to reference <B>build-Linux-libc5-i386-linux</B> while building.
 
 
@@ -6378,7 +6505,7 @@ A9602: You have several shells installed, which are setting conflicting values
        preferentially.
 
 </P>
-<A NAME="SEC277" HREF="FAQ.html#TOC277">Q9603</A>: I want to use logrotate which is standard with <B>RH5.2</B> Linux to rotate
+<A NAME="SEC280" HREF="FAQ.html#TOC280">Q9603</A>: I want to use logrotate which is standard with <B>RH5.2</B> Linux to rotate
        my mail logs. Anyone worked out the logrotate config file that will
        do this?
 
@@ -6400,7 +6527,7 @@ A9603: Here's one suggestion:
        reject log, of course.
 
 </P>
-<A NAME="SEC278" HREF="FAQ.html#TOC278">Q9604</A>: I'm seeing the message "<B>inetd</B>[334]: imap/tcp server failing (looping),
+<A NAME="SEC281" HREF="FAQ.html#TOC281">Q9604</A>: I'm seeing the message "<B>inetd</B>[334]: imap/tcp server failing (looping),
        service terminated" on a RedHat 5.2 system, causing imap connections to
        be refused. The imapd in use is Washington Uni vers 12.250. Could this
        be anything to do with Exim?
@@ -6424,7 +6551,7 @@ A9604: No, it's nothing to do with Exim, but here's the answer anyway: there
        provide similar functionality, but in different ways.
 
 </P>
-<A NAME="SEC279" HREF="FAQ.html#TOC279">Q9605</A>: I get the "too many open files" error especially when a lot of messages
+<A NAME="SEC282" HREF="FAQ.html#TOC282">Q9605</A>: I get the "too many open files" error especially when a lot of messages
        land for majordomo at the same time.
 
 
@@ -6451,7 +6578,7 @@ A9605: The problem appears to be the number of open files the system can
        you actually change the kernel parameters.
 
 </P>
-<A NAME="SEC280" HREF="FAQ.html#TOC280">Q9606</A>: I'm having a problem with an Exim RPM.
+<A NAME="SEC283" HREF="FAQ.html#TOC283">Q9606</A>: I'm having a problem with an Exim RPM.
 
 
 <P>
@@ -6496,10 +6623,10 @@ A9606: Normally the thing to do if you have a problem with an RPM package is
        debs, tarballs, and POSIX packages.
 
 </P>
-<BR><H2><A NAME="SEC281" HREF="FAQ.html#TOC281">97. SUN SYSTEMS
+<BR><H2><A NAME="SEC284" HREF="FAQ.html#TOC284">97. SUN SYSTEMS
 
 </A></H2>
-<A NAME="SEC282" HREF="FAQ.html#TOC282">Q9701</A>: Exim builds fine with gcc on SunOS 4 but crashes inside <B>sscanf()</B>.
+<A NAME="SEC285" HREF="FAQ.html#TOC285">Q9701</A>: Exim builds fine with gcc on SunOS 4 but crashes inside <B>sscanf()</B>.
 
 
 <P>
@@ -6507,7 +6634,7 @@ A9701: Make sure you are liking with the GNU <B>ld</B> linker and not the system
        version of <B>ld</B>.
 
 </P>
-<A NAME="SEC283" HREF="FAQ.html#TOC283">Q9702</A>: How can I get rid of spurious ^M characters in messages sent from
+<A NAME="SEC286" HREF="FAQ.html#TOC286">Q9702</A>: How can I get rid of spurious ^M characters in messages sent from
        CDE <B>dtmail</B>?
 
 
@@ -6525,7 +6652,7 @@ A9702: CDE <B>dtmail</B> passes messages to Exim via the command line interface 
        before passing it to Exim.
 
 </P>
-<A NAME="SEC284" HREF="FAQ.html#TOC284">Q9703</A>: On SunOS 4 Exim crashes when looking up domains in the DNS that have
+<A NAME="SEC287" HREF="FAQ.html#TOC287">Q9703</A>: On SunOS 4 Exim crashes when looking up domains in the DNS that have
        more than 10 A records.
 
 
@@ -6542,7 +6669,7 @@ A9703: There are Sun library patches to fix this. It is not Exim's problem.
        those.
 
 </P>
-<A NAME="SEC285" HREF="FAQ.html#TOC285">Q9704</A>: The menu in Eximon isn't working on my Sun system.
+<A NAME="SEC288" HREF="FAQ.html#TOC288">Q9704</A>: The menu in Eximon isn't working on my Sun system.
 
 
 <P>
@@ -6553,7 +6680,7 @@ A9704: With OpenWindows, if the numlock key is pressed (so that the numeric
        be encountered.
 
 </P>
-<A NAME="SEC286" HREF="FAQ.html#TOC286">Q9705</A>: I am experiencing mailbox locking problems with Sun's <B>mailtool</B> used
+<A NAME="SEC289" HREF="FAQ.html#TOC289">Q9705</A>: I am experiencing mailbox locking problems with Sun's <B>mailtool</B> used
        over a network.
 
 
@@ -6580,7 +6707,7 @@ A9705: Under the "Expert" settings of mailtool is a option to turn on "Use
        to hit the "done" button to make it release the lock.
 
 </P>
-<A NAME="SEC287" HREF="FAQ.html#TOC287">Q9706</A>: Exim has been crashing on my Solaris x86 system, apparently while
+<A NAME="SEC290" HREF="FAQ.html#TOC290">Q9706</A>: Exim has been crashing on my Solaris x86 system, apparently while
        running DBM functions.
 
 
@@ -6590,7 +6717,7 @@ A9706: The use of ndbm with gcc has caused problems on x86 Solaris systems.
        WS compiler with ndbm, has fixed this in the past.
 
 </P>
-<A NAME="SEC288" HREF="FAQ.html#TOC288">Q9707</A>: The exiwhat utility isn't working for me on a Solaris 2 system.
+<A NAME="SEC291" HREF="FAQ.html#TOC291">Q9707</A>: The exiwhat utility isn't working for me on a Solaris 2 system.
 
 
 <P>
@@ -6599,7 +6726,7 @@ A9707: Have you got <B>/usr/ucb</B> on your path? If so, it is probably picking 
        Solaris to expect the normal Solaris version of <B>ps</B>.
 
 </P>
-<A NAME="SEC289" HREF="FAQ.html#TOC289">Q9708</A>: How do I stop Sun's <B>dtcm</B> from hanging?
+<A NAME="SEC292" HREF="FAQ.html#TOC292">Q9708</A>: How do I stop Sun's <B>dtcm</B> from hanging?
 
 
 <P>
@@ -6608,7 +6735,7 @@ A9708: From qmail's FAQ: "There is a novice programming error in <B>dtcm</B>, kn
        at the time of this writing, not yet provided a patch."
 
 </P>
-<A NAME="SEC290" HREF="FAQ.html#TOC290">Q9709</A>: I want Exim to use only the resolver (i.e. ignore <B>/etc/hosts</B>), but don't
+<A NAME="SEC293" HREF="FAQ.html#TOC293">Q9709</A>: I want Exim to use only the resolver (i.e. ignore <B>/etc/hosts</B>), but don't
        want to alter the <B>nsswitch.conf</B> file in Solaris 2.
 
 
@@ -6634,10 +6761,10 @@ A9709: You need to rebuild Exim after fiddling with <B>OS/os.h-SunOS5:</B>
        that Exim uses.
 
 </P>
-<BR><H2><A NAME="SEC291" HREF="FAQ.html#TOC291">98. COOKBOOK
+<BR><H2><A NAME="SEC294" HREF="FAQ.html#TOC294">98. COOKBOOK
 
 </A></H2>
-<A NAME="SEC292" HREF="FAQ.html#TOC292">Q9801</A>: How do I configure Exim as part of TPC <B>(<A HREF="http://www.tpc.int">http://www.tpc.int</A>)?</B>
+<A NAME="SEC295" HREF="FAQ.html#TOC295">Q9801</A>: How do I configure Exim as part of TPC <B>(<A HREF="http://www.tpc.int">http://www.tpc.int</A>)?</B>
 
 
 <P>
@@ -6681,7 +6808,7 @@ A9801: (1) add <B>partial-lsearch;/etc/mail/tpc.domains</B> to <TT>local_domains
        a functioning TPC server.
 
 </P>
-<A NAME="SEC293" HREF="FAQ.html#TOC293">Q9802</A>: How do I configure Exim so that it sends mail to the outside world only
+<A NAME="SEC296" HREF="FAQ.html#TOC296">Q9802</A>: How do I configure Exim so that it sends mail to the outside world only
        from a restricted list of our local users?
 
 
@@ -6774,7 +6901,7 @@ A9802: There are several possible ways that this can be done.
            part of <B><B>user@your.domain</B>.</B>
 
 </P>
-<A NAME="SEC294" HREF="FAQ.html#TOC294">Q9803</A>: How do I configure Exim to run with SmartList?
+<A NAME="SEC297" HREF="FAQ.html#TOC297">Q9803</A>: How do I configure Exim to run with SmartList?
 
 
 <P>
@@ -6838,21 +6965,21 @@ A9803: This is what was done for Exim's own mailing list, using SmartList/
        and was written by Michelle Dick.
 
 </P>
-<A NAME="SEC295" HREF="FAQ.html#TOC295">Q9804</A>: How do I configure Exim to minic PP's "tripnote" facility?
+<A NAME="SEC298" HREF="FAQ.html#TOC298">Q9804</A>: How do I configure Exim to minic PP's "tripnote" facility?
 
 
 <P>
 A9804: See C005.
 
 </P>
-<A NAME="SEC296" HREF="FAQ.html#TOC296">Q9805</A>: How do I configure Exim to handle local parts with extensions?
+<A NAME="SEC299" HREF="FAQ.html#TOC299">Q9805</A>: How do I configure Exim to handle local parts with extensions?
 
 
 <P>
 A9805: See C010.
 
 </P>
-<A NAME="SEC297" HREF="FAQ.html#TOC297">Q9806</A>: How do I configure Exim so that only a restricted list of users can
+<A NAME="SEC300" HREF="FAQ.html#TOC300">Q9806</A>: How do I configure Exim so that only a restricted list of users can
        receive mail from external domains?
 
 
@@ -6860,7 +6987,7 @@ A9805: See C010.
 A9806: See C013.
 
 </P>
-<A NAME="SEC298" HREF="FAQ.html#TOC298">Q9807</A>: I have <B><B>someuser@mydomain.com</B></B> that I only want certain users to be able
+<A NAME="SEC301" HREF="FAQ.html#TOC301">Q9807</A>: I have <B><B>someuser@mydomain.com</B></B> that I only want certain users to be able
        to mail to. How do I accomplish this?
 
 
@@ -6893,7 +7020,7 @@ A9807: This is a transport:
        file as complete addresses, including a domain.
 
 </P>
-<A NAME="SEC299" HREF="FAQ.html#TOC299">Q9808</A>: A site for which I provide secondary MX is down for some time. Is there
+<A NAME="SEC302" HREF="FAQ.html#TOC302">Q9808</A>: A site for which I provide secondary MX is down for some time. Is there
        a way to run the queue for that destination separately from the main
        queue?
 
@@ -6907,14 +7034,14 @@ A9808: No, because Exim does not have the concept of "the queue for that
        BSMTP files. There is an example of the latter approach in C014.
 
 </P>
-<A NAME="SEC300" HREF="FAQ.html#TOC300">Q9809</A>: How do I implement VERP (Variable Envelope Return Paths) in Exim?
+<A NAME="SEC303" HREF="FAQ.html#TOC303">Q9809</A>: How do I implement VERP (Variable Envelope Return Paths) in Exim?
 
 
 <P>
 A9809: See C017.
 
 </P>
-<A NAME="SEC301" HREF="FAQ.html#TOC301">Q9810</A>: I'd like to make a copy of all outgoing messages to a local mailbox. Is
+<A NAME="SEC304" HREF="FAQ.html#TOC304">Q9810</A>: I'd like to make a copy of all outgoing messages to a local mailbox. Is
        there a solution for this using an Exim filter?
 
 
@@ -6959,10 +7086,10 @@ A9810: The following filter makes a copy of every message, except for delivery
        This takes copies of messages whose From: header contains <B>your.domain</B>
        and whose To: and Cc: headers contain at least one address that does not
        contain <B>your.domain.</B> See also 
-        <A HREF="FAQ.html#SEC308">Q9817</A>.
+        <A HREF="FAQ.html#SEC311">Q9817</A>.
 
 </P>
-<A NAME="SEC302" HREF="FAQ.html#TOC302">Q9811</A>: I want to make a copy of outgoing messages to a specific file for each
+<A NAME="SEC305" HREF="FAQ.html#TOC305">Q9811</A>: I want to make a copy of outgoing messages to a specific file for each
        user in a specific directory, using a "save" command in a system filter.
        How can I arrange for Exim to write to these files under the correct
        UID/GID?
@@ -6992,7 +7119,7 @@ A9811: You need to set up a special transport and tell Exim to use it for
        use <TT>user=exim</TT> and do all the writing under the same UID/GID.
 
 </P>
-<A NAME="SEC303" HREF="FAQ.html#TOC303">Q9812</A>: How can I keep an archive of all mail for some specific local email
+<A NAME="SEC306" HREF="FAQ.html#TOC306">Q9812</A>: How can I keep an archive of all mail for some specific local email
        addresses?
 
 
@@ -7012,10 +7139,10 @@ A9812: You could use a system filter, along the lines of
        this, you will need to set <TT>message_filter_file_transport</TT> to point to an
        appropriate transport which includes a setting of "user" to specify
        which uid to run the saving under, as is described in 
-        <A HREF="FAQ.html#SEC302">Q9811</A>.
+        <A HREF="FAQ.html#SEC305">Q9811</A>.
 
 </P>
-<A NAME="SEC304" HREF="FAQ.html#TOC304">Q9813</A>: How can I configure Exim to provide a vacation message when there are
+<A NAME="SEC307" HREF="FAQ.html#TOC307">Q9813</A>: How can I configure Exim to provide a vacation message when there are
        no local users on my mail hub?
 
 
@@ -7023,7 +7150,7 @@ A9812: You could use a system filter, along the lines of
 A9813: See C019.
 
 </P>
-<A NAME="SEC305" HREF="FAQ.html#TOC305">Q9814</A>: We want to be able to temporarily lock out a user by disabling the
+<A NAME="SEC308" HREF="FAQ.html#TOC308">Q9814</A>: We want to be able to temporarily lock out a user by disabling the
        password and moving the home directory to another place. How can we
        arrange to reject mail for users in this state?
 
@@ -7071,7 +7198,7 @@ A9814: Change the home directory pointer in the passwd file to something
        instead of setting <TT>match_directory</TT>.
 
 </P>
-<A NAME="SEC306" HREF="FAQ.html#TOC306">Q9815</A>: I need an alias, say "fakeaddress" that should receive a message,
+<A NAME="SEC309" HREF="FAQ.html#TOC309">Q9815</A>: I need an alias, say "fakeaddress" that should receive a message,
        strip all reply-to: headers present, substitute another one pointing to
        "otheraddress" and forward a message to "realaddress".
 
@@ -7094,20 +7221,20 @@ A9815: Add this director:
        the fixed values shown above.
 
 </P>
-<A NAME="SEC307" HREF="FAQ.html#TOC307">Q9816</A>: How can I set up Exim to work with Listar?
+<A NAME="SEC310" HREF="FAQ.html#TOC310">Q9816</A>: How can I set up Exim to work with Listar?
 
 
 <P>
 A9816: See <B><A HREF="http://www.cs.huji.ac.il/~vadik/listar-exim/.">http://www.cs.huji.ac.il/~vadik/listar-exim/.</A></B>
 
 </P>
-<A NAME="SEC308" HREF="FAQ.html#TOC308">Q9817</A>: I need to take copies of all incoming and outgoing mail for certain
+<A NAME="SEC311" HREF="FAQ.html#TOC311">Q9817</A>: I need to take copies of all incoming and outgoing mail for certain
        users. For each user there may be a different monitoring address.
 
 
 <P>
 A9817: You can adapt the filter solution given in 
-        <A HREF="FAQ.html#SEC301">Q9810</A> by adding a test for
+        <A HREF="FAQ.html#SEC304">Q9810</A> by adding a test for
        the relevant local parts. Create a file containing lines like this:
 
 </P>
@@ -7136,7 +7263,7 @@ A9817: You can adapt the filter solution given in
        because Exim caches the results of successful lookups.
 
 </P>
-<A NAME="SEC309" HREF="FAQ.html#TOC309">Q9818</A>: How can I add a disclaimer to the end of every message?
+<A NAME="SEC312" HREF="FAQ.html#TOC312">Q9818</A>: How can I add a disclaimer to the end of every message?
 
 
 <P>
@@ -7149,16 +7276,16 @@ A9818: This isn't as easy as it appears. You cannot just add text to the bottom
        their .sig files).
 
 </P>
-<A NAME="SEC310" HREF="FAQ.html#TOC310">Q9819</A>: I would like to append a simple advertisement text to all outgoing
+<A NAME="SEC313" HREF="FAQ.html#TOC313">Q9819</A>: I would like to append a simple advertisement text to all outgoing
        and local mails.
 
 
 <P>
 A9819: See 
-        <A HREF="FAQ.html#SEC309">Q9818</A>.
+        <A HREF="FAQ.html#SEC312">Q9818</A>.
 
 </P>
-<A NAME="SEC311" HREF="FAQ.html#TOC311">Q9820</A>: How can I configure Exim so that all mails adressed to
+<A NAME="SEC314" HREF="FAQ.html#TOC314">Q9820</A>: How can I configure Exim so that all mails adressed to
        <B><B>something@username.domain.net</B></B> get delivered to <B>/var/spool/mail/username</B>?
 
 
@@ -7187,7 +7314,7 @@ A9820: There are several possibilities, depending on exactly how you are set
        This should be the first director.
 
 </P>
-<A NAME="SEC312" HREF="FAQ.html#TOC312">Q9821</A>: How do I get exim not to add a Sender: header to locally originated
+<A NAME="SEC315" HREF="FAQ.html#TOC315">Q9821</A>: How do I get exim not to add a Sender: header to locally originated
        mail?
 
 
@@ -7221,15 +7348,15 @@ A9821: It only adds it if the From: header doesn't correspond to the user
         <A HREF="FAQ.html#SEC154">Q0603</A>.
 
 </P>
-<A NAME="SEC313" HREF="FAQ.html#TOC313">Q9822</A>: How can I get Exim to work with mailman?
+<A NAME="SEC316" HREF="FAQ.html#TOC316">Q9822</A>: How can I get Exim to work with mailman?
 
 
 <P>
 A9822: The Exim mailing list uses the configuration that is given in the "how
-       to" information at <B><A HREF="http://www.exim.org/howto/mailman.html.">http://www.exim.org/howto/mailman.html.</A></B>
+       to" information at <B><A HREF="http://www.exim.org/howto/mailman.html">http://www.exim.org/howto/mailman.html.</A></B>
 
 </P>
-<A NAME="SEC314" HREF="FAQ.html#TOC314">Q9823</A>: Is there any way to have messages sent to a specific local address
+<A NAME="SEC317" HREF="FAQ.html#TOC317">Q9823</A>: Is there any way to have messages sent to a specific local address
        delayed by - say - 24 hours?
 
 
@@ -7250,7 +7377,7 @@ A9823: Using Exim 3.10 or later, the answer is "yes". Set up a <B>smartuser</B>
        the address. You may want to set a special retry rule for it.
 
 </P>
-<BR><H2><A NAME="SEC315" HREF="FAQ.html#TOC315">99. LIST OF SAMPLE CONFIGURATIONS
+<BR><H2><A NAME="SEC318" HREF="FAQ.html#TOC318">99. LIST OF SAMPLE CONFIGURATIONS
 
 </A></H2>
 <P>
@@ -7260,125 +7387,125 @@ with names of the form Fnnn are filter file fragments.
 
 </P>
 <P>
-<a href="config.samples/C001">C001:</a>  "This config will support delivery across multiple systems using NIS to
+C001:  "This config will support delivery across multiple systems using NIS to
        look up delivery addresses from the <B>mail.aliases</B> database."
 
 </P>
 <P>
-<a href="config.samples/C002">C002:</a>  "Although exim not intended for use in UUCP environment (it doesn't
+C002:  "Although exim not intended for use in UUCP environment (it doesn't
        know anything about bang!path addresses), I'm successfully using it for
        delivering mail to UUCP clients."
 
 </P>
 <P>
-<a href="config.samples/C003">C003:</a>  "I've read down through 
+C003:  "I've read down through 
         <A HREF="FAQ.html#SEC152">Q0601</A> and your request for UUCP examples. Here's
        how I'm doing it." (This example uses routers.)
 
 </P>
 <P>
-<a href="config.samples/C004">C004:</a>  "Here's a BSMTP over UUCP [configuration] - the transport is Taylor/GNU
+C004:  "Here's a BSMTP over UUCP [configuration] - the transport is Taylor/GNU
        UUCP - which takes the long option types." (This example uses
        directors.)
 
 </P>
 <P>
-<a href="config.samples/C005">C005:</a>  "I am using a virus scanner program that is invoked by a pipe, scans the
+C005:  "I am using a virus scanner program that is invoked by a pipe, scans the
        mail and re-invokes Exim to do the delivery. The pipe is invoking a perl
        script that tries to unpack and MIME, zip and other archives and then
        applies the McAfee scanner on the results."
 
 </P>
 <P>
-<a href="config.samples/C006">C006:</a>  "This is how I have configured a PP-inspired vacationnote, there is
+C006:  "This is how I have configured a PP-inspired vacationnote, there is
        (was?) such a feature in PP. The user makes a file "tripnote" in his/her
        home directory, the message is passed to the sender once with a short
        leading text."
 
 </P>
 <P>
-<a href="config.samples/C007">C007:</a>  "If I host a domain <B>foo.dom</B> on my machine as a virtual domain I expect
+C007:  "If I host a domain <B>foo.dom</B> on my machine as a virtual domain I expect
        it to be completely virtual and separate from other mail domains that
        end up on my machine."
 
 </P>
 <P>
-<a href="config.samples/C008">C008:</a>  "And of course it is possible to do a very interesting solution to
+C008:  "And of course it is possible to do a very interesting solution to
        this [virtual domains] using LDAP."
 
 </P>
 <P>
-<a href="config.samples/C009">C009:</a>  "These are suggested parts of a configuration for looking up users in
+C009:  "These are suggested parts of a configuration for looking up users in
        <B><B>/etc/passwd.domain</B></B> rather than in <B>/etc/passwd</B> ..."
 
 </P>
 <P>
-<a href="config.samples/C010">C010:</a>  "One of our customers is looking for us to support addresses of the form
+C010:  "One of our customers is looking for us to support addresses of the form
        <B><B>username+extension@domain.com</B>,</B> primarily for use with procmail."
 
 </P>
 <P>
-<a href="config.samples/C011">C011:</a>  "Thanks to Philip and others I now have my ISP style config built and
+C011:  "Thanks to Philip and others I now have my ISP style config built and
        therefore am posting the final configuration fragments to the list in
        case anyone else wants to do a similar thing."
 
 </P>
 <P>
-<a href="config.samples/C012">C012:</a>  "I've written a small chapter how-to configure Exim for use with UUCP
+C012:  "I've written a small chapter how-to configure Exim for use with UUCP
        (mostly condensed from the exim-user mailing list plus some
        experimenting) and would be glad if it could be included in the Exim
        documentation."
 
 </P>
 <P>
-<a href="config.samples/C013">C013:</a>  "I've take some tips from the FAQ about permitting only certain users
+C013:  "I've take some tips from the FAQ about permitting only certain users
        to send to external mail and came up with my own for the receiving
        part."
 
 </P>
 <P>
-<a href="config.samples/C014">C014:</a>  "If I have a situation where a site I MX for has a known outage I stash
+C014:  "If I have a situation where a site I MX for has a known outage I stash
        all their mail into a directory in BSMTP format."
 
 </P>
 <P>
-<a href="config.samples/C015">C015:</a>  "This approach to virtual domains has helped me a great deal, and is so
+C015:  "This approach to virtual domains has helped me a great deal, and is so
        easy to maintain (add and modify as appropriate)."
 
 </P>
 <P>
-<a href="config.samples/C016">C016:</a>  "Herewith my configuration." (A complete configuration, including simple
+C016:  "Herewith my configuration." (A complete configuration, including simple
        virtual domains, along the lines of C015).
 
 </P>
 <P>
-<a href="config.samples/C017">C017:</a>  "I have gotten the new VERP feature of Exim 2.054 working in test, along
+C017:  "I have gotten the new VERP feature of Exim 2.054 working in test, along
        with some supporting programs to handle bounces that do come back."
 
 </P>
 <P>
-<a href="config.samples/C018">C018:</a>  "This Majordomo configuration removes a lot of the aliases, and
+C018:  "This Majordomo configuration removes a lot of the aliases, and
        automates a lot of the other functions based on whether the files or
        directories exist."
 
 </P>
 <P>
-<a href="config.samples/C019">C019:</a>  "The following configuration file entries can be used to provide a
+C019:  "The following configuration file entries can be used to provide a
        'vacation'-style function for a mailhub which has no local users."
 
 </P>
 <P>
-<a href="config.samples/C020">C020:</a>  "I was asked for a copy of the programs we were using to mail
+C020:  "I was asked for a copy of the programs we were using to mail
        everybody."
 
 </P>
 <P>
-<a href="config.samples/C021">C021:</a>  "Here is some sample code that might be useful for handling
+C021:  "Here is some sample code that might be useful for handling
        X-Failed-Recipients headers generated by Exim, with mailing lists."
 
 </P>
 <P>
-<a href="config.samples/C022">C022:</a>  "This is the Exim configuration file of a machine which delivers mail to
+C022:  "This is the Exim configuration file of a machine which delivers mail to
        several local domains where the mail is delivered locally, several hairy
        domains, handled as described below, and a half-virtual domain, which is
        first processed by its special alias file, then processed as other local
@@ -7386,42 +7513,42 @@ with names of the form Fnnn are filter file fragments.
 
 </P>
 <P>
-<a href="config.samples/C023">C023:</a>  A Perl script and instructions for hooking it into Exim in order to
+C023:  A Perl script and instructions for hooking it into Exim in order to
        handle disposition-notification-to and return-receipt-to by using a
        shadow transport to send copies of delivered messages to the script.
 
 </P>
 <P>
-<a href="config.samples/C024">C024:</a>  "In case anybody wants to use a MySql database to store aliases this is
+C024:  "In case anybody wants to use a MySql database to store aliases this is
        how I managed to get my site working."
 
 </P>
 <P>
-<a href="config.samples/C025">C025:</a>  "As promised here is the way I got Exim to delver to Cyrus mailboxes if
+C025:  "As promised here is the way I got Exim to delver to Cyrus mailboxes if
        the user exists in the MySql database."
 
 </P>
 <P>
-<a href="config.samples/C026">C026:</a>  "The following configuration and program will allow messages going to
+C026:  "The following configuration and program will allow messages going to
        AOL only, to be filtered thru a Perl script. This Perl script will
        convert any URL's to the HTML syntax. In addition, the transport will
        use VERP to send a unique envelope sender with each message."
 
 </P>
 <P>
-<a href="config.samples/C027">C027:</a>  "This is an FYI to demonstrate how to have exim work with SSL using the
+C027:  "This is an FYI to demonstrate how to have exim work with SSL using the
        stunnel wrapper and its underlying OpenSSL libraries and toolkit."
 
 </P>
 <P>
-<a href="config.samples/C028">C028:</a>  "This Python script reads from stdin and writes to stdout. It strips all
+C028:  "This Python script reads from stdin and writes to stdout. It strips all
        the MIME attachments from a mail message that are one of the mime types
        listed on the command line. Exim can use it in its configuration file,
        for example, as follows:"
 
 </P>
 <P>
-<a href="config.samples/C029">C029:</a>  "The standard way to connect one's MTA to a list manager seems to be to
+C029:  "The standard way to connect one's MTA to a list manager seems to be to
        add a set of aliases for <EM>every</EM> list one creates. Once upon a time, I
        crufted a set of configs from Smail to work with majordomo, to
        automaticaly recognize the standard patterns, for all lists in
@@ -7430,7 +7557,7 @@ with names of the form Fnnn are filter file fragments.
 
 </P>
 <P>
-<a href="config.samples/C030">C030:</a>  "I am currently configuring an exim for a site that will to mail
+C030:  "I am currently configuring an exim for a site that will to mail
        hosting for several domains. I want the domain holders to have control
        over 'their' alias files, being able to create their own aliases.
        However, I don't want them to have postmaster, abuse and other role
@@ -7438,12 +7565,12 @@ with names of the form Fnnn are filter file fragments.
 
 </P>
 <P>
-<a href="config.samples/C031">C031:</a>  "These are config file snippets for handling certain remote addresses as
+C031:  "These are config file snippets for handling certain remote addresses as
        local, and making only real external addresses visible to users."
 
 </P>
 <P>
-<a href="config.samples/C032">C032:</a>  "This is the Exim Nervous Mailbox Quota Suite.  It does not impose
+C032:  "This is the Exim Nervous Mailbox Quota Suite.  It does not impose
        hard quotas on users' mailboxes, but it makes a user nervous by
        putting all his mail in a secondary mailbox, inaccessible to the
        user, when he is over his quota.  When the user clears his
@@ -7453,34 +7580,39 @@ with names of the form Fnnn are filter file fragments.
 
 </P>
 <P>
-<a href="config.samples/C033">C033:</a>  "Here's our current automatic vacation recipe".
+C033:  "Here's our current automatic vacation recipe".
 
 </P>
 <P>
-<a href="config.samples/C034">C034:</a>  "This is a HOW-TO for setting up Exim to support SMTP authentication
+C034:  "This is a HOW-TO for setting up Exim to support SMTP authentication
        under different environments, including regular password files, PAM
        and NIS."
 
 </P>
 <P>
-<a href="config.samples/F001">F001:</a>  "I thought that the rest of the list may be interested in reviewing our
+C035:  "These configurations enable exim and hylafax <B>(www.hylafax.org)</B>  work
+       together, I mean sending fax by email <B><B>(user@123456.fax</B>)."</B>
+
+</P>
+<P>
+F001:  "I thought that the rest of the list may be interested in reviewing our
        filter as a starting point for their own system message filter."
 
 </P>
 <P>
-<a href="config.samples/F002">F002:</a>  "... program which refused mail from unknown addresses until they mailed
+F002:  "... program which refused mail from unknown addresses until they mailed
        me promising not to spam me ... since I'd already thought through how
        to do it in Exim, and knew it'd be slightly easier than falling out of
        bed, I went ahead and did it."
 
 </P>
 <P>
-<a href="config.samples/F003">F003:</a>  "Here's four checks installed in our system wide filter that knock out
+F003:  "Here's four checks installed in our system wide filter that knock out
        a lot of otherwise hard to detect rubbish."
 
 </P>
 <P>
-<a href="config.samples/F004">F004:</a>  "This is an Exim filter snippet to change locally-generated Message-Id:
+F004:  "This is an Exim filter snippet to change locally-generated Message-Id:
        and Resent-Message-Id: headers to world-unique values."
 
 </P>
