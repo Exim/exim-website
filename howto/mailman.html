@@ -1,32 +1,32 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html>
   <head>
-    <title>HOWTO - Using exim and mailman together</title>
+    <title>HOWTO - Using exim and Mailman together</title>
   </head>
 
   <body bgcolor="#FFFFFF" text="#00005A" link="#FF6600" alink="#FF9933" vlink="#990000">
-    <h1>HOWTO - Using exim and mailman together</h1>
+    <h1>HOWTO - Using exim and Mailman together</h1>
 
     <p>Mailman is a list manager with web front end and built in
       archiving functions.  Details can be found at <a href="http://www.list.org/">http://www.list.org/</a></p>
 
     <h2>Mailman configuration</h2>
 
-    <p>There is no mailman configuration needed other than the
-    standard options detailed in the mailman install documentation.
-    The exim configuration is transparent to mailman.  The uid/gid
-    settings for mailman must match those in the config fragments
+    <p>There is no Mailman configuration needed other than the
+    standard options detailed in the Mailman install documentation.
+    The exim configuration is transparent to Mailman.  The uid/gid
+    settings for Mailman must match those in the config fragments
     given below.</p>
 
     <h2>Exim configuration</h2>
 
     <p>The exim configuration is built so that a list created within
-    mailman automagically appears to exim without the need for
+    Mailman automagically appears to exim without the need for
     additional alias files etc to be changed.</p>
 
     <p>The drawback of this configuration is that it will work poorly
     on systems supporting lists in several different mail domains -
-    for that matter mailman itself has poor support for this right
+    for that matter Mailman itself has poor support for this right
     now. This may change in the future</p>
 
     <p>The configuration file segments included are to be built on top
@@ -44,7 +44,7 @@
     <tt>mailman-admin</tt> (plus any other global contact addresses
     for the list master).  These addresses point to a (or some - not
     necessarily the same for all of these aliases) human rather than
-    being piped into mailman. You do <b>not</b> need to put per-list
+    being piped into Mailman. You do <b>not</b> need to put per-list
     entries into the system alias file, and doing so will most likely
     break things since the user id used for delivery is likely to be
     incorrect or not set (which causes an exim delivery time config
@@ -52,7 +52,7 @@
 
     <p>There are 3 config file sections below which need pasting into
     the appropriate parts of the main exim config file.  The first one
-    may also need tailoring to your mailman configuration</p>
+    may also need tailoring to your Mailman configuration</p>
 
     <h4>Main config file section</h4>
 <pre>
@@ -60,11 +60,11 @@
 ## Tailor these to fit your installation
 ## pretty much everything else should just fit...
 ##
-# home dir for mailman
+# home dir for Mailman
 MAILMAN_HOME=/home/mailman
 # wrapper script for mailman
 MAILMAN_WRAP=MAILMAN_HOME/mail/wrapper
-# user and group for mailman
+# user and group for Mailman
 MAILMAN_UID=exim
 MAILMAN_GID=exim
 </pre>
@@ -170,16 +170,16 @@ you like receiving tons of mail when a host is down.</p>
    for a list.  If you delete lists by foul means, be aware of
    this.</li>
 
-   <li>If you are getting exim or mailman complaining about user ids
+   <li>If you are getting exim or Mailman complaining about user ids
    when you send mail to a list, check that the MAILMAN_UID and
-   MAILMAN_GID match those of mailman itself.  Also make sure you do
+   MAILMAN_GID match those of Mailman itself.  Also make sure you do
    <b>not</b> have aliases in the main alias file for the list.</li>
 </ul>
 
     <h2>Other Tweaks</h2> 
 
     <p>One solution passed to me for handling virtual domains was -
-    <i>Since I use mailman in a virtual domain configuration with a
+    <i>Since I use Mailman in a virtual domain configuration with a
     separate installation for each virtual domain, I did a slight
     modification like this:</i></p>
 
@@ -232,7 +232,7 @@ delay_warning = 26h
 ##delay_warning_condition = "${if match{$h_precedence:}{(?i)bulk|list|junk}{no}{yes}}"
 #
 # Verify receipient addresses on everything except local injects
-# DO NOT verify addresses from mailman - this would slow down
+# DO NOT verify addresses from Mailman - this would slow down
 # the acceptance of messages dramatically
 receiver_verify_hosts = !127.0.0.1/8:0.0.0.0/0
 sender_verify
@@ -265,6 +265,6 @@ exim-users-admin@www.exim.org
     <hr>
     <address><a href="mailto:Postmaster@exim.org">Nigel Metheringham</a></address>
 <!-- Created: Mon Aug 25 15:46:41 BST 1997 -->
-    <h4>$Id: mailman.html,v 1.1.1.1 2000/05/22 19:54:43 nigel Exp $</h4>
+    <h4>$Id: mailman.html,v 1.2 2000/05/30 19:59:57 nigel Exp $</h4>
   </body>
 </html>
