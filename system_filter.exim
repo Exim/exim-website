@@ -1,5 +1,6 @@
 # Exim filter
-## Version: 0.10
+## Version: 0.12
+#	$Id: system_filter.exim,v 1.4 2001/03/20 21:24:40 nigel Exp $
 
 ## If you haven't worked with exim filters before, read
 ## the install notes at the end of this file.
@@ -53,13 +54,12 @@ endif
 
 # Look for single part MIME messages with suspicious name extensions
 # Check Content-Type header [vb2_regexp]
-if $header_content-type: matches "(?:file)?name=(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat|scr|pif)\"|[\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat|scr|pif))"
+if $header_content-type: matches "(?:file)?name=(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif)\"|[\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif))"
 then
   fail text "This message has been rejected because it has\n\
 	     \ta potentially executable attachment $1\n\
 	     \tThis form of attachment has been used by\n\
-             \trecent viruses such as that described in\n\
-	     \thttp://www.fsecure.com/v-descs/love.htm\n\
+             \trecent viruses or other malware.\n\
 	     \tIf you meant to send this file then please\n\
 	     \tpackage it up as a zip file and resend it."
   seen finish
@@ -69,13 +69,12 @@ endif
 # in emails.   These were used as the basis for 
 # the ILOVEYOU virus and its variants
 # [vb_regexp]
-if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat|scr|pif)\"|[\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat|scr|pif))[\\\\s;]"
+if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif)\"|[\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif))[\\\\s;]"
 then
   fail text "This message has been rejected because it has\n\
 	     \ta potentially executable attachment $1\n\
 	     \tThis form of attachment has been used by\n\
-             \trecent viruses such as that described in\n\
-	     \thttp://www.fsecure.com/v-descs/love.htm\n\
+             \trecent viruses or other malware.\n\
 	     \tIf you meant to send this file then please\n\
 	     \tpackage it up as a zip file and resend it."
   seen finish
@@ -105,6 +104,11 @@ endif
 #	Removed exclusion for error messages - this is a little nasty
 #	since it has other side effects, hence we do still exclude
 #	on unix like error messages
+# 0.11 20 March, 2001
+#	Added CMD extension, tidied docs slightly, added RCS tag
+#	** Missed changing version number at top of file :-(
+# 0.12 10 May, 2001
+#	Added HTA extension
 #
 #### Install Notes
 #
@@ -121,6 +125,13 @@ endif
 # at the top the line:-
 #	message_filter = /etc/exim/system_filter.exim
 #	message_body_visible = 5000
+#
+# You may also want to set the message_filter_user & message_filter_group
+# options, but they default to the standard exim user and so can
+# be left untouched.  The other message_filter_* options are only
+# needed if you modify this to do other functions such as deliveries.
+# The main exim documentation is quite thorough and so I see no need
+# to expand it here...
 #
 # Any message that matches the filter will then be bounced.
 # If you wish you can change the error message by editing it
@@ -155,7 +166,9 @@ endif
 #	|jse?
 #	|exe
 #	|com
+#	|cmd
 #	|shs
+#	|hta
 #	|bat
 #	|scr
 #	|pif)
@@ -166,7 +179,9 @@ endif
 #	|jse?
 #	|exe
 #	|com
+#	|cmd
 #	|shs
+#	|hta
 #	|bat
 #	|scr
 #	|pif)
