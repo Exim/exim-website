@@ -14,7 +14,18 @@
       work.  In any case this is a theft of service and needs to be
       stopped.</p>
 
-    <h2>Relay Configuration Options</h2>
+    <h2>Exim v4.x Relay Control</h2>
+
+    <p>Exim v4.x has completely different and considerably more
+    flexible mail policy controls than earlier versions.  The
+    documentation is also considerable more complete and the default
+    configuration file has a well commented section on relay control
+    (in the <tt>RCPT TO</tt> ACL.  You should instead read the
+    specification section on <a
+    href="http://www.exim.org/exim-html-4.20/doc/html/spec_37.html">Access
+    Control Lists</a>.</p>
+
+    <h2>Exim v3.x Relay Configuration Options</h2>
 
     <p>These are fully detailed in the <a href="../exim-html-3.20/doc/html/spec.html"
     target="_top">Exim Specification Document</a>. The specific
@@ -66,6 +77,6 @@ host_accept_relay = 127.0.0.1/8
     <hr>
     <address><a href="mailto:Postmaster@exim.org">Nigel Metheringham</a></address>
 <!-- Created: Mon Aug 25 15:46:41 BST 1997 -->
-    <h4>$Id: relay.html,v 1.1.1.1 2000/05/22 19:54:43 nigel Exp $</h4>
+    <h4>$Id: relay.html,v 1.2 2001/05/10 11:24:39 nigel Exp $</h4>
   </body>
 </html>
