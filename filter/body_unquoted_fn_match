@@ -1,0 +1,9 @@
+# $Id$
+#
+# Match a body attachment with unquoted filename
+#
+#include header_regexp
+  ([\w.-]+\.					# unquoted filename.ext
+#include extension_regexp
+  )						# end of filename capture
+  [\s;]						# trailing ;/space/newline

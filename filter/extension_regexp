@@ -1,0 +1,14 @@
+# $Id$
+# matches the list of extensions
+# uses non-capturing brackets
+	(?:vb[se]				# list of extns
+	|ws[fh]
+	|jse?
+	|exe
+	|com
+	|cmd
+	|shs
+	|hta
+	|bat
+	|scr
+	|pif)

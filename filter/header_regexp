@@ -1,3 +1,5 @@
+# $Id$
+# Matches the header part
   (?:Content-					# start of content header
   (?:Type: (?>\s*)				# rest of c/t header
     [\w-]+/[\w-]+				# content-type (any)
@@ -6,29 +8,3 @@
   ;(?>\s*)					# ; space or newline
   (?:file)?name=				# filename=/name= 
   |begin (?>\s+) [0-7]{3,4} (?>\s+)) 		# begin octal-mode
-  (\"[^\"]+\.					# quoted filename.
-	(?:vb[se]				# list of extns
-	|ws[fh]
-	|jse?
-	|exe
-	|com
-	|cmd
-	|shs
-	|hta
-	|bat
-	|scr
-	|pif)
-	\"					# end quote
-  |[\w.-]+\.					# unquoted filename.ext
-	(?:vb[se]				# list of extns
-	|ws[fh]
-	|jse?
-	|exe
-	|com
-	|shs
-	|hta
-	|bat
-	|scr
-	|pif)
-  )						# end of filename capture
-  [\s;]						# trailing ;/space/newline
