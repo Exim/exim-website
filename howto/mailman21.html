@@ -1,9 +1,16 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<!-- -*-html-*- -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
   <head>
     <title>HOWTO - Using Exim 4 and Mailman together</title>
+    <style type="text/css">
+      body { color: #00005a; background: white; }
+      a:link { color: #ff6600; }
+      a:visited { color: #990000; }
+      a:hover { color: #ff9933; }
+    </style>
   </head>
-  <body bgcolor="#ffffff" text="#00005a" link="#ff6600" alink="#ff9933" vlink="#990000">
+  <body>
     <h1>HOWTO - Using Exim 4 and Mailman 2.1 together</h1>
 
     <p>Mailman is a list manager with web front end and built in
@@ -12,7 +19,7 @@
     documentation describes the configuration of Exim (version 4) to
     work with Mailman version 2.1</p>
 
-    <a name="index"><h2>Index</h2></a>
+    <h2><a name="index">Index</a></h2>
 
     <ul>
       <li><a href="#scope">Scope of this document</a></li>
@@ -50,8 +57,7 @@
     <li><a href="#dochis">Document History</a></li>
   </ul>
 
-    <a name="scope">&nbsp;</a>
-    <a href="#index"><h2>Scope of this document</h2></a>
+    <h2><a href="#index"><a name="scope">Scope of this document</a></a></h2>
 
     <p>This document describes how to set up a basic working
     configuration using Exim 4 as an MTA for the Mailman MLM.  The
@@ -70,11 +76,9 @@
     Mailman or exim is not covered here - the documentation for the
     programs concerned should be read for this information.</p>
 
-    <a name="basic">&nbsp;</a>
-    <a href="#index"><h2>Basic Configuration</h2></a>
+    <h2><a href="#index"><a name="basic">Basic Configuration</a></a></h2>
 
-    <a name="mmconf">&nbsp;</a>
-    <a href="#index"><h3>Mailman configuration</h3></a>
+    <h3><a href="#index"><a name="mmconf">Mailman configuration</a></a></h3>
 
     <p>For basic operation there is no Mailman configuration needed
     other than the standard options detailed in the Mailman install
@@ -114,8 +118,7 @@
     the config file (which is the default mode of operation)</p>
 
 
-    <a name="exconf">&nbsp;</a>
-    <a href="#index"><h3>Exim configuration</h3></a>
+    <h3><a href="#index"><a name="exconf">Exim configuration</a></a></h3>
 
     <p>The Exim configuration is built so that a list created within
     Mailman automatically appears to Exim without the need for
@@ -152,8 +155,7 @@
     enforcement.  Remember that the exim daemon needs restarting
     before it sees configuration changes.</p>
 
-    <a name="maconf">&nbsp;</a>
-    <a href="#index"><h3>Main configuration settings</h3></a>
+    <h3><a href="#index"><a name="maconf">Main configuration settings</a></a></h3>
 
     <p>First, you need to add some macros to the top of your Exim
     config file.  These just make the routers and transport below a
@@ -192,8 +194,7 @@
   MM_LISTCHK=MM_HOME/lists/${lc::$local_part}/config.pck
 </pre>
 
-    <a name="roconf">&nbsp;</a>
-    <a href="#index"><h3>Exim Router</h3></a>
+    <h3><a href="#index"><a name="roconf">Exim Router</a></a></h3>
 
     <p>This router picks up all the addresses going to the Mailman
     lists.  Initially it selects only the domains that have may have
@@ -222,8 +223,7 @@
     transport = mailman_transport
 </pre>
 
-    <a name="taconf">&nbsp;</a>
-    <a href="#index"><h3>Exim Transport</h3></a>
+    <h3><a href="#index"><a name="taconf">Exim Transport</a></a></h3>
 
     <p>The transport for Exim 4 can be placed anywhere where under the
     <tt>begin transports</tt> line of your Exim config file.</p>
@@ -250,8 +250,7 @@
 </pre>
 
 
-    <a name="batune">&nbsp;</a>
-    <a href="#index"><h2>Basic mailing list MTA tuning</h2></a>
+    <h2><a href="#index"><a name="batune">Basic mailing list MTA tuning</a></a></h2>
 
     <p>Exim has a lot configurability, especially where the ACL
     (Access Control Lists) used during SMTP reception are concerned.
@@ -261,8 +260,7 @@
     filtering traffic that is going into the mailing list, however
     </p>
 
-    <a name="retune">&nbsp;</a>
-    <a href="#index"><h3>Receiver verification</h3></a>
+    <h3><a href="#index"><a name="retune">Receiver verification</a></a></h3>
 
     <p>Exim's receiver verification feature is very useful -- it lets
     Exim reject unrouteable addresses at SMTP time.  However, this is
@@ -309,8 +307,7 @@
   accept  hosts         = 127.0.0.1
 </pre>
 
-    <a name="rctune">&nbsp;</a>
-    <a href="#index"><h3>Tuning of numbers of recipients</h3></a>
+    <h3><a href="#index"><a name="rctune">Tuning of numbers of recipients</a></a></h3>
 
     <p>By default Mailman will send up to 500 recipients on each
     message it injects into exim.  However this is not necessarily a
@@ -344,11 +341,9 @@
     issue if you are pushing your system near its operational
     limits.</p>
 
-    <a name="verpin">&nbsp;</a>
-    <a href="#index"><h2>Doing VERP and personalisation with exim and Mailman</h2></a>
+    <h2><a href="#index"><a name="verpin">Doing VERP and personalisation with exim and Mailman</a></a></h2>
 
-    <a name="verpmm">&nbsp;</a>
-    <a href="#index"><h3>VERP within Mailman</h3></a>
+    <h3><a href="#index"><a name="verpmm">VERP within Mailman</a></a></h3>
 
     <p><a href="http://cr.yp.to/proto/verp.txt">VERP</a> (Variable
     Envelope Return Paths) encodes the (original) receipient address
@@ -365,7 +360,7 @@
     (return path), for each of your subscribers - this means that it
     will generate more traffic since you cannot bundle up deliveries
     together.  An <a
-    href="http://www.python.org/cgi-bin/faqw-mm.py?req=show&file=faq04.012.htp">analysis
+    href="http://www.python.org/cgi-bin/faqw-mm.py?req=show%26file=faq04.012.htp">analysis
     of the costs of VERP</a> can be found in the <a
     href="http://www.python.org/cgi-bin/faqw-mm.py">Mailman FAQ
     Wizard</a>.</p>
@@ -409,8 +404,7 @@
     day, so ideally this approach should only be taken if the lists
     have more than 20 message per day throughput.</p>
 
-    <a name="persmm">&nbsp;</a>
-    <a href="#index"><h3>Mailing list personalisation by Mailman</h3></a>
+    <h3><a href="#index"><a name="persmm">Mailing list personalisation by Mailman</a></a></h3>
 
     <p>Mailman can also personalise each message it sends out on a
     list.  This allows, for example, the recipient's own address to
@@ -434,8 +428,7 @@
     interface a new set of options has appeared in the <i>Non-digest
     options</i> section.</p>
 
-    <a name="verpex">&nbsp;</a>
-    <a href="#index"><h3>VERP expansion by exim rather than Mailman</h3></a>
+    <h3><a href="#index"><a name="verpex">VERP expansion by exim rather than Mailman</a></a></h3>
 
     <p>One drawback of VERP is that as well as increasing the
     bandwidth outgoing mail requires, it also causes Mailman to send
@@ -513,8 +506,7 @@
     <p>If you have set personalisation on any list, this will still be
     handled, and VERPed, by Mailman.</p>
 
-    <a name="virdom">&nbsp;</a>
-    <a href="#index"><h2>Virtual domains</h2></a>
+    <h2><a href="#index"><a name="virdom">Virtual domains</a></a></h2>
 
     <p>One approach to handling virtual domains is to use a separate
     Mailman installation for each virtual domain.  (Currently, this is
@@ -530,8 +522,7 @@
 
     <p>and modify the <tt>mm_domains</tt> domain list appropriately.</p>
 
-    <a name="lispol">&nbsp;</a>
-    <a href="#index"><h2>List policy management</h2></a>
+    <h2><a href="#index"><a name="lispol">List policy management</a></a></h2>
 
     <p>Most list policy handling is done within Mailman using the Web
     GUI.  However some issues may be better handled by the MTA,
@@ -550,8 +541,7 @@
     causes Mailman generated traffic to bypass the machine intensive
     checks.</p>
 
-    <a name="conpol">&nbsp;</a>
-    <a href="#index"><h3>Content scanning</h3></a>
+    <h3><a href="#index"><a name="conpol">Content scanning</a></a></h3>
 
     <p>I would recommend that mailing lists now scan for both spam and
     viruses on incoming mail - this is due to the potential for a
@@ -583,8 +573,7 @@
     which have a given spam rating (as well as bouncing messages with
     a very high rating).</p>
 
-    <a name="incpol">&nbsp;</a>
-    <a href="#index"><h3>Incoming message checks</h3></a>
+    <h3><a href="#index"><a name="incpol">Incoming message checks</a></a></h3>
 
     <p>You may wish to apply various checks to incoming messages to
     ensure that they are sane.  These may include:-</p>
@@ -600,8 +589,7 @@
     may alienate by imposing too strict a set of controls, and balance
     that against the reduced amount of unwanted bulk mail.</p>
 
-    <a name="mmapol">&nbsp;</a>
-    <a href="#index"><h3>Mailman specific ACL checks</h3></a>
+    <h3><a href="#index"><a name="mmapol">Mailman specific ACL checks</a></a></h3>
 
     <p>Lists should never receive bounce messages to the posting
     address unless the bounced message is either a forgery using the
@@ -636,8 +624,7 @@
            local_parts = \N^.*-(subscribe|unsubscribe)$\N
 </pre>
 
-    <a name="smtune">&nbsp;</a>
-    <a href="#index"><h3>SMTP callbacks</h3></a>
+    <h3><a href="#index"><a name="smtune">SMTP callbacks</a></a></h3>
 
     <p>Exim's SMTP callback feature is an even more powerful way to
     detect bogus sender addresses than normal sender verification.
@@ -666,8 +653,7 @@
     especially when the message is going to Mailman's bounce
     processor</p>
 
-    <a name="lisver">&nbsp;</a>
-    <a href="#index"><h2>List verification</h2></a>
+    <h2><a href="#index"><a name="lisver">List verification</a></a></h2>
 
     <p>This is how a set of address tests for the Exim lists look on a
     working system.  The list in question is
@@ -699,8 +685,7 @@
     that your Exim/Mailman installation is functioning perfectly,
     though!</p>
 
-    <a name="problem">&nbsp;</a>
-    <a href="#index"><h2>Possible Problems</h2></a>
+    <h2><a href="#index"><a name="problem">Possible Problems</a></a></h2>
 
     <ul>
 
@@ -732,8 +717,7 @@
 
     </ul>
 
-    <a name="dochis">&nbsp;</a>
-    <a href="#index"><h2>Document History</h2></a>
+    <h2><a href="#index"><a name="dochis">Document History</a></a></h2>
 
     <ul>
       <li>Originally written by Nigel Metheringham.</li>
@@ -750,6 +734,6 @@
     You</i>.</p>
 
     <hr>
-    <h4>$Id: mailman21.html,v 1.7 2004/06/07 12:14:31 nigel Exp $</h4>
+    <h4>$Id: mailman21.html,v 1.3 2004/06/09 11:36:59 nigel Exp $</h4>
   </body>
 </html>
