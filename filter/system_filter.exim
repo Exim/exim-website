@@ -1,11 +1,34 @@
 # Exim filter
 ## Version: 0.14
-#	$Id: system_filter.exim,v 1.4 2001/05/22 08:18:31 nigel Exp $
+#	$Id: sysfilter.tmpl,v 1.1 2001/08/15 10:01:01 nigel Exp $
 
+## Exim system filter to refuse potentially harmful payloads in
+## mail messages
+## (c) 2000-2001 Nigel Metheringham <nigel@exim.org>
+##
+##     This program is free software; you can redistribute it and/or modify
+##    it under the terms of the GNU General Public License as published by
+##    the Free Software Foundation; either version 2 of the License, or
+##    (at your option) any later version.
+##
+##    This program is distributed in the hope that it will be useful,
+##    but WITHOUT ANY WARRANTY; without even the implied warranty of
+##    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##    GNU General Public License for more details.
+##
+##    You should have received a copy of the GNU General Public License
+##    along with this program; if not, write to the Free Software
+##    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+## -A copy of the GNU General Public License is distributed with exim itself
+
+## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 ## If you haven't worked with exim filters before, read
 ## the install notes at the end of this file.
+## The install notes are not a replacement for the exim documentation
+## -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-#
+
+## -----------------------------------------------------------------------
 # Only run any of this stuff on the first pass through the
 # filter - this is an optomisation for messages that get
 # queued and have several delivery attempts
@@ -57,7 +80,7 @@ endif
 ## -----------------------------------------------------------------------
 # Look for single part MIME messages with suspicious name extensions
 # Check Content-Type header using quoted filename [content_type_quoted_fn_match]
-if $header_content-type: matches "(?:file)?name=(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif)\")"
+if $header_content-type: matches "(?:file)?name=(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|lnk|pif)\")"
 then
   fail text "This message has been rejected because it has\n\
 	     potentially executable content $1\n\
@@ -68,7 +91,7 @@ then
   seen finish
 endif
 # same again using unquoted filename [content_type_unquoted_fn_match]
-if $header_content-type: matches "(?:file)?name=([\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif))"
+if $header_content-type: matches "(?:file)?name=(.+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|lnk|pif))"
 then
   fail text "This message has been rejected because it has\n\
 	     potentially executable content $1\n\
@@ -85,7 +108,7 @@ endif
 # in emails.   These were used as the basis for 
 # the ILOVEYOU virus and its variants - many many varients
 # Quoted filename - [body_quoted_fn_match]
-if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif)\")[\\\\s;]"
+if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|lnk|pif)\")[\\\\s;]"
 then
   fail text "This message has been rejected because it has\n\
 	     a potentially executable attachment $1\n\
@@ -96,7 +119,7 @@ then
   seen finish
 endif
 # same again using unquoted filename [body_unquoted_fn_match]
-if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))([\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif))[\\\\s;]"
+if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))(.+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|lnk|pif))[\\\\s;]"
 then
   fail text "This message has been rejected because it has\n\
 	     a potentially executable attachment $1\n\
@@ -143,6 +166,12 @@ endif
 #	shorter than the limits on pre exim 3.20 filters.  This will
 #	make them significantly less efficient, but I am getting so
 #	many queries about this that requiring 3.2x appears unsupportable.
+# 0.14 15 August,2001
+#	Added .lnk extension - most requested item :-)
+#	Reformatted everything so its now built from a set of short
+#	library files, cutting down on manual duplication.
+#	Changed \w in filename detection to . - dodges locale problems
+#	Explicit application of GPL after queries on license status
 #
 #### Install Notes
 #
@@ -182,45 +211,36 @@ endif
 #
 #### BASIS
 #
-# The regexp that is used to pickup MIME/uuencoded parts is replicated
-# below (in perl format).  You need to remember that exim converts
-# newlines to spaces in the message_body variable.
+# The regexp that is used to pickup MIME/uuencoded body parts with
+# quoted filenames is replicated below (in perl format).  
+# You need to remember that exim converts newlines to spaces in
+# the message_body variable.
 #
-#  (?:Content-					# start of content header
-#  (?:Type: (?>\s*)				# rest of c/t header
-#    [\w-]+/[\w-]+				# content-type (any)
-#    |Disposition: (?>\s*)			# content-disposition hdr
-#    attachment)					# content-disposition
-#  ;(?>\s*)					# ; space or newline
-#  (?:file)?name=				# filename=/name= 
-#  |begin (?>\s+) [0-7]{3,4} (?>\s+)) 		# begin octal-mode
-#  (\"[^\"]+\.					# quoted filename.
-#	(?:vb[se]				# list of extns
-#	|ws[fh]
-#	|jse?
-#	|exe
-#	|com
-#	|cmd
-#	|shs
-#	|hta
-#	|bat
-#	|scr
-#	|pif)
-#	\"					# end quote
-#  |[\w.-]+\.					# unquoted filename.ext
-#	(?:vb[se]				# list of extns
-#	|ws[fh]
-#	|jse?
-#	|exe
-#	|com
-#	|cmd
-#	|shs
-#	|hta
-#	|bat
-#	|scr
-#	|pif)
-#  )						# end of filename capture
-#  [\s;]					# trailing ;/space/newline
+#	  (?:Content-					# start of content header
+#	  (?:Type: (?>\s*)				# rest of c/t header
+#	    [\w-]+/[\w-]+				# content-type (any)
+#	    |Disposition: (?>\s*)			# content-disposition hdr
+#	    attachment)					# content-disposition
+#	  ;(?>\s*)					# ; space or newline
+#	  (?:file)?name=				# filename=/name= 
+#	  |begin (?>\s+) [0-7]{3,4} (?>\s+)) 		# begin octal-mode
+#	  (\"[^\"]+\.					# quoted filename.
+#		(?:vb[se]				# list of extns
+#		|ws[fh]
+#		|jse?
+#		|exe
+#		|com
+#		|cmd
+#		|shs
+#		|hta
+#		|bat
+#		|scr
+#		|lnk
+#		|pif)
+#	  \"						# end quote
+#	  )						# end of filename capture
+#	  [\s;]						# trailing ;/space/newline
+
 #
 #
 ### [End]
