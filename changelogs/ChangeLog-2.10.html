@@ -1,0 +1,417 @@
+Version 2.10
+------------
+
+1. The log message for a skipped syntax error in a filter file needed tidying.
+
+2. After a "foranyaddress" condition succeeds in a filter file, the value of
+$thisaddress is available in the commands. It holds whatever what the last
+value tested.
+
+3. Another adjustment to the FreeBSD makefile to make it work in ports and
+non-ports environments.
+
+4. scripts/Configure-Makefile was testing for PERL_COMMAND in the local
+configuration without anchoring the check to the start of a line.
+
+5. Give the error "no local part" instead of "missing colon in route" for
+addresses like <@abcd>.
+
+6. Nested ${lookup} and ${if} items in expanded strings were not working
+correctly if "fail" was present in one of the internal items.
+
+7. A macro expansion at the start of a continuation line of a string was
+getting ignored.
+
+8. Escapes such as \n are now handled conventionally in string expansions.
+
+9. Added numeric comparisons to string expansions.
+
+10. Changed the space checking to use the f_bavail field returned by the
+stat(v)fs function instead of f_bfree, thus testing non-superuser space only.
+Also, for those OS which have it, changed from f_ffree to f_favail for checking
+the number of inodes.
+
+11. Errors in expanding the name of a perl function or its arguments were not
+being passed back correctly.
+
+12. The count of lines in a message (which is used for computing the value for
+the SIZE option on outgoing messages) was not being correctly set for incoming
+non-local SMTP mail.
+
+13. If no_smtp_check_spool_space is set, Exim refrains from checking that there
+is enough space in the spool partition when it receives a SIZE setting on an
+incoming message.
+
+14. Added message_size_limit_count_recipients.
+
+15. Implemented quota_warn_threshold in appendfile.
+
+16. Running exim with -q but without -bd could cause it to crash.
+
+17. In the delivery log line, don't print the original address in <> if the
+only difference from the original address is in the case of the domain(s).
+
+18. Removed the "debug" transport as I haven't used it for years and it is
+simply clutter.
+
+19. Write a log line when a message is abandoned because of a ridiculously long
+header line.
+
+20. If an error is detected while receiving a batch SMTP message (using -bS)
+the error message that is sent now contains information about the sender and
+recipients, and a copy of the headers, when such information has been read
+before the error was detected.
+
+21. If errors_to was set in forwardfile, and a headers_add option used
+$local_part or any other address-specific expansion, the expansion went wrong.
+(The verification of the errors_to address was clobbering the values.) This
+could have applied to other directors and routers too.
+
+22. The smtp_log_connections option should really be called
+log_smtp_connections to fit in with other naming. Added the "correct" name as
+a synonym, and hide the old one in displays.
+
+23. If daemon_smtp_service was set to a named service on a machine with a byte
+order different to network byte order, Exim listened on the wrong port. This
+might have been introduced by change 12 of 2.03.
+
+24. helo_verify wasn't working in the case where the helo argument was a valid
+(but incorrect) host name.
+
+25. Missing information in log for failures from multiple remote hosts.
+
+26. If a malformed response to an SMTP command contained newlines, they were
+written verbatim to the log. They are now converted to \n (and other
+non-printing characters are also escaped).
+
+
+Version 2.054
+-------------
+
+1. Insert missing fflush() if starting an SMTP session is rejected.
+
+2. In the default configuration, changed the retry specification to
+
+ *  *  F,2h,15m; G,16h,1h,1.5; F,4d,8h
+
+The difference is that after trying every 15 minutes for 2 hours, it next tries
+one hour later rather than two hours later.
+
+3. Remove the definition of os_strsignal from the FreeBSD os.h, as it seems it
+doesn't have it (ditto BSDI) and also from OpenBSD, just in case. My assumption
+that it's on all BSD systems (based on NetBSD) is clearly false.
+
+4. Updated exim_tidydb so that with the -f flag, it checks for the continued
+presence of a message that has a message-specific retry record.
+
+5. Fix exiqsumm so that it correctly recognizes domain literals in recipient
+addresses.
+
+6. The install script should now install the Texinfo documentation if
+INFO_DIRECTORY is defined, and the source is available.
+
+7. If a screwed-up host sent an SMTP response that contained LF characters,
+they got left as LFs when included in the retry database. This could mess up
+the format of the output from exim_dumpdb. They are now converted into \n.
+
+8. Multiline responses from a remote host are better formatted when -d is set
+for the smtp transport.
+
+9. Fixed a very low-probability file descriptor leak in eximon; if a -J file
+existed and reading the -H file failed, the -J file didn't get closed.
+
+10. Added to the FreeBSD makefile, on Sheldon Hearn's recommendation:
+
+.if ${PORTOBJFORMAT} == "elf"
+XLFLAGS+=-Wl,-rpath,${X11BASE}/lib
+.endif
+
+It allows eximon to be built on FreeBSD ELF systems.
+
+11. Fixed bug in libident/support.c causing crashes on malformed ident data.
+Also fixed another typo bug in libident.
+
+12. If headers_sender_verify was set and there was a syntax error in a header,
+the error message just said "no valid sender". Now it gives details of the
+syntax error.
+
+13. If the expansion of headers_add for pipe and smtp transports failed, the
+reason for the failure was not included in the error message (it was for
+appendfile).
+
+14. Added the "check_local_user" magic to {current,home}_directory in
+forwardfile.
+
+15. Changed the way the Makefile works when embedding Perl. The user need now
+specify only EXIM_PERL=perl.o. The Makefile builder sets default values for the
+other parameters at the top of the file, using the setting of PERL_COMMAND to
+run Perl, when EXIM_PERL is set.
+
+16. When an alias lookup defers because no addresses generated, include the
+syntax error message in the message.
+
+17. In the forwardfile director, the skip_syntax_errors option now applies to
+filter files as well as to conventional .forward files. Added
+syntax_errors_text option to forwardfile and aliasfile.
+
+18. Fixed potential segfault crash in MBX delivery (while computing the
+timestamp).
+
+19. Added $parent_domain, $parent_local_part, $address_file, $address_pipe.
+
+20. The router and director options "domains", "local_parts", "senders", and
+their matching "except_" partners are now expanded.
+
+21. The -bp option wasn't reading messages' -J files, and so wasn't marking
+addresses "delivered" as early as it could.
+
+22. Added the queue_only_file option.
+
+23. The autoreply transport now has a reply_to option, and the "mail" command
+in filters supports "from" and "reply-to" keywords.
+
+24. Pedantic message correction: "all its recipients" => "all of its
+recipients".
+
+25. Added default definition of EX_CONFIG for systems that don't have it.
+
+26. Set no_expn on the forwardfile director in the default configuration.
+
+27. Skip logwrite in filter files when run as a result of EXPN.
+
+28. Allow leading dots in local parts. Exim is already extended to allow null
+components inside or at the end of local parts (e.g. a..b.@xyz) so it doesn't
+seem worth making this extension specifically configurable.
+
+29. Added rbl_log_rcpt_count and rbl_log_headers.
+
+30. The setting of KEEPALIVE on an incoming socket was not being bypassed when
+-bh was in use, leading to a warning message.
+
+31. There was a long-standing problem with queue runners when a delivery that
+was started by a queue runner passed on one or more TCP/IP connections to
+another process. The problem was that the queue runner did not know this, and
+went on to start more deliveries. If there were a large number of messages
+queued for one host, this could cause too many delivery processes to be
+running. The queue runner process is now told about additional descendent
+processes, and it waits for them all to finish before moving on to the next
+message.
+
+
+
+Version 2.053
+-------------
+
+1. Reword message for not-found driver to emphasize which kind of driver.
+
+2. Give pid and ppid in message about process creation failure.
+
+3. If addresses on the command line for a -t message cause all included
+addresses to get deleted, give a special "no recipients" error, mentioning the
+cause. (Previously the message just never got delivered to anybody.)
+
+4. If a user's filter file has "seen finish" with no significant deliveries,
+write a log line of the form "=> discarded <address> D=director" to indicate
+what has happened.
+
+5. Added match_directory to forwardfile.
+
+6. If match_directory was set on localuser, and it was an expanded string, and
+the resulting pattern was a regular expression, and more than one address was
+processed by this director such that the expansions gave differing patterns,
+then things went wrong because the first pattern was used every time owing to
+caching of the compiled regular expression.
+
+7. When doing a 2-stage queue run (using the -qq option) a message about
+queue_smtp was written to each individual message log (though suppressed on the
+main log).
+
+8. If the log level is set less than 5, messages about retry time not reached
+are no longer written to individual message logs.
+
+9. If the replacement string for a rewrite rule is "*" then addresses matching
+the patterns and the flags are not rewritten, and no further rules are tried.
+
+10. Added -bpr, -bpru, -bpra which are like the versions without the 'r', but
+display the list in random order.
+
+11. Added log_smtp_syntax_errors.
+
+12. Added ${uc:} operator.
+
+13. Added ignore_fromline_nets and ignore_fromline_local.
+
+14. After SMTP transport errors such as "connection reset by peer" the text of
+the error appeared twice in the log line.
+
+15. Added :unknown: for use in alias files.
+
+16. Give full search_type in debugging info for aliasfile.
+
+17. Added generic transport option message_size_limit.
+
+18. Added quota_filecount to appendfile, to apply when delivering into a
+directory.
+
+19. When delivering into a directory and quota was exceeded, the "time since
+last read" field, which applies to individual mailboxes, was getting set to to
+junk values, and could cause a retry record to time out prematurely.
+
+20. Show sender address in debugging output.
+
+21. Allow non-trusted users to use -f when running -bt or -bv.
+
+22. If a transport returns PANIC, Exim used to panic log and die. Now it just
+panic logs - so other addresses do get processed.
+
+23. In aliasfile and forwardfile, the *_transport options can now be expanded
+strings. If the result isn't a named transport, the address gets deferred, and
+the message gets frozen.
+
+24. Expanded transport names on directors and routers are now checked only if
+the driver handles the address.
+
+25. Bug introduced in new SMTP temporary problem handling meant that the
+wait-smtp database wasn't always updated when it should have been.
+
+26. Added support for MBX mailboxes (a) the format and (b) the locking.
+Upgraded exim_lock.
+
+27. Added body_only and headers_only generic transport options.
+
+
+Version 2.052
+-------------
+
+1. Added return_path generic option to the transports. This can re-expand the
+return path at transport time and do things like sticking in the recipient's
+address (i.e. it makes VERP support possible).
+
+2. If, during a remote parallel delivery in a subprocess, an SMTP error
+response had a humongously long text associated with it, Exim crashed.
+
+3. When there are no deferred addresses, convert any message-specific retry
+record updates into deletes. This does some useful tidying in cases when one
+host produces such an error and a subsequent one succeeds or fails hard.
+
+4. If retry_include_ip_address was set false in an SMTP transport, then the
+retrying was not searching for a rule keyed on the domain in addition to a rule
+keyed on the host.
+
+5. Added "rewrite" option to smartuser, cf aliasfile and forwardfile.
+
+6. When verifying or testing an address, if both a director and router are set,
+show both in the output, as is done on log lines for deliveries.
+
+7. Implemented lookup_open_max for controlling the maximum number of cached
+lookup opens for lookup types that use real files.
+
+
+Version 2.051
+-------------
+
+1. Added bsdi4.0 as an os-type, equivalent to BSDI.
+
+2. Removed definition of DN_EXPAND_ARG4_TYPE as u_char * for IRIX 6.5, as that
+release of IRIX is now compatible with most other OS so the default is OK.
+
+3. The exiwhat script no longer uses "cut" to fish the process numbers out of
+"ps" output because it doesn't work on all systems. (IRIX 6.5 has longer pids.)
+It now uses awk instead, to get the first field, whatever length it is.
+
+4. Installed PCRE version 2.01 (Perl 5.005 compatible).
+
+5. Revamped the way the working makefile in the build directory is created.
+This also involved some modification to some of the files in the scripts
+directory. At the top level one still runs "make" on its own, but this no
+longer involves a nested call to "make" in order to create the lower-level
+makefile (which is now called Makefile with a capital M). If run from within
+the build directory, it is no longer capable of re-building itself. Further
+revampings were done to ensure that the behaviour is the same on IRIX as on
+other systems with regard to rebuilding. The "make" program on IRIX behaves
+differently in regard to targets that are forced but don't actually rebuild the
+file of that name.
+
+6. The source has been tidied in places as a result of a -fullwarn run on the
+IRIX 6.5 compiler. In Exim itself, one set of warnings, in store.c, remains; I
+haven't been able to find a way to write the code so that it doesn't generate
+them. In the Exim monitor, there are warnings for the modified StripChart and
+TextPop modules taken from the Athena widgets.
+
+7. LFLAGS has been set to -Wl,-LD_MSG:off=85 for IRIX 6.5. This suppresses the
+warning about StripChart and TextPop overriding those in the Xaw library when
+linking eximon.bin.
+
+8. Unwanted \n at end of log message for too many message in one connection
+removed.
+
+9. Log entries for queued messages on a single SMTP connection other than the
+first such message were incorrectly given as if the queueing was for too many
+SMTP connections, instead of for too many messages or load average too high.
+
+10. Changed the OS/Makefile-FreeBSD setting to X11=$(X11BASE) instead of
+X11=/usr/X11.
+
+11. Improved the output for host testing with the -bh option; more detail of
+the order of testing accept/reject lists etc. is now given.
+
+12. The pipe transport now gives the signal name in the log message when its
+child is ended by signal. For Solaris 2, BSD-derived systems, and Linux, the
+strsignal() function is called. For the rest, there is a built-in function that
+covers the most important signals.
+
+13. The pipe transport now attempts to give a possible explanation when its
+child is ended by a non-zero exit code. As these aren't standardised, it has to
+use the uncertain phrase "could mean".
+
+14. Helo_accept_junk_hosts wasn't allowing the junk to start with [.
+
+15. Remove trailing spaces from Local/Makefile when building Makefile, as
+they can cause trouble in some of the sed commands for building scripts.
+
+16. A new test for options settings threw up two obscure ones that were out of
+alphabetical order in the source. Also some poorly worded configuration error
+messages.
+
+17. The domainlist router wasn't accepting the route_queries option if
+route_list wasn't set, complaining "either route_list or route_file or
+route_query required".
+
+18. The queryprogram router had options called "user" and "group" which
+conflicted with the generic options of the same name (which got invented
+later, for 1.929). The options for queryprogram have been renamed
+"command_user" and "command_group".
+
+19. When the -t option was set, Exim was barfing at header lines like
+
+  To: Recipient list not shown:;
+
+and complaining about "empty address", even if there were valid addresses in
+the Cc or Bcc headers.
+
+20. The second part of change 10 for 2.05 was a disaster in the case of
+temporary errors after MAIL FROM, DATA, and ".", because it meant that one
+dodgy message could hold up other mail for the recipients involved. Backed it
+out. However, the action after RCPT TO is OK, and remains.
+
+21. If a listening daemon was run without a -q option to start queue-runners,
+it could occasionally crash when a message-accepting process ended.
+
+22. Added smtp_accept_max_per_host. Required smtp_accept_max to be set if this
+or smtp_accept_queue is set.
+
+23. Added keepalive options for incoming and outgoing SMTP.
+
+24. Reworded the message that is output at the end of filter testing, as it was
+confusing to users. (It wasn't clear that 'delivered is false' meant that the
+message would be delivered normally.)
+
+25. Bug in handling exceedingly long configuration lines fixed.
+
+26. Added Malcolm Beattie's patch for calling Perl from string expansion.
+
+27. A new approach to handling temporary errors in the smtp transport. Details
+documented in NewStuff.
+
+28. Bug in exiqsumm showed up under Perl 5.005; the sorting wasn't working
+correctly.

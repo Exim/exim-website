@@ -1,0 +1,62 @@
+Date: Thu, 23 Jul 1998 01:02:29 -0500 (CDT)
+From: "Steven A. Reisman" <sar@pressenter.com>
+ 
+I've read down through Q0601 and your request for UUCP examples.
+Here's how I'm doing it:
+
+  # route via UUCP
+
+  uucp_routing_rmail:
+    transport = uucp_rmail
+    driver = domainlist
+    route_file = /etc/exim/uucp_rmail
+    search_type = dbm
+
+  uucp_routing_rsmtp:
+    transport = uucp_rsmtp
+    driver = domainlist
+    route_file = /etc/exim/uucp_rsmtp
+    search_type = dbm
+
+
+  # This transport delivers via UUCP-rmail
+
+  uucp_rmail:
+    driver = pipe
+    user = nobody
+    command = "/usr/bin/uux --stdin --nouucico --requestor \
+          '${if eq {$sender_address}{}{mailer-daemon}{$sender_address}}' \
+          $host!rmail $pipe_addresses"
+    return_fail_output=true
+    no_retry_use_local_part
+
+
+  # This transport delivers via UUCP-rsmtp
+
+  uucp_rsmtp:
+    driver = pipe
+    batch = domain
+    bsmtp = domain
+    user = nobody
+    command = "/usr/bin/uux --stdin --nouucico --requestor \
+          '${if eq {$sender_address}{}{mailer-daemon}{$sender_address}}' \
+          $host!rsmtp"
+    prefix = ""
+    suffix = ""
+    return_fail_output=true
+    no_retry_use_local_part
+
+
+Files /etc/exim/uucp_rmail and /etc/exim/uucp_rsmtp are of the form:
+
+  domain1.com:    alpha
+  domain2.com:    beta
+  domain3.com:    gamma
+
+where alpha, beta, and gamma are UUCP neighbors.
+
+
+For example, our mail server, hermes, uses UUCP to transport email to my
+laptop, ulysses.  Ulysses can poll hermes on TCP port 520 from anywhere
+on the net.  This is independent of ulysses's IP address, and there's
+no messing with SMTP/ETRN.

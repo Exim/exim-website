@@ -1,0 +1,84 @@
+Date: Tue, 23 Nov 1999 02:49:32 +0200
+From: Vadim Vygonets <vadik@cs.huji.ac.il>
+
+Something Hans Matzen and I did.
+
+# These are config file snippets for handling certain remote
+# addresses as local, and making only real external addresses
+# visible to users.
+
+
+# Copyright (c) 1999
+#	Hans Matzen <hans@tm.informatik.uni-frankfurt.de>,
+#	Vadim Vygonets <vadik@vygo.net>.  All rights reserved.
+
+#################################################################
+# These are config file snippets for handling certain remote
+# addresses as local, and making only real external addresses
+# visible to users.
+#
+# First, adjust values of the following definitions, which will
+# be used in configuration snippets below:
+
+EXIM_DIR	= /var/exim
+LOCAL_DOM	= home.dom
+LOCAL_NET	= 192.168.0.0/16
+SMART_HOST	= cc.huji.ac.il
+
+
+# The scheme is to use global addresses everywhere, which is done
+# by rewriting envelope sender and all headers, using a dbm file
+# EXIM_DIR/in2ex, which maps internal local parts to external
+# e-mail addresses using entries like:
+#	user:	someone@remote.dom
+#
+# To do this, it good to hide hostnames in all envelope and
+# header addresses first, using this rewriting rule:
+
+*@*.LOCAL_DOM	$1@LOCAL_DOM						Eh
+
+# Then, rewrite envelope sender and all headers to external
+# addresses with this rule:
+
+*@LOCAL_DOM	${lookup{${lc:$1}}dbm{EXIM_DIR/in2ex}{$value}fail}	Fh
+
+
+# This means that envelope recipients must be somehow rewritten
+# back to local addresses, which is done in one of the two
+# proposed ways (you choose).
+#
+# One way to do it is by rewriting, using a dbm file
+# EXIM_DIR/ex2in, which maps external e-mail addresses to
+# internal local parts using entries like:
+#	someone@remote.dom:	user
+#
+# This is done with the rewriting rule:
+#
+# *@*	${lookup{${lc:$0}}dbm{EXIM_DIR/ex2in}{$value@LOCAL_DOM}fail}	T
+
+
+# The preferred way to do it is by treating certain e-mail
+# addresses on remote domains as local, using route_list and self
+# options to the domainlist routers, looking up e-mail addresses
+# in dbm file EXIM_DIR/ex2in and throwing values away.  This is
+# an example of such router.  It should probably the only router
+# in the configuration.
+
+smart_route:
+   driver = domainlist
+   transport = remote_smtp
+   route_list = "*	${lookup{$local_part@$domain}dbm\
+			  {EXIM_DIR/ex2in}{@}{SMART_HOST}}	bydns_a"
+   self = local
+
+
+# Then, IF local parts of some of your users are different in
+# their internal and external addresses, it's nice to have the
+# internal_adjust smartuser director to rewrite the address.  It
+# should probably be the first director.
+
+internal_adjust:
+  driver = smartuser
+  new_address = "${lookup{${lc:$local_part@$domain}}dbm{EXIM_DIR/ex2in}\
+		   {$value@LOCAL_DOM}fail}"
+

@@ -1,0 +1,297 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>exim changelogs - Version 3.00 (previous main release 2.12)</title>
+  </head>
+
+  <body bgcolor="#FFFFBF" text="#00005A" link="#000060" alink="#E8700D" vlink="#003050">
+    <h1>Exim changelog for Version 3.00 (previous main release 2.12)</h1>
+
+    <h2>Version 3.00</h2>
+
+    <ol>
+      <li>
+	The documentation has been brought up-to-date for release
+	3.00.
+      </li>
+      <li>
+	The -oMr option is documented as working for non-SMTP and
+	batch SMTP input.  It was being ignored for batch SMTP. This
+	has been fixed.
+      </li>
+      <li>
+	Add #define DN_EXPAND_ARG4_TYPE u_char * to OS/os.h-SCO
+	because it seems that it is one of the operating systems that
+	defines the fourth argument of dn_expand this way.
+      </li>
+    </ol>
+
+
+    <h2>Version 2.954</h2>
+
+    <ol>
+      <li>
+	Log reception of the SMTP "debug" command.
+      </li>
+      <li>
+	Bug introduced by 2.950/15: Exim was incorrectly assuming a
+	dropped SMTP call if the message's data contained a byte with
+	the value 255. (Signed character problem in the private
+	"getc()" code. Sigh.)
+      </li>
+    </ol>
+
+
+    <h2>Version 2.953</h2>
+
+    <ol>
+      <li>
+	Typo in filter.c fixed; some compilers didn't like it, while
+	others were happy.
+	</li><li>
+	Make "fail_soft" for the "self" and host_find_failed domainlist
+	options override a generic setting of no_more.
+      </li><li>
+	Set $self_hostname when self=fail_soft in a router.
+      </li><li>
+	Added /warn and /reject to rbl_domains.
+      </li><li>
+	Reject messages with too many headers instead of just silently
+	pushing the rest into the body.
+      </li><li>
+	Recoded handling of multiple headers in expansion to be
+	(hopefully) more efficient in store usage.
+      </li><li>
+	Restrict the amount of store used by a $h_ expansion to 64K (to
+	catch lunatic messages with a zillion To: headers).
+      </li><li>
+	Add the operator "escape" to string expansions: it escapes all
+	non-printing characters in its argument.
+      </li><li>
+	Make HEADER_MAXHEADERS into a config.h macro to match
+	HEADER_MAXLENGTH so it can be changed easily.
+      </li><li>
+	If Exim reads EOF on an incoming SMTP connection, it assumes a
+	broken connection, but neverthless writes an error response. This
+	was erroneously using a 554 error code instead of 421.
+      </li><li>
+	The private "getc()" code for TCP/IP inputs had the feof and
+	ferror tests the wrong way round (but it shouldn't have mattered
+	much).
+      </li><li>
+	Blank lines were getting written to the log after some "no
+	immediate delivery" messages.
+      </li><li>
+	Increase the maximum length of RBL TXT record data that Exim reads
+	from 127 to 511.
+      </li><li>
+	Include IP address in RBL rejection message.
+      </li><li>
+	To aid in debugging "unexpected disconnection" errors, if the
+	result of read() is negative, the errno message is now added to
+	the logged error.
+      </li>
+    </ol>
+
+    <h2>Version 2.952</h2>
+
+    <ol>
+      <li>
+	White space was not being ignored after a search type ending in
+	"*" or "@*" in a lookup expression in an expansion.
+      </li><li>
+	If the smtp waiting database failed to open, the error message
+	wasn't printing out the interpretation of the value of errno.
+      </li><li>
+	The negative item "!@" was not being correctly handled in a host
+	list.
+      </li><li>
+	Changed the expansion of $tod_full so that the day number is
+	always given as two digits (to match the times, and it helps for
+	regression testing).
+      </li>
+    </ol>
+
+    <h2>Version 2.951</h2>
+
+    <ol>
+      <li>
+	Installed PCRE 2.05 (anchoring bug fix).
+      </li><li>
+	Retrying was not timing out properly when a message suffered a
+	temporary address error. This could result in retrying every queue
+	run after the time when it should have bounced.
+      </li><li>
+	Implemented once_repeat option for the autoreply transport, and a
+	corresponding "once_repeat" option for the mail and vacation
+	commands in mail filters. The vacation command now defaults
+	once_repeat to 7 days.
+      </li><li>
+	Added $message_body_size.
+      </li>
+    </ol>
+
+    <h2>Version 2.950</h2>
+
+    <ol>
+      <li>
+	Big, INCOMPATIBLE re-arrangement of the handling of
+	domain/host/net/address lists by adding negation and reducing the
+	number of options.
+      </li><li>
+	Remove a number of obsolete features; another INCOMPATIBLE change.
+	<ol>
+	  <li>
+	    Obsolete options - see README.UPDATING.
+	  </li><li>
+	    No longer allow for pre-0.57 spool files without their names 
+	    at the top.
+         </li><li>
+	    No longer cater for spool files that don't have a -body_linecount
+	    setting. This came in at 1.91, but affects only SIZE for 
+	    smtp output, so older spool files might still work.
+	  </li><li>
+	    No longer ignore commas and semicolons for driver options.
+	  </li>
+	</ol>
+      </li><li>
+	Installed PCRE 2.04 - bug fixes and tidies.
+      </li><li>
+
+	The API of DB 2 changed at release 2.5.x by adding an
+	additional option field to the function for starting a
+	cursor. Fixed dbfn.h to cope with both styles - luckily the
+	version number is defined by macros.
+      </li><li>
+	The LDAP library in Solaris 7 has yet another way of handling
+	errors from the search functions - different from either UMich
+	LDAP or the Netscape LDAP SDK. (A pity, since everything else
+	appears to be source-compatible.) It does not seem to be
+	possible to detect the differences automatically. There was a
+	previous fudge to distinguish UMich and Netscape, but I
+	haven't found out how to extend it. Anyway, it gets messier
+	and messier. Instead, there is now a configuration option
+	LDAP_LIB_TYPE which the builder of Exim must set. (If not, the
+	current heuristic still applies.)
+      </li><li>
+	Some tidies in the smtp transport; some error status
+	information might have got lost when debugging was turned on
+	(failing to preserve errno).
+      </li><li>
+	Host names used as part of keys in the retry database were not
+	getting lower cased; consequently if a host appeared in two
+	differently-cased forms (e.g. in MX records, or in a
+	domainlist rule), separate retry records were being created.
+      </li><li>
+	Improve wording of some expansion errors.
+      </li><li>
+	Exim now takes note of the list of alias host names when it
+	uses gethostbyaddr() to look up a host name. Host checks for
+	relaying etc. now check against the alias list as well as
+	against the primary name.
+      </li><li>
+	In the smtp transport, Exim was relying on errno remaining
+	zero after a valid read() call, though one shouldn't really
+	look at its value except in cases of error. It was getting set
+	on at least one OS.
+      </li><li>
+	Because "service" is not what people expect, add "port" as a
+	synonym to all the relevant options.
+      </li><li>
+	The -bh option wasn't giving any commentary on the testing of
+	the sender address (or any other address testing).
+      </li><li>
+
+	Lower case local parts as well as domains when doing tests of
+	address lists, but allow for exception with +caseful.
+      </li><li>
+
+	Make scripts/os-type recognize "sunos4*" instead of just
+	"sunos4".
+      </li><li>
+
+	When reading from an incoming SMTP call, Exim was always
+	flushing the output after every command. This causes an
+	unnecessary number of TCP/IP packets to be used when the
+	remote client is using pipelining. Instead of using the
+	standard C library functions (getc() etc.) in this case, Exim
+	now reads directly from the socket, and flushes the output
+	only when it needs to refill its input buffer.
+
+16. Re-vamp of the handling of incoming batch SMTP, as suggested by Ian
+Jackson: (i) sender_verify_batch defaults false. (ii) Always give up entirely
+on encountering any error while receiving, writing to stdout/stderr and setting
+a return code. (iii) EOF is now an error.
+
+17. Make -R[f] and -qf skip frozen messages by default, and implement -Rff
+etc to force thawing.
+
+18. Log ETRN from hosts that are not in the permitted list.
+
+19. The use of log_level to cut out "retry time not reached" from the message
+log file now applies only to second and subsequent delivery attempts. This
+means that during the first attempt, something gets written to the file for all
+addresses, both toplevel ones and generated ones.
+
+20. Added START_SMALL to monitor build-time configuration to start up with
+small sized window.
+
+21. Added $interface_address to hold the incoming interface address, and -oMi
+to force it.
+
+22. Cast uids and gids to long int when [s]printf-ing them.
+
+23. Typo in source: if an alias file used :fail: for an address that was being
+verified, a 450 rather than a 550 error was given.
+
+24. Log (main and reject logs) when a VRFY or EXPN command is rejected on
+policy grounds. Also log (on main log) when an accepted VRFY command fails to
+verify the address - this is already done for failing verification of RCPT.
+
+25. For RBL rejections, if prohibition_message is set, use it, with the RBL
+text in $rbl_text. Otherwise show the text as before.
+
+26. Implemented $message_body_end. In the process, fixed a possible bug
+involved with $message_body - the data was being put into non-permanent store,
+so if the variable was used more than once, there could have been problems.
+
+27. If the pattern in a route_list item in the domainlist router is a lookup,
+the data looked up is now available as $value in the hostlist item.
+
+28. Added the "environment" option to the pipe transport.
+
+29. If -odi is set (synchronous delivery), pass it on to any re-execs or other
+calls of Exim (e.g. to send error messages). This helps with automatic testing.
+
+30. The converter to Texinfo format was turning @sc{xxx} into actual capital
+letters in section headings, but not in menu items that refer to them. The
+latest version of Texinfo picks this up. Menu items are now also capitalized.
+
+31. The change that forces euid=uid when Exim is called by root broke the
+special processing when CONFIGURE_FILE_USE_EUID is set. This has been fixed.
+
+32. If an LDAP lookup found an entry, but it had no attributes, it was
+returning junk. Now it behaves as if the entry was not found.
+
+33. During a -qq run, delay warnings were being sent after the first pass.
+
+34. Access to headers in expansion strings is documented only via the syntax
+$h_name: or $header_name: but *not* using {}. For example, ${h_to} is not
+documented as legal; by accident it used to work, but ${h_to:} did not because
+it was taken as an invalid abbreviation for ${hash_to:}. The "accident" has
+been undone.
+
+35. Patch to scripts/os-type to cater for Unixware 7 and 7.1.
+
+36. Changed SCO_SV configuration (for SCO 5) using Tony Earnshaw's information.
+
+37. Created a Unixware7 configuration using James FitzGibbon's information.
+
+****
+      </li>
+    </ol>
+    <hr>
+    <h6>$Id: ChangeLog-3.00.html,v 1.2 1999/05/25 20:46:06 nigel Exp $</h6>
+<!-- Created: Mon Aug 25 13:12:18 BST 1997 -->
+  </body>
+</html>

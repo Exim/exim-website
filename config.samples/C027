@@ -1,0 +1,91 @@
+From: "Paul Makepeace" <Paul.Makepeace@realprogrammers.com>
+Date: Sat, 16 Oct 1999 02:03:04 -0500
+
+Quickstart: do everything following the # signs as root
+
+This is an FYI to demonstrate how to have exim work with SSL using the
+stunnel wrapper and its underlying OpenSSL libraries and toolkit. It's
+intended as a recipe; there are plenty of explanations about the underlying
+technology (start at http://mike.daewoo.com.pl/computer/stunnel/ ) but little
+up-to-date cookbook info (that I could find) and the manpages left me
+guessing.
+
+My goal was not to compile anything. This unfortunately required me moving to
+Debian 2.2, the unstable branch that contained these new packages. This note
+is thus Debian-oriented but not -specific.
+
+Stunnel requires a X.509 certificate to operate and comes with one by default
+in the Debian stunnel package. For my purposes though it was useless since
+Outlook Express (and I'm sure many others) check the Common Name matched the
+hostname it's connecting too.
+
+The certificate generation can be done in this four step process in lieu of
+obtaining a signed one from Thawte or Verisign (not sure why one would do
+that in this instance):
+
+Generate RSA key:
+
+## mkdir -p /etc/ssl/certs
+# cd /etc/ssl/certs
+# cat > README < this-email; # :-)
+
+# openssl genrsa 1024 > exim.rsa
+
+Generate Diffie-Hellman parameters:
+
+# openssl gendh -rand /dev/urandom > exim.dh
+
+Generate certificate using the RSA key without a passphrase (explained in
+docs):
+
+# openssl req -new -x509 -nodes -key exim.rsa -out exim.x509
+
+The important point here is to enter the hostname into the Common Name field
+as it's entered into the mail client. Without this the mail client may
+question you for every connection about this mismatch. The data to this and
+other questions can be set up in /usr/local/openssl/openssl.cnf . The fields
+can be given defaults by adding _default to the attribute name (examples
+already in there).
+
+At this point create the stunnel-ready file by stringing those three
+together:
+
+# cat exim.rsa exim.pem exim.x509 exim.dh > exim.pem
+
+Run exim in daemon mode under stunnel on the ssmtp port (and imapd to
+complete the story):
+
+(suitably hack /etc/init.d/* as follows:)
+
+# cp exim.pem imapd.pem
+# chmod 600 exim.pem imapd.pem
+# chown mail exim.pem
+# stunnel -d 465 -l /usr/sbin/exim -p exim.pem -- exim -bs
+# stunnel -d 993 -l /usr/sbin/imapd -p imapd.pem -- imapd
+
+The name given after the -- on the command line is the name the service is
+run as so using say exim-ssl would, since stunnel can use libwrap (of TCP
+Wrappers fame), allow a separately configured access policy in
+/etc/hosts.(allow|deny)
+
+To run exim in inetd mode (not recommended apparently because of the
+connection cost) requires a adding 127.0.0.1 to the host_accept_relay
+directive in /etc/exim.conf since stunnel invokes it through the loopback
+interface. I suspect this actually would defeat the point of this directive
+in practice if spammers ever figured out how to connect to an SSL MTA thus
+configured...
+
+The magic line in /etc/inetd.conf is (as a single line):
+
+ssmtp stream tcp nowait mail /usr/sbin/stunnel exim -l /usr/sbin/exim -p
+/etc/ssl/certs/exim.pem -- exim -bs
+
+...with in /etc/services:
+
+ssmtp           465/tcp                         # SMTP over SSL
+
+
+Corrections & improvements appreciated!
+
+Enjoy,
+Paul

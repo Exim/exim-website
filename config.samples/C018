@@ -1,0 +1,148 @@
+Date: Mon, 17 May 1999 22:34:10 -0700
+From: Thomas Robinson <roo@marsh.cts.com>
+
+This configuration removes a lot of the aliases, and automates a
+lot of the other functions based on whether the files /
+directories exist. Only three aliases per list are needed:
+
+<list>-approval
+<list>-owner
+owner-<list>
+
+# Lots of stuff snipped . . .
+
+trusted_users = mail:majordomo
+
+end
+
+######################################################################
+#                      TRANPORTS CONFIGURATION                       #
+######################################################################
+
+# More stuff snipped . . .
+
+# This transport is used for processing *-request addresses
+# through Majordomo
+majordomo:
+  driver = pipe
+  user = majordomo
+  command = "/usr/local/mail/majordomo/wrapper majordomo -l ${local_part}"
+  return_fail_output = true
+
+
+# This transport is used for processing messages through the
+# majordomo resend mechanism
+resend:
+  driver = pipe
+  user = majordomo
+  command = "/usr/local/mail/majordomo/wrapper resend -l ${local_part} ${local_part}"
+  return_fail_output = true
+
+
+# This transport handles creation of digests for majordomo.
+digestify:
+  driver = pipe
+  user = majordomo
+  command = "/usr/local/mail/majordomo/wrapper digest -r -C -l ${local_part}-digest ${local_part}-digest"
+  return_fail_output = true
+
+
+# This transport handles the archive function
+archivate:
+  driver = pipe
+  user = majordomo
+  command = "/usr/local/mail/majordomo/wrapper archive2.pl -f /usr/local/mail/lists/${local_part}.archive/${local_part} -M -a"
+  return_fail_output = true
+
+end
+
+
+
+######################################################################
+#                      DIRECTORS CONFIGURATION                       #
+#             Specifies how local addresses are handled              #
+######################################################################
+#                          ORDER DOES MATTER                         #
+#   A local address is passed to each in turn until it is accepted.  #
+######################################################################
+
+# Local addresses are those with a domain that matches some item
+# in the "local_domains" setting above, or those which are passed
+# back from the routers because of a "self=local" setting (not
+# used in this configuration).
+
+
+# This director handles list processing of *-request addresses.
+# Note that if there is no file, the message will NOT get passed
+# to majordomo.
+
+listrequest:
+  driver = smartuser
+  suffix = -request
+  require_files = +/usr/local/mail/lists/${local_part}.config
+  transport = majordomo
+
+
+# This director handles list processing when sending through the
+# majordomo RESEND mechanism.  If there is no file, the message
+# will NOT get passed to majordomo.
+
+listresend:
+  driver = smartuser
+  suffix = -digest
+  suffix_optional = true
+  require_files = +/usr/local/mail/lists/${local_part}${local_part_suffix}.config
+  transport = resend
+  except_senders = owner-${local_part}@marsh.cts.com:majordomo:owner-${local_part}-digest@marsh.cts.com
+
+
+# This director handles creation of the archive files for a list.
+
+archives:
+  driver = smartuser
+  suffix = -digest
+  suffix_optional = true
+  require_files = +/usr/local/mail/lists/${local_part}.archive:!+/usr/local/mail/lists/${local_part}-digest.config
+  transport = archivate
+  unseen = true
+
+
+# This director handles the list-digest processing.
+
+digests:
+  driver = smartuser
+  require_files = +/usr/local/mail/lists/${local_part}-digest.config
+  transport = digestify
+  unseen = true
+
+
+# This director handles list processing.
+
+listout:
+  driver = forwardfile
+  require_files = +/usr/local/mail/lists/${local_part}.config
+  file = /usr/local/mail/lists/${local_part}
+  modemask = 2
+  user = majordomo
+  no_check_local_user
+  forbid_pipe
+  forbid_file
+  one_time
+  skip_syntax_errors
+  errors_to = owner-${local_part}
+
+
+# This director handles aliasing using a traditional /etc/aliases
+# file.  If any of your aliases expand to pipes or files, you
+# will need to set up a user and a group for these deliveries to
+# run under. You can do this by uncommenting the "user" option
+# below (changing the user name as appropriate) and adding a
+# "group" option if necessary.
+
+system_aliases:
+  driver = aliasfile
+  file = /etc/aliases
+  search_type = lsearch
+  user = mail
+
+# The rest of the file goes here . . .

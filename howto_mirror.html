@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Building an exim website mirror</title>
+  </head>
+
+  <body bgcolor="#FFFFFF" text="#00005A" link="#FF6600" alink="#FF9933" vlink="#990000">
+    <h1>Mirroring the Exim web site</h1> 
+
+    <h2>Mirroring the content</h2> 
+
+    <p>All of the exim web site content is available through rsync,
+    and this is the recommended means for mirroring the web site
+    content.  A document describing <a
+    href="http://www.sunsite.auc.dk/SunSITE/rsync/rsync-mirroring.html">rsync
+    mirroring</a> has been produced by <a
+    href="http://www.sunsite.auc.dk/">Sunsite Denmark</a>, and this
+    gives good general information on rsync in general, where to
+    obtain the software, as well as rsync for mirroring.</p>
+
+    <p>The rsync URL is <a href="rsync://ftp.exim.org/www">
+	rsync://ftp.exim.org/www </a></p>
+
+    <p>However the more normal means to quote the rsync path is
+    <tt>ftp.exim.org::www</tt></p>
+
+    <p>The rsync path for the ftp area is
+    <tt>ftp.exim.org::ftp</tt></p>
+
+    <h2>Configuring your httpd</h2>
+
+    <p>Your httpd obviously needs to see the mirrored content.  There
+    are also some other tweaks - Apache aliases - which are needed.
+    The paths that need aliasing are currently only the <tt>/ftp></tt>
+    path which either needs pointing to your ftp mirror, or
+    redirecting to a reasonable mirror of the exim ftp site.</p>
+
+    <p>If and when the mailing list archives are put on line, these
+      may also need handling in a special way.</p>
+
+    <h2>Branding your site</h2>
+
+    <p>In some small recognition of the ISPs and other organisations
+      who donate the web site space, bandwidth and management, the web 
+      site has a brandable component - specifically the bottom left
+      hand pane of the main window points to the
+      <tt>branding/branding.html</tt> file.  By aliasing this path you 
+      can tailor this to put a sponsors logo in place.</p>
+
+    <h2>Tell people about it</h2>
+
+    <p>Assuming this is a public mirror then contact me about it and I
+    will add a link from the main site.  I can also get a
+    <tt>www.<i>country</i>.exim.org</tt> link added to the DNS for
+    you.  You may also wish to send one message to the mailing list
+    about this.</p>
+
+    <hr>
+    <address><a href="mailto:Postmaster@exim.org">Nigel Metheringham</a></address>
+<!-- Created: Mon Aug 25 15:46:41 BST 1997 -->
+    <h4>$Id: howto_mirror.html,v 1.4 2000/04/09 22:02:33 nigel Exp $</h4>
+  </body>
+</html>

@@ -1,0 +1,78 @@
+Date: Thu, 11 Nov 1999 16:20:13 -0500 (EST)
+From: "Dave C." <davec@pathwaynet.com>
+
+1. The standard way to connect one's MTA to mailman (and for Majordomo
+as well) seems to be to add a set of aliases for *every* list one
+creates. Once upon a time, I crufted a set of configs from Smail to
+work with majordomo, to automaticaly recognize the standard patterns,
+for all lists in existance. I have long since switched to Exim, and
+have recently installed Mailman to test on my personal workstation in
+preparation for installing it on our main system. To get to the point,
+I have setup a set of transports and directors for Exim, which will do
+the same thing.
+
+
+##########################################################
+
+#
+# Transports:
+#
+
+mailman_post:
+ driver=pipe
+ command = "/home/mailman/mail/wrapper post ${local_part}"
+ user = exim
+ group = mail
+
+mailman_owner:
+ driver=pipe
+ command = "/home/mailman/mail/wrapper mailowner ${local_part}"
+ user = exim
+ group = mail
+
+mailman_request:
+ driver=pipe
+ command = "/home/mailman/mail/wrapper mailcmd ${local_part}"
+ user = exim
+ group = mail
+
+##########################################################
+
+#
+# Directors:
+#
+
+mailman_post:
+ domains=lists.whateverdomains.com
+ driver=smartuser
+ condition=${if exists{/home/mailman/lists/${local_part}} {yes}{no}}
+ transport=mailman_post
+
+mailman_request:
+ domains=lists.whateverdomains.com
+ driver=smartuser
+ suffix=-request
+ condition=${if exists{/home/mailman/lists/${local_part}} {yes}{no}}
+ transport=mailman_request
+
+mailman_owner1:
+ domains=lists.whateverdomains.com
+ driver=smartuser
+ prefix=owner-
+ condition=${if exists{/home/mailman/lists/${local_part}} {yes}{no}}
+ transport=mailman_owner
+
+mailman_owner2:
+ domains=lists.whateverdomains.com
+ driver=smartuser
+ suffix=-owner
+ condition=${if exists{/home/mailman/lists/${local_part}} {yes}{no}}
+ transport=mailman_owner
+
+mailman_owner3:
+ domains=lists.whateverdomains.com
+ driver=smartuser
+ suffix=-admin
+ condition=${if exists{/home/mailman/lists/${local_part}} {yes}{no}}
+ transport=mailman_owner
+

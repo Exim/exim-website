@@ -1,0 +1,119 @@
+Date: Tue, 22 Sep 1998 23:21:58 -0400
+From: Peter Radcliffe <pir@pir.net>
+
+Philip Hazel <ph10@cus.cam.ac.uk> probably said:
+> On Fri, 18 Sep 1998, Tabor J. Wells wrote:
+> > One of our customers is looking for us to support addresses of the form
+> > username+extension@domain.com, primarily for use with procmail.
+
+> Look up the "prefix" and "suffix" options of directors. A smartuser 
+> director with options along the lines of
+> 
+>   suffix = +extension
+>   new_address = some kind of lookup to get the rewrite, and then 
+>                 manipulation involving the use of $local_part_suffix
+>                 to put the extension back. Depending on your lookup,
+>                 could be messy...
+
+Thats what I was doing before I saw this ;)
+If this isn't clear and you want an explanation, ask ...
+
+Note to Tabor: I added qualify_preserve_domain to the virtual director.
+This is not what you have now and will break things, you'll have to remove
+it and alter the virtual suffix as it says.
+
+# macros
+
+EBASE = /usr/local/etc/exim
+DSUFFIX = -
+# DSUFFIX = +
+DBEXT = .db
+#DBEXT = 
+
+## transports
+
+# delivery by procmail, local users with .procmailrc files only
+procmail_pipe:
+  driver = pipe
+  delivery_date_add = true
+  envelope_to_add = true
+  return_path_add = true
+  path = "/usr/local/bin:/usr/bin"
+  command = "procmail -a ${substr_1:${local_part_suffix}} -d ${local_part}"
+  from_hack
+  user = ${local_part}
+
+
+## directors
+
+# deal with virtual domains - just for virtual domains, look them up
+virtual:
+  driver = aliasfile
+  domains = dbm;EBASE/dbm/virtualDBEXT
+  file = EBASE/domains/${lc:${length_1:${domain}}/${domain}}DBEXT
+  search_type = dbm*
+  forbid_file
+  forbid_pipe
+  qualify_preserve_domain
+
+
+# if the virtual domain has no postmaster or root alias, throw them at
+# the default domain
+virtualpostmaster:
+  driver = smartuser
+  domains = dbm;EBASE/dbm/virtualDBEXT
+  local_parts = "postmaster:root"
+  new_address = ${local_part}@${qualify_recipient}
+
+
+# and if there is a -something suffix, send it to the right place
+virtualsuffix:
+  driver = smartuser
+  domains = dbm;EBASE/dbm/virtualDBEXT
+  no_more
+  suffix = DSUFFIX*
+# if you want this to not do qualify_preserve_domain replace ' {$domain} '
+# with ' {$qualify_recipient} ' in the 7th line.
+  new_address = "\
+    ${lookup{$local_part} dbm \
+      {EBASE/domains/${lc:${length_1:${domain}}/${domain}}DBEXT} \
+      {\
+        ${if !match {$value}{^:(defer|fail|blackhole|include):} \
+          {${local_part:$value}${local_part_suffix}@\
+           ${if eq {${domain:$value}} {} {$domain} {${domain:$value}}}}\
+        fail}\
+      }\
+    fail}"
+
+.
+.
+.
+
+userforward:
+  driver = forwardfile
+  no_verify
+  check_ancestor
+  file = .forward${local_part_suffix}
+  filter
+  suffix = DSUFFIX*
+  suffix_optional
+
+
+# Use procmail only if a ~/.procmailrc file exists, and procmail exists.
+# If sending to a username-suffix and $HOME/.forward-suffix exists,
+# its valid.
+procmail:
+  driver = localuser
+  transport = procmail_pipe
+  require_files = "${local_part}:${home}/.procmailrc:+/usr/local/bin/procmail"
+  suffix = DSUFFIX*
+  suffix_optional
+  
+# I realised that this might pass things to procmail when you have a .forward
+# file and expect it not to happen (if .forward and .procmailrc exist user-foo
+# will still get passed to procmail).
+# To stop this you can change the above to use:
+ 
+  require_files = "${local_part}:${home}/.procmailrc:+/usr/local/bin/procmail\
+                    :!${home}/.forward"
+ 

@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>HOWTO - Using the RBL</title>
+  </head>
+
+  <body bgcolor="#FFFFFF" text="#00005A" link="#FF6600" alink="#FF9933" vlink="#990000">
+    <h1>HOWTO - Using the RBL</h1>
+
+    <p>The MAPS (Mail Abuse Protection System) RBL (Realtime Blackhole
+    List) is a means of identifying hosts that have been associated
+    with the sending of spam mail.  A full description of the service
+    and the technology and ethics behind it can be found at <a
+    href="http://maps.vix.com/rbl/"><tt>http://maps.vix.com/rbl/</tt></a>
+    along with more general mail policy information at <a
+    href="http://maps.vix.com/"><tt>http://maps.vix.com/</tt></a>.</p>
+
+    <p>In the few years since MAPS started operating, other similar
+    services although with different aims, procedures and
+    reliabilities have been introduced - MAPS itself has a number of
+    these (ie MAPS/DUL which maintains lists of dial up modems), the
+    other major source is <a href="http:/www.orbs.org/">ORBS</a>,
+    which is a more proactive relay blocking service</p>
+
+    <p>Exim can use the MAPS RBL and/or any other similarly defined
+    service (ie you could make your own additional maps as well).  To
+    use exim for this you need to be running version 1.80 or later,
+    the configuration example in this document are specifically for
+    version 3.00 and later - the old version of this document,
+    covering older versions of exim can be found <a
+    href="old_rbl.html">here</a>.</p>
+
+    <h2>Exim RBL Support</h2>
+
+    <p>Exim has supported RBL from version 1.80, although the
+    flexibility was increased (with a related change configuration
+    options) on the release of Exim 3.00</p>
+
+    <p>The exim RBL support allows one or more RBL systems to be
+    checked and messages from hosts within each RBL to be either
+    rejected or marked by the addition of an extra header
+    <tt>X-RBL-Warning:</tt>.  It is also possible to have a limited
+    number of recipients bypass the RBL reject functions completely,
+    thus allowing postmaster (for example) to receive mail even from
+    an RBL blocked site.</p>
+
+
+   <h2>RBL Configuration Options</h2>
+
+    <p>These are fully detailed in the <a
+    href="../exim-html-3.10/doc/html/spec.html" target="_top">Exim
+    Specification Document</a>. The specific section on RBL is <a
+    href="../exim-html-3.10/doc/html/spec_43.html#SEC758">here</a> and
+    the rbl directives are documented starting <a
+    href="../exim-html-3.10/doc/html/spec_11.html#SEC299">here</a></p>
+
+    <p>A typical configuration would be a mail system which rejects
+    mail from machines that appear within the MAPS RBL list, and also
+    checks hosts in the ORBS lists but only marking each message has
+    coming via an RBLed host rather than rejecting them.  Additionally
+    all mail to the local postmaster always gets through, even if the
+    host is in the MAPS RBL list.  You also have a local private set
+    of IPs which relay out through this mail server on net
+    192.168.0.0/24 - these cannot be contacted from outside your
+    organisation so RBL is not an issue.</p>
+
+    <p>The configuration fragment (in the main part of the exim
+    configuration file) to do this is:-</p>
+
+    <pre>
+# reject messages whose sending host is in MAPS/RBL
+# add warning to messages whose sending host is in ORBS
+rbl_domains = rbl.maps.vix.com/reject : relays.orbs.org/warn
+# check all hosts other than those on internal network
+rbl_hosts = !192.168.0.0/24:0.0.0.0/24
+# but allow mail to postmaster@my.dom.ain even from rejected host
+recipients_reject_except = postmaster@my.dom.ain
+# change some logging actions (collect more data)
+rbl_log_headers 	# log headers of accepted RBLed messages
+rbl_log_rcpt_count	# log recipient info of accepted RBLed messages
+    </pre>
+
+    <p>The information to do more complicated manipulations can be
+      found in the specification document and is outside the scope of
+      this note.</p>
+    <hr>
+    <address><a href="mailto:Postmaster@exim.org">Nigel Metheringham</a></address>
+<!-- Created: Mon Aug 25 15:46:41 BST 1997 -->
+    <h4>$Id: rbl.html,v 1.3 2000/04/09 22:02:34 nigel Exp $</h4>
+  </body>
+</html>

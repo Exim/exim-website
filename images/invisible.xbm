@@ -1,0 +1,4 @@
+#define invisible_width 1
+#define invisible_height 1
+static char invisible_bits[] = {
+   0x00};

@@ -1,0 +1,27 @@
+Date: Thu, 6 Aug 1998 16:01:25 -0400
+From: Peter Radcliffe <pir@pir.net>
+
+If I host a domain foo.dom on my machine as a virtual domain I expect it
+to be completely virtual and seperate from other mail domains that end
+up on my machine. pir@foo.dom may or may not be me ...
+
+I have separate aliasfiles per domain (because its faster and more
+suitable to my application) and use:
+
+# I move this config between different db implementations that either do
+# or don't expect the .db extension.
+DBEXT = .db
+#DBEXT = 
+
+local_domains = "....:dbm;/usr/local/etc/exim/dbm/virtualDBEXT:..."
+
+As the first director:
+
+# deal with virtual domains.
+virtual:
+  driver = aliasfile
+  domains = dbm;/usr/local/etc/exim/dbm/virtualDBEXT
+  no_more
+  rewrite = false
+  file = /usr/local/etc/exim/domains/${lc:${length_1:${domain}}/${domain}}DBEXT
+  search_type = dbm*

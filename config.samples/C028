@@ -1,0 +1,102 @@
+Date: Fri, 5 Nov 1999 02:30:38 +0200 (SAST)
+From: Paul Sheer <psheer@icon.co.za>
+
+there is an FAQ question on this, but no examples.
+
+works with python 1.5.1
+
+enjoy
+
+-paul
+
+
+#!/usr/bin/python
+
+# Usage:
+#	exim-filter-mime.py <mime-type> ...
+#
+# Example:
+#	exim-filter-mime.py audio image/jpg video
+#
+# This script reads from stdin and writes to stdout.
+# It strips all the mime attachments from a mail message
+# that are one of the mime types listed on the command line
+#
+# Exim can use it in its configuration file, for example, as follows:
+#
+#	remote_smtp:
+#	  driver = smtp
+#	  .
+#	  .
+#	  .
+#	  transport_filter = /etc/exim-filter-mime.py audio video image
+#
+
+# The attachment is replaced with the following:
+def cheeky_response (part):
+    print "[File `%s' of type `%s' is meant to go here]" % (part.getheader('Content-Description'), part.gettype ())
+    print
+    print "This host is restricted from transmitting %s files and" % (part.getmaintype (),)
+    print "hence this attachment was stripped from the mail message."
+    print
+
+import sys
+import mimetools
+
+message = mimetools.Message (sys.stdin, 0)
+
+# Print out the header:
+for l in message.headers:
+    sys.stdout.write (l)
+print
+
+# Not a multipart message, so just dump the whole thing:
+if message.getmaintype () != "multipart":
+    l = " "
+    while l:
+	l = message.fp.readline ()
+	sys.stdout.write (l)
+    sys.exit (0)
+
+# Mime boundaries:
+boundary = "--" + message.getparam ("boundary") + "\n"
+lastboundary = "--" + message.getparam ("boundary") + "--\n"
+
+l = " "
+while l and l != boundary and l != lastboundary:
+    l = message.fp.readline ()
+    sys.stdout.write (l)
+
+while l and l != lastboundary:
+    part = mimetools.Message (message.fp, 0)
+    if part.getmaintype () in sys.argv[1:] or part.gettype () in sys.argv[1:]:
+# If it is of a type on the command-line, do not write the header or body,
+# just skip over till the next boundary...
+	l = " "
+	while l and l != boundary and l != lastboundary:
+	    l = part.fp.readline ()
+# ... and then give a cheeky replacement:
+	print "Content-Type: TEXT/plain; charset=us-ascii"
+	print
+	cheeky_response (part)
+# write the boundary:
+	sys.stdout.write (l)
+    else:
+# if it is anything else (like text/plain, application/octet-stream etc.
+# then write the header...
+	p = ""
+	for p in part.headers:
+	    sys.stdout.write (p)
+	print
+# ... and then write the body
+	l = " "
+	while l and l != boundary and l != lastboundary:
+	    l = part.fp.readline ()
+	    sys.stdout.write (l)
+
+l = " "
+while l:
+    l = message.fp.readline ()
+    sys.stdout.write (l)
+
+

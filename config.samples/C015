@@ -1,0 +1,68 @@
+From: Andromeda <andromeda@htmlworkshop.com> 
+Date: Sun, 15 Nov 1998 23:24:05 +0200   
+
+This approach to virtual domains has helped me a great deal, and is so easy
+to maintain (add and modify as appropriate):
+
+Under the main configuration settings (in your configure file):
+
+local_domains = "domain1.com:mydomain.com:\
+	       lsearch;/usr/exim/aliases/domains"
+
+Under transports:
+
+local_delivery:
+  driver = appendfile
+  file = /var/spool/mail/${local_part}
+
+Under the directors settings:
+
+system_aliases:
+  except_domains = "lsearch;/usr/exim/aliases/domains"
+  driver = aliasfile
+  file = /etc/aliases
+  search_type = lsearch
+
+userforward:
+  except_domains = "lsearch;/usr/exim/aliases/domains"
+  no_verify
+  driver = forwardfile
+  file = .forward
+
+localuser:
+  except_domains = "lsearch;/usr/exim/aliases/domains"
+  driver = localuser
+  transport = local_delivery
+
+virtual:
+  domains = "lsearch;/usr/exim/aliases/domains"
+  driver = aliasfile
+  no_more
+  file = /usr/exim/aliases/$domain-aliases
+  search_type = lsearch
+
+Voila. Done. This requires the following files from you:
+
+1. domains (contains the domains that you do virtual hosting for. Its format is
+as follows:
+
+domain1.com
+domain2.com
+.
+.
+etc.
+
+2. domain1.com-aliases (contains the addresses in domain1.com that you want
+to redirect). The format is as follows:
+
+bob: bob@ibm.net
+adam: adam@otherdomain.com
+.
+.
+etc.
+
+/usr/exim/aliases/ is my directory where I store those files to make it
+easier for administration.
+
+This way it works just fine, and mail to non-existent aliases gets bounced.
+You can check whether selecting *: allows you to do a catch-all.

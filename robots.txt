@@ -1,0 +1,4 @@
+# $Id: robots.txt,v 1.2 2000/01/09 21:33:19 nigel Exp $
+User-agent: *
+Disallow: /mailman/
+Disallow: /ftp/

@@ -1,0 +1,89 @@
+Date: Thu, 05 Nov 1998 00:19:46 +0100
+From: David Frey <david@eos.lugs.ch>
+
+I've written a small chapter how-to configure exim for use with UUCP
+(mostly condensed from the exim-user mailing list plus some experimenting)
+and would be glad if it could be included in the exim documentation.
+
+--------------------------------------------------------------------------8<---
+\input texinfo                                               @c -*- texinfo -*-
+@c $Id: C012,v 1.2 2000/01/09 21:33:19 nigel Exp $
+
+@c %** start of header
+@setfilename exim-uucp.info
+@settitle    Exim and @sc{uucp}
+@c %** end of header
+
+@iftex
+@afourpaper
+@end iftex
+
+@section Exim and @sc{uucp}
+
+Configuring exim for use with @sc{uucp} is a bit of manual work, since exim
+wasn't written with @sc{uucp} in mind.
+
+This guide assumes that you use @emph{Internet-addressing} --- i.e. both
+sides use Taylor-@sc{uucp} --- or 1-level deep Bang-paths (the Bang-Path level 
+has to be finite to make address-rewriting feasible). What you have to do is 
+the following:
+
+@enumerate
+@item 
+add a new transports definition
+@item 
+add a new router
+@end enumerate
+
+@subsection Transports
+
+The @emph{transports} does the work: it passes the mail to @sc{uucp}.
+This is the place to do bang-path-conversions and similar things
+(when using Taylor-@sc{uucp}, as my provider does, the Internet-address 
+is simply passed to rmail).        
+
+@example
+uucp_pipe:
+  driver = pipe 
+  batch = all 
+  command = "uux - -a\"$sender_address\" -r $host\!rmail $pipe_addresses" 
+  delivery_date_add = true 
+  pipe_as_creator 
+  restrict_to_path 
+  path = "/usr/bin:/bin" 
+  return_output
+@end example
+
+If you wanted to use bang-paths, you'd use something as (untested):
+@example
+@dots{}
+  command = "uux - -a$sender_address -r $host\!rmail ($domain\!$local_part)" 
+@dots{}
+@end example
+
+@subsection Router
+
+The @emph{router} tells exim that a @sc{uucp}-route is available:
+
+@example
+uucp:
+  driver = domainlist 
+  transport = uucp_pipe 
+  route_list = "* neighbor byname"
+@end example
+
+@var{neighbor} is the upstream @sc{uucp}-neighbor; all outgoing traffic
+is routed over there (leaf node configuration).
+
+@subsection Other
+
+In order to omit the @code{Sender: uucp} line, add @var{uucp} to the
+trusted users:
+
+@example
+trusted_users  = mail:uucp
+trusted_groups = uucp
+@end example
+
+@bye
+--------------------------------------------------------------------------8<---

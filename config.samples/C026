@@ -1,0 +1,104 @@
+Date: Tue, 12 Oct 1999 13:07:25 -0500
+From: mark david mcCreary <mdm@internet-tools.com>
+
+Most modern email readers will now show any URL's in the body of an
+email message as a clickable link.  AOL also does this, but needs the
+URL to be in the HTML syntax.
+
+The following configuration and program will allow messages going to
+AOL only, to be filtered thru a Perl script.  This Perl script will
+convert any URL's to the HTML syntax.
+
+In addition, the transport will use VERP to send a unique envelope
+sender with each message.
+
+It is useful for mailing lists.
+
+
+
+######################################################################
+#                      TRANPORTS CONFIGURATION                       #
+######################################################################
+
+# This transport is used for delivering messages AOL messages one at a time
+# It will put their email address in the To: line
+# It will create a custom sender envelope address that will allow bounces
+# to be easier to track.
+#
+
+aol_smtp:
+  headers_remove =
+"To:Message-Id:Resent-To:Resent-Date:Resent-From:Resent-Message-Id:Resent-Bcc",
+add_headers = "To: $local_part@$domain\n\
+  Message-Id:
+<Epah${length_3:$local_part}${substr_17_2:$tod_log}${substr_14_2:$tod_log}${subs
+tr_11_2:$tod_log}${length_3:$domain}\
+  @$primary_hostname>",
+  transport_filter = "/usr/local/bin/aol_transport_filter.pl",
+  return_path = "${if match {$return_path}{^(.+?)-request@.*\\$}\
+        {bounce-$1=$local_part=$domain@$primary_hostname}fail}",
+  driver = smtp;
+  max_rcpt = 1
+
+
+
+######################################################################
+#                      ROUTERS CONFIGURATION                         #
+######################################################################
+
+filter_msg_aol_domains:
+   self = defer,
+   driver = lookuphost,
+   transport = aol_smtp,
+   domains = "aol.com"
+
+
+
+
+
+
+
+
+######################################################################
+#          /usr/local/bin/aol_transport_filter.pl
+######################################################################
+
+#!/usr/bin/perl -w
+#
+#  This program will tweak the body of all email messages going to
+#  America On Line (AOL).
+#
+#  It will change a plain text URL clause to an HTML version
+#  since that is how the AOL email reader works.
+#
+#  For example,
+#
+#  http://commerce.internet-tools.com becomes
+#
+#  <A
+HREF="http://commerce.internet-tools.com">http://commerce.internet-tools.com</A>
+#
+#  or also with the https, mailto, and ftp prefix
+#
+#
+
+
+$/ = "";                    # set paragraph mode
+chomp($headers = <STDIN>);  # read a paragraph, remove trailing newlines
+$/ = "\n";                  # unset paragraph mode
+
+printf(STDOUT "%s\n\n", $headers);
+
+while (<STDIN>)
+  {
+
+s%\b((mailto:|((http(s?)|ftp)://)).*?)(?=(\s|:\s|\.\s|;\s|,\s|\?\s|!\s))%<A
+HREF="$1">$1</A>%ig;
+  print(STDOUT $_);
+  }
+
+exit;
+
+
+
+

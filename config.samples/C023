@@ -1,0 +1,86 @@
+#!/usr/bin/perl
+#
+# Delivery notification for Exim
+# Vladimir Litovka <doka@kiev.sovam.com>, 1999/10/18
+#
+# Use it in such way:
+# 1. Add such entry in transports section:
+#
+# rrc:
+#  driver = pipe;
+#  command = "/usr/local/sbin/rrc.pl \
+#     ${original_local_part}@${original_domain}"
+#  path = "/usr/sbin"
+#  user = mail
+#  prefix =
+#  suffix =
+#
+# 2. Add shadow_transport in local delivery entry (or entries)
+#
+# local_delivery:
+#  ...
+#  shadow_transport = rrc
+#
+# 3. Enjoy :-)
+
+$who = $ARGV[0];
+die "Must be executed from Exim\n" unless ($who);
+
+while (<STDIN>) {
+  chomp $_;
+  last if ($_ eq '');		# Empty row - the end of headers
+  if ( /^\s+/ ) {
+    if ($header) {
+      $headers{$header} .= " " . $_ ; }
+    else {
+      next; }
+   }
+  else {
+    ($header, $content) = split (/: +/, $_, 2);
+    $headers{lc($header)} = $content;
+   }
+ }
+
+if ( !($to = $headers{'disposition-notification-to'}) ) {
+  $to = $headers{'return-receipt-to'};
+ }
+
+if ($too = $to) {	# If there are delivery notification request(s)
+
+  # Strip GECOS from RRC header
+  if ($too !~ s/^.*?<([-=+\.\w\@]+)>.*$/$1/g) {
+    $too =~ s/^([-=+\.\w\@]+)\s+\(.*?\).*$/$1/g;
+   }
+
+  # Check is RRC header valid
+  if ($too !~ /^[-=+\w\.]+\@(\w[-\w]*\.)+[a-z]{2,4}$/io) {
+    $mailto = $headers{'from'};
+    $x_to = "X-Invalid-DSN-To: $to";
+   }
+  else {
+    $mailto = $to; }
+
+  open MAIL, "| sendmail -t";
+  print MAIL <<_EOM_;
+To: $mailto
+Subject: Delivery notification
+$x_to\n
+Your message
+
+  From: $headers{'from'}
+  To: $who
+  Subject: $headers{'subject'}
+  Date: $headers{'date'}
+  Message-ID: $headers{'message-id'}
+
+was successfully delivered. I hope that recipient of your message will
+read it and answer you as soon as possible.
+
+-- 
+Yours sincerely,
+	Mailer-Daemon of Sovam Teleport Ukraine.
+_EOM_
+
+  close MAIL;
+ }
+exit 0;

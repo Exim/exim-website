@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Exim Y2K Information</title>
+  </head>
+
+  <body bgcolor="#FFFFFF" text="#00005A" link="#FF6600" alink="#FF9933" vlink="#990000">
+    <h1>Exim Y2K Information</h1> 
+
+    <p>The author of Exim believes that it is Y2K-compliant, as long
+    as the underlying operating system and C library are. Exim does
+    not parse dates or times at all.  Internally, it makes some use of
+    binary timestamps in Unix format (number of seconds since
+    1-Jan-1970) and uses C library services to convert these to
+    printing forms (e.g. for logging). The printing forms all use
+    4-digit years.</p>
+
+    <p><i>It should be noted that exim, in common with all GNU
+	licensed software, does not come with any form of warrenty -
+	see the NOTICE and LICENSE files within the distribution.  If
+	you need a full Y2K audit performing, then the source is
+	available for this to be done.</i></p>
+
+    <h2>Newsflash</h2>
+    <p>January 2000 - its still working, no problem reports :-)</p>
+
+
+    <hr>
+    <address><a href="mailto:Postmaster@exim.org">Nigel Metheringham</a></address>
+<!-- Created: Mon May 24 21:47:56 BST 1999 -->
+<!-- hhmts start -->
+Last modified: Sun Jan  9 21:56:56 GMT 2000
+<!-- hhmts end -->
+    <h4>$Id: y2k.html,v 1.5 2000/04/09 22:02:33 nigel Exp $</h4>
+  </body>
+</html>

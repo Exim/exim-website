@@ -1,0 +1,44 @@
+Date: 6 Oct 1998
+From: Philip Hazel
+
+These are suggested parts of a configuration for looking up users in 
+/etc/passwd.domain rather than in /etc/passwd, with a separate alias file for 
+each domain as well. Delivery takes place into a mailbox within a per-domain 
+directory, though a different transport could of course be substituted. The
+delivery process is run as user exim, group mail. The list of domains is kept
+in /etc/customer/domains.
+
+# Transport: Place this in the "transports" section of the configuration.
+
+virtual_localdelivery:
+  driver = appendfile
+  file = /var/spool/mail/${domain}/${local_part}
+  user = exim 
+  group = mail
+  mode = 660
+  
+# Directors: Place these two directors in the "directors" section of the
+# configuration. DO NOT put them immediately after the transport driver
+# just defined - that's the wrong part of the configuration file. 
+ 
+# This director handles aliases. Because it has no transport setting, it
+# just expands local parts that it recognizes into new addresses.
+ 
+virtual_alias:
+   driver = aliasfile
+   domains = lsearch;/etc/customer/domains
+   file = /etc/customer/${domain}.aliases
+   search_type = lsearch
+   qualify_preserve_domain 
+
+# This director checks local parts. It *does* have a transport setting, so
+# if it finds a local part in the file, the message is directed to that
+# transport. The data following the local part in the file is not used.
+ 
+virtual_localuser:
+   driver = aliasfile
+   transport = virtual_localdelivery
+   domains = lsearch;/etc/customer/domains
+   file = /etc/passwd.$domain
+   search_type = lsearch  
+   no_more

@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>HOWTO - Preventing Relaying</title>
+  </head>
+
+  <body bgcolor="#FFFFFF" text="#00005A" link="#FF6600" alink="#FF9933" vlink="#990000">
+    <h1>HOWTO - Preventing Relaying</h1>
+
+    <p>Many people want to get a free ride from your system by using
+      it for relaying their mail.  This can be due to them being
+      corrupt and wishing to let you take the rap for relaying their
+      junk, or them being lazy and unable to make their own systems
+      work.  In any case this is a theft of service and needs to be
+      stopped.</p>
+
+    <h2>Relay Configuration Options</h2>
+
+    <p>These are fully detailed in the <a href="../exim-html-3.10/doc/html/spec.html"
+    target="_top">Exim Specification Document</a>. The specific
+    section on relaying is <a
+    href="../exim-html-3.10/doc/html/spec_43.html#SEC761">here</a> </p>
+
+    <ol>
+      <li>Firstly you need to specify the local mail domains as
+	tightly as possible.  <tt>local_domains</tt> should only cover
+	domains that really are local - this is relevant since exim
+	allows any sender to mail to these domains (since you have
+	told exim those domains are local you are not actually
+	relaying by sending to them.</li>
+
+      <li>Any domains that are not finally handled by the local exim,
+      but can legitmately be relayed through (ie domains you act as
+      backup MX for) should be specified in the
+      <tt>relay_domains</tt>, although a short cut for doing this is
+      setting <tt>relay_domains_include_local_mx</tt> which can be
+      used to abuse your mail server by adding MXes pointing at you,
+      but raises the bar so much higher than it is normally good
+      enough.</li>
+
+      <li>You probably want to be able to relay out from local
+      machines on the same network - be careful here since any open
+      machine on your network could be used to do unauthorised
+      relaying.  The control of hosts that can relay is done with the
+      <tt><a
+      href="../exim-html-3.10/doc/html/spec_11.html#SEC228">host_accept_relay</a></tt>
+      option.</li>
+
+    </ol>
+
+    <p>The standard settings for a workstation, allowing relaying
+      through the loopback (since packages such as MH post mail this
+      way), would be:-</p>
+<pre>
+relay_domains =
+no_relay_domains_include_local_mx
+no_relay_match_host_or_sender
+host_accept_relay = 127.0.0.1/8
+</pre>
+    <p>this is actually the default settings other than that for
+      <tt>host_accept_relay</tt>.</p>
+
+    <p>The information to do more complicated manipulations can be
+      found in the specification document and is outside the scope of
+      this note.</p>
+    <hr>
+    <address><a href="mailto:Postmaster@exim.org">Nigel Metheringham</a></address>
+<!-- Created: Mon Aug 25 15:46:41 BST 1997 -->
+    <h4>$Id: relay.html,v 1.3 2000/04/09 22:02:34 nigel Exp $</h4>
+  </body>
+</html>

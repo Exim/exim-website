@@ -1,0 +1,53 @@
+From: Nigel Metheringham <Nigel.Metheringham@ThePLAnet.net>
+Date: Wed, 23 Dec 1998 09:30:11 +0000
+
+If I have a situation where a site I MX for has a known outage I stash all
+their mail into a directory in BSMTP format.  This is how I do it -
+another way would be to use a router rather than a director to do this....
+
+ EXICONF_DIR    = /var/exim
+ HELD_DOMDB     = EXICONF_DIR/held_domains.cdb
+ HELD_DOMAINS   = cdb;HELD_DOMDB
+ LOCAL_DOMAINS  = ...:HELD_DOMAINS:...
+ local_domains  = LOCAL_DOMAINS
+
+ #
+ # held_domain transport
+ # ~~~~~~~~~~~~~~~~~~~~~
+ #
+ # This is a transport used to stash held mail into.
+ # Its basically a BSMTP maildir setup.
+
+ held_domain:
+  driver = appendfile
+  directory = /var/spool/mail/held_domains/${lc:$domain}
+  maildir_format
+  user = exim
+  group = exim
+  mode = 0640
+  create_directory
+  bsmtp = domain
+  prefix = ""
+  suffix = ""
+  no_from_hack
+
+.... 
+
+ #
+ # held_domains director
+ # ~~~~~~~~~~~~~~~~~~~~~
+ #
+ # Handles domains that are broken in some way so we hold mail
+ # for them in a bsmtp mail queue
+ #
+ held_domains:
+  domains = "HELD_DOMAINS"
+  driver = smartuser
+  transport = held_domain
+
+When the outage is over I then knock the entry out of the held domains
+cdb, and then cat all the BSMTP files into exim -bS (probably with a few
+extra options to make it route and queue them).
+
+This keeps our queues manageable and prevents piles of extra delay messages
+being sent out.

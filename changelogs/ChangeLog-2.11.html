@@ -1,0 +1,112 @@
+Version 2.11
+------------
+
+1. Adjustment of code for catching over-long multi-line SMTP responses to
+do a better job in the case of packets not ending in \r\n.
+
+2. Ignore any user-supplied whitespace (in particular, newlines) at the end of
+smtp_banner; previously it was starting a continuation response, and then never
+completing it, as there was nothing left.
+
+3. Eximstats: computed incorrect total size of local deliveries.
+
+4. If NO_SYSEXITS is set, don't make assumptions about the existence of exit
+definitions in the strexits() function in os.c.
+
+5. Tweak DGUX os.h file for strsignal and add HAVE_MMAP.
+
+6. If a bounce message was constructed without any directing/routing having
+occurred, Exim crashed. This could be provoked by -Mg, or if routing/directing
+was deferred until the message retry time was exceeded. The bounce message
+could be sent multiple times in the latter case, and did not contain a copy of
+the original.
+
+7. Don't insist on a transport for the domainlist router if verify_only is set.
+
+8. The count of lines in messages read from stdin with the -i option (ended
+only by EOF) was not getting set correctly.
+
+9. When calling itself to send an error or a warning message, Exim wasn't
+setting the -oi option, thus causing truncation of any enclosed text such as a
+copy of the incoming message or the output of a pipe if it contained a line
+with only a full stop in it.
+
+10. Added dns_check_names_pattern to provide control over the syntax check.
+
+11. If a DNS MX lookup fails the syntax check, don't go on to look for an A
+record; and if called from lookuphost, don't go on to try widening the name.
+
+12. Add the identity of the RBL domain to the log when in RBL warning mode,
+and also to the messages output during -bh testing.
+
+13. Do not stop scanning the list of RBL domains when one matches in warning
+mode; ensure that X-RBL-Warning headers are added for all that match.
+
+14. When testing with -bh, output a reminder after the final 250 after "." that
+this is not for real.
+
+15. Added max_username_length.
+
+16. The log phrase "Error while handling error message" has been made more
+accurate by changing it to "Error while reading a message with no usable sender
+address", and a reference to the generating message added if there is one.
+
+17. If -oee was set and the sender of a malformed incoming message was <>, so
+that no error message could be sent, the return code was zero rather than 1
+(i.e. it wasn't noticing it hadn't sent an error message).
+
+18. If a non-SMTP message contains no recipients and error reporting is by mail
+and no error message can be sent, the return code from Exim is now 2 instead of
+1. This is so it can detect this case in the autoreply transport.
+
+19. If the autoreply transport detects return code 2 for the message it has
+submitted (no recipients) it no longer defers delivery. This means that
+autoreplies to $sender_address when that is <> just get ignored (but there is
+an entry on the log for the error).
+
+20. Improved the error message that is given when an alias file or route list
+file has the wrong mode, since this seems to confuse people.
+
+21. Treat disconnection after end of data as a message error rather than a host
+error.
+
+22. Expanded the "file has wrong uid/gid" message to include the uids or gids
+which don't match.
+
+23. Installed PCRE 2.02 (minor tidies).
+
+24. If a system filter discarded a message (by "seen finish" or similar) then
+the log said "original recipients ignored", but had no => line. Now it contains
+"=> discarded (message_filter)" instead, to be like the logging that happens
+when a user filter discards a message.
+
+25. Exinext was not displaying routing delays for specific addresses if the
+domain successfully routed to a remote host. These can now exist in these
+circumstances after temporary recipient-specific errors. Likewise it was not
+capable of picking out message-specific retry data when given a message id.
+
+26. Pipe delivery timeouts were not working if the writes to the pipe got
+blocked (they only worked while waiting for the process to complete after doing
+all the writing). Furthermore, after a timeout Exim just killed the process it
+had created; if that process created further subprocesses they got left
+running. It now makes the created process a process group leader, and kills the
+whole process group, which will catch simple cases that don't themselves start
+new process groups. Also, after detecting a timeout and killing the subprocess,
+the third process that was reading from the output pipe didn't always die
+immediately. The reading process is now forcibly killed along with the timed
+out process group.
+
+27. If a queryprogram process timed out, Exim wasn't killing it. It now kills
+the whole process group, as for pipes (see 26 above).
+
+28. If a pipe produced output, any error message was omitted from the bounce
+message (this was to avoid "output message generated"), but this omitted
+information about timeouts. The error information is now included except for
+DEFER and OK returns.
+
+29. Added "hosts_override" to the smtp transport.
+
+30. Fixed two code infelicities in mailstore format delivery: (a) after opening
+RDONLY, a stream of type "w+" was made (this fails on Linux), and the call to
+fdopen() was not checked for errors; (b) the fd was closed directly, instead of
+the stream.

@@ -1,0 +1,199 @@
+From: Mark Morley <mark@islandnet.com>
+Date: Sat, 11 Dec 1999 10:45:38 -0800 (PST)
+
+This is a HOW-TO for setting up Exim to support SMTP authentication under
+different environments, including regular password files, PAM and NIS.
+
+The goal is to allow local users to relay without requiring authentication,
+and disallow relaying by remote users UNLESS they authenticate.  If a user
+authenticates then their username is included in the log file entries so
+they can't abuse your server without incurring your wrath.
+
+The first thing you need to do is make sure you enabled the right things in
+the Local/Makefile before compiling.  You will need the following line:
+
+   AUTH_PLAINTEXT=yes
+
+And possibly this line:
+
+   AUTH_CRAM_MD5=yes
+
+If your server uses PAM then you will also need this line:
+
+   SUPPORT_PAM=yes
+
+Next you need to edit your configure file.  To achieve our goals we need
+to set three entries:
+
+   host_accept_relay should list those hosts that are allowed to relay
+   without needing to authenticate.  This is normally a list of your
+   local IP numbers.
+
+   host_auth_accept_relay should list those hosts that are allowed to
+   relay so long as they authenticate first.  We just set this to "*"
+   to allow authentication from anywhere.
+
+   If there are any hosts that you REQUIRE authentication from, even if
+   they are listed in host_accept_relay, then list them in the auth_hosts
+   setting.  In my case I only have one IP listed, and that's the one I'm
+   using to test authentication with (ie: my personal static IP number).
+
+Next comes the potentially tricky part.  You need to edit the AUTH section
+of the configure file (it's the section right after REWRITE).  You need to
+create an entry for each authentication method you wish to support.
+
+The first authentication method we'll create is called AUTH PLAIN.  It is
+the method used by Netscape Messenger for example.  With the PLAIN method
+the client sends a command like this:
+
+   AUTH PLAIN AHVzZXJuYW1lAHBhc3N3b3Jk
+
+That third item there is actually three strings, separated by nul characters,
+and then base64 encoded.  The first string is not used here.  The second
+string will be the username, and the third string will be the password.
+
+The entry for AUTH PLAIN will look something like this:
+
+plain:
+  driver = plaintext
+  public_name = PLAIN
+  server_condition = ????
+  server_set_id = $2
+
+The tricky bit is deciding what the server_condition should be, and that
+depends on whether you are using PAM, NIS, plain password files, etc.  The
+server_condition string will be expanded, and if the result is "1" then
+authentication is successful - if it's "0" then authentication failed.
+
+At the point where the string is expanded, the username is stored in $2
+and the password in $3, so we just need to perform whatever lookups and
+comparisons are necessary to validate the user.
+
+For example, here's a server_condition that works for a specific user
+named "bloggs" with the password "freddy":
+
+  server_condition = "${if and{ {eq{$2}{bloggs}} {eq{$3}{freddy}} } {1}{0}}"
+
+But a single hardcoded example isn't all that useful (unless you only want
+a specific user to be able to authenticate).  Here's one that works with a
+non-shadowed NIS based password file:
+
+  server_condition = "${if and {{!eq{$2}{}}{!eq{$3}{}} \
+  {crypteq{$3}{${extract{2}{:} \
+  {${lookup{$2}nis{passwd.byname}{$value}{*:*}}}}}}}{1}{0}}"
+
+That's a tad more complicated!  At the heart of it it performs an NIS lookup
+on the "passwd.byname" map using $2 (the username) as the key.  If the
+lookup is successful then we get a typical passwd file entry, otherwise
+we get the bogus entry "*:*".  From the result it extracts the second field
+using a colon as the delimiter.  This results in either the user's encrypted
+password or "*".  It then encrypts $3 (the plaintext password) and compares
+that against the extracted value.  It also checks both $2 and $3 to ensure
+that neither is a null string.  If the whole condition is true then it
+resolves to "1", otherwise it resolves to "0".
+
+If your server uses a shadow passwd file with NIS, then you simply need to
+change the map from "passwd.byname" to "passwd.adjunct.byname" or whatever
+name your system uses.
+
+If your mail server uses a traditional passwd file, you could probably do
+something like this (untested):
+
+  server_condition = "${if and {{!eq{$2}{}}{!eq{$3}{}} \
+  {crypteq{$3}{${extract{2}{:} \
+  {${lookup{$2}lsearch{/etc/passwd}{$value}{*:*}}}}}}}{1}{0}}"
+
+If you use shadow passwords you could change the "/etc/passwd" to
+"/etc/shadow" or "/etc/security/passwd.adjunct", etc.
+
+If your mail server uses PAM, then the condition is much simpler:
+
+  server_condition = "${if pam{$2:$3}{1}{0}}"
+
+Since Exim has built-in PAM support you don't need such a complicated
+string expansion.
+
+So now we want to add a second authentication method.  This one is called
+AUTH LOGIN and is used by Outlook Express, among others.  This is similar
+to the PLAIN method, except that the client expects the server to prompt
+it for the username and password one at a time.
+
+Here's the basic entry:
+
+login:
+  driver = plaintext
+  public_name = LOGIN
+  server_prompts = "Username:: : Password::"
+  server_condition = ????
+  server_set_id = $1
+
+The primary difference from the PLAIN method is the server_prompts setting,
+which is a colon-separated list of prompts to issue to the client.  According
+to the AUTH LOGIN specification, there should be two prompts and they should
+always be "User Name" and "Password".  But Microsoft is never content to
+leave things be and this will only work with Outlook Express if you use
+"Username:" and "Password:".  The double "::" is needed to escape the
+trailing colons.
+
+After the prompts are issued and the client has submitted it's responses,
+the username will be stored in $1 and the password in $2.  You can use the
+same server condition that you used for the PLAIN method, just change the
+$2's to $1's, and the $3's to $2's.
+
+Both the PLAIN and LOGIN methods transfer unencrypted copies of the username
+and password over the 'net.  This is not the most secure way of doing things
+(although the fact that it's base64 encoded makes it a bit more secure than
+the way the same data is sent for a standard POP session).  So there is a
+third method you may want to support called CRAM-MD5.  This is the method
+used by Eudora for example.
+
+CRAM-MD5 never sends the password at all.  The server issues a challenge,
+which the client encrypts using the user's password, and returns to the
+server.  The server performs the same encryption.  If the two strings
+match then the client must have used the same password and therefore it's
+safe to authenticate them.
+
+The problem with CRAM-MD5 is that in order for it to work, the server must
+have an UNENCRYPTED copy of the user's password.  With most typical servers
+this isn't possible, since the passwords in a UNIX passwd file are normally
+one-way encrypted.
+
+So unless you are willing to maintain a separate database of plaintext
+username/password pairs for those users who want to use CRAM-MD5, it's
+of little value.
+
+In our case we use Qualcomm's POP server software which allows Eudora
+users to send email via the POP server itself (via the POP XMIT command),
+so SMTP authentication isn't really needed for them anyway.
+
+So that's that.  Whether it's via SMTP authentication or POP XMIT, the
+majority of our users can now relay through our mail server regardless
+of where they are connecting from.
+
+Now there is one problem, in my opinion, with this whole setup.  Certain
+email clients (eg: Netscape Messenger) will notice that your server now
+accepts authentication, and will assume that it's required.  That means
+that even users on your local network will suddenly have to enter their
+password whenever they send a message.
+
+While this works, it causes a lot of confusion for people who have never
+had to do that before.  To my way of thinking it would be better to hide
+the fact that authentication is supported when the client is connecting
+from a local IP number.
+
+To do this you must make a simple modification to the Exim source code.
+On line 1943 of src/smtp_in.c (Exim 3.12) you will find the following
+condition:
+
+   if (auths != NULL)
+
+Change it to this:
+
+   if (auths != NULL && (host_must_authenticate ||
+                        !verify_check_host(&host_accept_relay, FALSE)))
+
+And recompile.  Your server will now only advertise the AUTH capability
+to clients that are required to authenticate (ie: they are listed in
+the auth_hosts setting) or those that are NOT listed in host_accept_relay.
+
+mark@islandnet.com

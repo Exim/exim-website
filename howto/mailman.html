@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>HOWTO - Using exim and mailman together</title>
+  </head>
+
+  <body bgcolor="#FFFFFF" text="#00005A" link="#FF6600" alink="#FF9933" vlink="#990000">
+    <h1>HOWTO - Using exim and mailman together</h1>
+
+    <p>Mailman is a list manager with web front end and built in
+      archiving functions.  Details can be found at <a href="http://www.list.org/">http://www.list.org/</a></p>
+
+    <h2>Mailman configuration</h2>
+
+    <p>There is no mailman configuration needed other than the
+    standard options detailed in the mailman install documentation.
+    The exim configuration is transparent to mailman.  The uid/gid
+    settings for mailman must match those in the config fragments
+    given below.</p>
+
+    <h2>Exim configuration</h2>
+
+    <p>The exim configuration is built so that a list created within
+    mailman automagically appears to exim without the need for
+    additional alias files etc to be changed.</p>
+
+    <p>The drawback of this configuration is that it will work poorly
+    on systems supporting lists in several different mail domains -
+    for that matter mailman itself has poor support for this right
+    now. This may change in the future</p>
+
+    <p>The configuration file segments included are to be built on top
+    of an already functional exim configuration, which accepts mail
+    for the domain which the list resides in (ie that domain is
+    already in <tt>local_domains</tt> - should this domain be separate
+    from the others handled by this exim, then add the list domain to
+    <tt>local_domains</tt>, add a <tt>domains=my.list.domain</tt>
+    option to each of the directors and you may wish to exclude that
+    domain from the other directors.</p>
+
+    <p>Your exim configuration also needs a working alias
+    configuration, with entries (within the list domain) for
+    <tt>mailman</tt>, <tt>mailman-request</tt> and
+    <tt>mailman-admin</tt> (plus any other global contact addresses
+    for the list master.</p>
+
+    <p>There are 3 config file sections below which need pasting into
+    the appropriate parts of the main exim config file.  The first one
+    may also need tailoring to your mailman configuration</p>
+
+    <h4>Main config file section</h4>
+<pre>
+## Top section of config file - macro definitions
+## Tailor these to fit your installation
+## pretty much everything else should just fit...
+##
+# home dir for mailman
+MAILMAN_HOME=/home/mailman
+# wrapper script for mailman
+MAILMAN_WRAP=MAILMAN_HOME/mail/wrapper
+# user and group for mailman
+MAILMAN_UID=exim
+MAILMAN_GID=exim
+</pre>
+    <h4>Transports config file section</h4>
+<pre>
+## Transports section
+##
+## Three transports for list mail, request mail and admin mail
+## respectively
+## Mailman is installed in MAILMAN_HOME
+## Mailman is configured to be invoked as user exim
+list_transport:
+           driver = pipe
+           command = MAILMAN_WRAP post ${lc:$local_part}
+           current_directory = MAILMAN_HOME
+           home_directory = MAILMAN_HOME
+           user = MAILMAN_UID
+           group = MAILMAN_GID
+
+list_request_transport:
+           driver = pipe
+           command = MAILMAN_WRAP mailcmd ${lc:$local_part}
+           current_directory = MAILMAN_HOME
+           home_directory = MAILMAN_HOME
+           user = MAILMAN_UID
+           group = MAILMAN_GID
+
+list_admin_transport:
+           driver = pipe
+           command = MAILMAN_WRAP mailowner ${lc:$local_part}
+           current_directory = MAILMAN_HOME
+           home_directory = MAILMAN_HOME
+           user = MAILMAN_UID
+           group = MAILMAN_GID
+
+### end of transports section fragment
+</pre>
+    <h4>Directors config file section</h4>
+<pre>
+## Directors section [this deals with local addresses]
+## 
+## First 2 directors rewrite list-owner or owner-list to list-admin
+## This is only done if the list exists.
+## List existence checks are done by seeing if the file
+## MAILMAN_HOME/lists/<list>/config.db
+## exists.  
+
+list_owner_director:
+   driver = smartuser
+   require_files = MAILMAN_HOME/lists/${lc:$local_part}/config.db
+   suffix = "-owner"
+   new_address = "${lc:$local_part}-admin@${domain}"
+
+owner_list_director:
+   driver = smartuser
+   require_files = MAILMAN_HOME/lists/${lc:$local_part}/config.db
+   prefix = "owner-"
+   new_address = "${lc:$local_part}-admin@${domain}"
+
+##
+## Next 3 directors direct admin, request and list mail to the appropriate
+## transport.  List existence is checked as above.
+
+list_admin_director:
+   driver = smartuser
+   suffix = -admin
+   require_files = MAILMAN_HOME/lists/${lc:$local_part}/config.db
+   transport = list_admin_transport
+
+list_request_director:
+   driver = smartuser
+   suffix = -request
+   require_files = MAILMAN_HOME/lists/${lc:$local_part}/config.db
+   transport = list_request_transport
+
+list_director:
+   driver = smartuser
+   require_files = MAILMAN_HOME/lists/${lc:$local_part}/config.db
+   transport = list_transport
+
+## End of directors fragment
+## End of config files bits
+</pre>
+
+<p>Exim should be configured to allow reasonable volume - ie no
+setting <tt>max_recipients</tt> down to a silly value, and with normal
+degrees of security - ie allowing relaying from <tt>127.0.0.1</tt>
+(thats vital), but pretty much nothing else.  Parallel deliveries and
+other tweaks can also be used.  Delay warning messages should be
+switched off or configured to only happen for non-list mail - unless
+you like receiving tons of mail when a host is down.</p>
+
+<h3>Problems</h3>
+<ul>
+
+   <li>Mailman's detection of exim bounces needs improving - it really
+   should make use of the extra header information that exim provides.
+   It also should recognise and deal with or ignore delay warning
+   messages.</li>
+
+   <li>List existence is checked on whether there is a config.db file
+   for a list.  If you delete lists by foul means, be aware of
+   this.</li>
+</ul>
+
+    <h2>Other Tweaks</h2> 
+
+    <p>One solution passed to me for handling virtual domains was -
+    <i>Since I use mailman in a virtual domain configuration with a
+    separate installation for each virtual domain, I did a slight
+    modification like this:</i></p>
+
+<pre>
+## transport configurations
+
+command = "/virtual/${domain}/mailman/mail/wrapper post ${lc:$local_part}"
+current_directory = /virtual/${domain}/mailman
+home_directory = /virtual/${domain}/mailman
+
+## and in the director part:
+
+require_files = /virtual/${domain}/mailman/lists/${lc:$local_part}/config.db
+
+</pre>
+
+    <hr>
+    <address><a href="mailto:Postmaster@exim.org">Nigel Metheringham</a></address>
+<!-- Created: Mon Aug 25 15:46:41 BST 1997 -->
+    <h4>$Id: mailman.html,v 1.6 2000/04/09 22:02:34 nigel Exp $</h4>
+  </body>
+</html>
