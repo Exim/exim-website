@@ -107,7 +107,7 @@ interest to them, its limitations are listed first.
 
   <LI> Exim is intended for use as an Internet mailer, and therefore handles
      addresses in RFC 822 domain format only. It cannot handle 'bang paths',
-     though simple two-component bang paths can be converted by a straightforward 
+     though simple two-component bang paths can be converted by a straightforward
      rewriting configuration.
 
   <LI> Exim insists that every address it handles has a domain attached. For
@@ -117,7 +117,7 @@ interest to them, its limitations are listed first.
 
   <LI> The only external transport currently implemented is an SMTP transport
      over a TCP/IP network (using sockets), suitable for machines on the
-     Internet. However, a pipe transport is available, and there are facilities 
+     Internet. However, a pipe transport is available, and there are facilities
      for writing messages to files in 'batched SMTP' format; this can be
      used to send messages to some other transport mechanism. Batched SMTP
      input is also catered for.
@@ -358,7 +358,7 @@ follows:
 
 <P>
 Exim can be configured to allow users to set up filter files as an alternative
-to the traditional .forward files. A filter file can test various characteristics 
+to the traditional .forward files. A filter file can test various characteristics
 of a message, including the contents of the headers and the start of
 the body, and direct delivery to specified addresses, files, or pipes
 according to what it finds. The system-wide filter file uses the same control
@@ -409,7 +409,7 @@ mean that portion of an address that comes before the @ character.
 
 <P>
      and it is possible to specify an error address for each list that depends
-     on the list name. Generated pipe and file addresses can be (independently) 
+     on the list name. Generated pipe and file addresses can be (independently)
      locked out.
 
 <UL>
@@ -438,7 +438,7 @@ The addresses a director handles can be constrained in the following ways:
 
   <LI> A specific set of local parts may be specified, in which case the
      director is called only for addresses that contain one of those local
-     parts. This could be used, for example, to handle 'postmaster' independently 
+     parts. This could be used, for example, to handle 'postmaster' independently
      of the particular local domain.
 
   <LI> A director may be configured to handle local-parts that start with a
@@ -481,7 +481,7 @@ The existing routers are:
 <UL>
   <LI> lookuphost: This router looks up domain names either by calling the
      gethostbyname function, or by using the DNS. In the latter case, it can
-     be configured to use the DNS resolver options for qualifying singlecomponent 
+     be configured to use the DNS resolver options for qualifying singlecomponent
      names and for searching parent domains. It is also possible to
      specify explicit text strings for widening domains that are not found
      initially. It is possible to insist on the presence of MX records for
@@ -967,6 +967,10 @@ There is a menu of operations that can be performed by suitably privileged
 users. Messages can be frozen, thawed, deleted, caused to be delivered,
 modified, or returned to their senders from this interface.
 
+    <hr>
+    <address><a href="mailto:Postmaster@exim.org">Nigel Metheringham</a></address>
+<!-- Created: Sun May 16 21:43:01 BST 1999 -->
+    <h6>$Cambridge$</h6>
 
 </BODY>
 </HTML>

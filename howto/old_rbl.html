@@ -12,7 +12,7 @@
       with the sending of spam mail.  A full description of the
       service and the technology and ethics behind it can be found at
       <a href="http://maps.vix.com/rbl/"><tt>http://maps.vix.com/rbl/</tt></a>
-      along with more general mail policy information at 
+      along with more general mail policy information at
       <a href="http://maps.vix.com/"><tt>http://maps.vix.com/</tt></a>.</p>
 
     <p>Exim can use the MAPS RBL and/or any other similarly defined
@@ -30,14 +30,14 @@
     <p>These are fully detailed in the <a href="../exim-html-3.00/doc/html/spec.html"
     target="_top">Exim Specification Document</a>. The specific
     section on RBL is <a
-    href="../exim-html-3.00/doc/html/spec_39.html#SEC708">here</a> and the rbl directives 
+    href="../exim-html-3.00/doc/html/spec_39.html#SEC708">here</a> and the rbl directives
     are documented starting <a href="../exim-html-3.00/doc/html/spec_10.html#SEC283">here</a></p>
 
     <p>The 2 standard RBL configurations are:-</p>
     <ol>
 
       <li>Use RBL to add a <tt>X-RBL-Warning:</tt> header which can be
-	used by users for filtering
+ used by users for filtering
 <pre>
 rbl_domains = rbl.maps.vix.com
 no_rbl_reject_recipients
@@ -50,7 +50,7 @@ rbl_warn_header
 rbl_domains = rbl.maps.vix.com
 rbl_reject_recipients
 </pre>
-	</li>
+ </li>
     </ol>
     <p>In both cases machines can be explicitly removed from RBL
       control by adding their network addresses to the
@@ -62,6 +62,6 @@ rbl_reject_recipients
     <hr>
     <address><a href="mailto:Postmaster@exim.org">Nigel Metheringham</a></address>
 <!-- Created: Mon Aug 25 15:46:41 BST 1997 -->
-    <h4>$Id: old_rbl.html,v 1.3 2000/04/09 22:02:34 nigel Exp $</h4>
+    <h4>$Cambridge$</h4>
   </body>
 </html>

@@ -110,14 +110,14 @@
 # add warning to messages whose sending host is in RSS
 rbl_domains = blackholes.mail-abuse.org/reject : \
         dialups.mail-abuse.org/reject : \
-        relays.mail-abuse.org/warn 
+        relays.mail-abuse.org/warn
 # check all hosts other than those on internal network
 rbl_hosts = !192.168.0.0/24:0.0.0.0/0
 # but allow mail to postmaster@my.dom.ain even from rejected host
 recipients_reject_except = postmaster@my.dom.ain
 # change some logging actions (collect more data)
-rbl_log_headers 	# log headers of accepted RBLed messages
-rbl_log_rcpt_count	# log recipient info of accepted RBLed messages
+rbl_log_headers  # log headers of accepted RBLed messages
+rbl_log_rcpt_count # log recipient info of accepted RBLed messages
     </pre>
 
     <p>The information to do more complicated manipulations can be
@@ -126,6 +126,6 @@ rbl_log_rcpt_count	# log recipient info of accepted RBLed messages
     <hr>
     <address><a href="mailto:Postmaster@exim.org">Nigel Metheringham</a></address>
 <!-- Created: Mon Aug 25 15:46:41 BST 1997 -->
-    <h4>$Id: rbl.html,v 1.5 2003/06/01 14:17:01 nigel Exp $</h4>
+    <h4>$Cambridge$</h4>
   </body>
 </html>

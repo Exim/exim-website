@@ -38,12 +38,12 @@
       <li><a href="#smtune">SMTP callback</a></li>
     </ul>
     <li><a href="#verpin">Doing VERP and personalisation with exim
-	and Mailman</a></li>
+ and Mailman</a></li>
     <ul>
       <li><a href="#verpmm">VERP within Mailman</a></li>
       <li><a href="#persmm">Mailing list personalisation by Mailman</a></li>
       <li><a href="#verpex">VERP expansion by Exim rather than
-	  Mailman</a></li>
+   Mailman</a></li>
     </ul>
     <li><a href="#virdom">Virtual domains</a></li>
     <li><a href="#lispol">List policy management</a></li>
@@ -217,11 +217,11 @@
     require_files = MM_LISTCHK
     local_part_suffix_optional
     local_part_suffix = -admin     : \
-			-bounces   : -bounces+* : \
+ -bounces   : -bounces+* : \
                         -confirm   : -confirm+* : \
-			-join      : -leave     : \
-			-owner	   : -request   : \
-			-subscribe : -unsubscribe
+ -join      : -leave     : \
+ -owner    : -request   : \
+ -subscribe : -unsubscribe
     transport = mailman_transport
 </pre>
 
@@ -667,15 +667,15 @@
   % exim -bt testlist@list.example.com
   testlist@list.example.com
     router = mailman_router, transport = mailman_transport
-  
+
   % exim -bt testlist-request@list.example.com
   testlist-request@list.example.com
     router = mailman_router, transport = mailman_transport
-  
+
   % exim -bt testlist-bounces@list.example.com
   testlist-bounces@list.example.com
     router = mailman_router, transport = mailman_transport
-  
+
   % exim -bt testlist-bounces+luser=example.com@list.example.com
   testlist-bounces+luser=example.com@list.example.com
     router = mailman_router, transport = mailman_transport
@@ -725,7 +725,7 @@
       <li>Originally written by Nigel Metheringham.</li>
       <li>Updated by Marc Merlin for Mailman 2.1, Exim 4</li>
       <li>Overhauled/reformatted/clarified/simplified by Greg
-	Ward.</li>
+ Ward.</li>
       <li>Rehashed again by Nigel Metheringham</li>
     </ul>
 
@@ -734,13 +734,13 @@
     <ul>
       <li><b>14 June 2004</b> Originally written by Nigel Metheringham.</li>
       <li><b>28 June 2004</b> Fixed a problem with the Exim VERP
-	transport which caused locally aliased recipient addresses to
-	have incorrect VERP extensions added.  Followed posting to
-	exim-users list by Arkadiusz Miskiewicz -- <i>Nigel Metheringham</i>.</li>
+ transport which caused locally aliased recipient addresses to
+ have incorrect VERP extensions added.  Followed posting to
+ exim-users list by Arkadiusz Miskiewicz -- <i>Nigel Metheringham</i>.</li>
       <li><b>19 November 2004</b> Fixed previously unnoticed brainstorm
-	where <tt>reject</tt> had been used as a ACL verb rather than
-	<tt>deny</tt>.  Fixes to the VERP router/transport pair.
-	-- <i>Nigel Metheringham</i></li>
+ where <tt>reject</tt> had been used as a ACL verb rather than
+ <tt>deny</tt>.  Fixes to the VERP router/transport pair.
+ -- <i>Nigel Metheringham</i></li>
     </ul>
 
 
@@ -753,6 +753,6 @@
     You</i>.</p>
 
     <hr>
-    <h4>$Id: mailman21.html,v 1.6 2004/11/19 14:18:55 nigel Exp $</h4>
+    <h4>$Cambridge$</h4>
   </body>
 </html>
