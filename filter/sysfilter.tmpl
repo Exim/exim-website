@@ -1,6 +1,6 @@
 # Exim filter
 ## Version: 0.15
-#	$Id: sysfilter.tmpl,v 1.1 2001/08/15 10:01:01 nigel Exp $
+#	$Id: sysfilter.tmpl,v 1.2 2001/08/17 12:44:41 nigel Exp $
 
 ## Exim system filter to refuse potentially harmful payloads in
 ## mail messages
@@ -172,6 +172,8 @@ endif
 #	library files, cutting down on manual duplication.
 #	Changed \w in filename detection to . - dodges locale problems
 #	Explicit application of GPL after queries on license status
+# 0.15 17 August, 2001
+#	Chnaged the . in filename detect to \S (stops it going mad)
 #
 #### Install Notes
 #
