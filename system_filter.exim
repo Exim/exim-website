@@ -1,5 +1,5 @@
 # Exim filter
-## Version: 0.08
+## Version: 0.09
 
 ## If you haven't worked with exim filters before, read
 ## the install notes at the end of this file.
@@ -43,10 +43,10 @@ endif
 
 # Look for single part MIME messages with suspicious name extensions
 # Check Content-Type header [vb2_regexp]
-if $header_content-type: matches "(?:file)?name=(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat)\"|[\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat))"
+if $header_content-type: matches "(?:file)?name=(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat|scr|pif)\"|[\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat|scr|pif))"
 then
   fail text "This message has been rejected because it has\n\
-	     \tan apparently executable attachment $1\n\
+	     \ta potentially executable attachment $1\n\
 	     \tThis form of attachment has been used by\n\
              \trecent viruses such as that described in\n\
 	     \thttp://www.fsecure.com/v-descs/love.htm\n\
@@ -59,10 +59,10 @@ endif
 # in emails.   These were used as the basis for 
 # the ILOVEYOU virus and its variants
 # [vb_regexp]
-if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat)\"|[\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat))[\\\\s;]"
+if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat|scr|pif)\"|[\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat|scr|pif))[\\\\s;]"
 then
   fail text "This message has been rejected because it has\n\
-	     \tan apparently executable attachment $1\n\
+	     \ta potentially executable attachment $1\n\
 	     \tThis form of attachment has been used by\n\
              \trecent viruses such as that described in\n\
 	     \thttp://www.fsecure.com/v-descs/love.htm\n\
@@ -89,6 +89,8 @@ endif
 #	Latest MS Outhouse bug catching
 # 0.08 19 July 2000
 #	Changed trigger length to 80 chars, fixed some spelling
+# 0.09 29 September 2000
+#	More extensions... its getting so we should just allow 2 or 3 through
 #
 #### Install Notes
 #
@@ -140,7 +142,9 @@ endif
 #	|exe
 #	|com
 #	|shs
-#	|bat)
+#	|bat
+#	|scr
+#	|pif)
 #	\"					# end quote
 #  |[\w.-]+\.					# unquoted filename.ext
 #	(?:vb[se]				# list of extns
@@ -149,9 +153,11 @@ endif
 #	|exe
 #	|com
 #	|shs
-#	|bat)
+#	|bat
+#	|scr
+#	|pif)
 #  )						# end of filename capture
-#  [\s;]						# trailing ;/space/newline
+#  [\s;]					# trailing ;/space/newline
 #
 #
 ### [End]
