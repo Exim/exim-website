@@ -55,6 +55,8 @@
     <li><a href="#lisver">List verification</a></li>
     <li><a href="#problem">Possible Problems</a></li>
     <li><a href="#dochis">Document History</a></li>
+    <li><a href="#doccha">Document Changes</a></li>
+    <li><a href="#docfin">Final Word</a></li>
   </ul>
 
     <h2><a href="#index"><a name="scope">Scope of this document</a></a></h2>
@@ -484,13 +486,13 @@
     driver = smtp
     # put recipient address into return_path
     return_path = \
-      ${local_part:$return_path}+$local_part=$domain@${domain:$return_path}
+      ${local_part:$return_path}+$original_local_part=$original_domain@${domain:$return_path}
     # must restrict to one recipient at a time
     max_rcpt = 1
     # Errors-To: may carry old return_path
     headers_remove = Errors-To
     headers_add = Errors-To: \
-      ${local_part:$return_path}+$local_part=$domain@${domain:$return_path}
+      ${local_part:$return_path}+$original_local_part=$original_domain@${domain:$return_path}
 </pre>
 
     <p>Once this has been configured, Mailman can be set to not do
@@ -727,6 +729,19 @@
       <li>Rehashed again by Nigel Metheringham</li>
     </ul>
 
+    <h2><a href="#index"><a name="doccha">Document Changes</a></a></h2>
+
+    <ul>
+      <li><b>14 June 2004</b> Originally written by Nigel Metheringham.</li>
+      <li><b>28 June 2004</b> Fixed a problem with the Exim VERP
+	transport which caused locally aliased recipient addresses to
+	have incorrect VERP extensions added.  Followed posting to
+	exim-users list by Arkadiusz Miskiewicz -- <i>Nigel Metheringham</i>.</li>
+    </ul>
+
+
+    <h2><a href="#index"><a name="docfin">Final Word</a></a></h2>
+
     <p>Like many documents of this type, it has evolved and taken on
     contributions by many many helpful folks, mainly those on the
     Mailman and exim mailing lists.  To all of you, who have made
@@ -734,6 +749,6 @@
     You</i>.</p>
 
     <hr>
-    <h4>$Id: mailman21.html,v 1.3 2004/06/09 11:36:59 nigel Exp $</h4>
+    <h4>$Id: mailman21.html,v 1.4 2004/06/25 12:42:53 nigel Exp $</h4>
   </body>
 </html>
