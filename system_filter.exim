@@ -1,0 +1,157 @@
+# Exim filter
+## Version: 0.08
+
+## If you haven't worked with exim filters before, read
+## the install notes at the end of this file.
+
+#
+# Only run any of this stuff on the first pass through the
+# filter - this is an optomisation for messages that get
+# queued and have several delivery attempts
+#
+# we express this in reverse so we can just bail out
+# on inappropriate messages
+#
+if not first_delivery
+then
+  finish
+endif
+
+# Check for MS buffer overruns as per latest BUGTRAQ.
+# http://www.securityfocus.com/frames/?content=/templates/article.html%3Fid%3D61
+# This could happen in error messages, hence its placing
+# here...
+# We substract the first n characters of the date header
+# and test if its the same as the date header... which
+# is a lousy way of checking if the date is longer than
+# n chars long
+if ${length_80:$header_date:} is not $header_date:
+then
+  fail text "This message has been rejected because it has\n\
+	     \tan overlength date field which can be used\n\
+	     \tto subvert Microsoft mail programs\n\
+             \tThe following URL has further information\n\
+	     \thttp://www.securityfocus.com/frames/?content=/templates/article.html%3Fid%3D61"
+  seen finish
+endif
+
+# drop out error messages here
+if error_message
+then
+  finish
+endif
+
+# Look for single part MIME messages with suspicious name extensions
+# Check Content-Type header [vb2_regexp]
+if $header_content-type: matches "(?:file)?name=(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat)\"|[\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat))"
+then
+  fail text "This message has been rejected because it has\n\
+	     \tan apparently executable attachment $1\n\
+	     \tThis form of attachment has been used by\n\
+             \trecent viruses such as that described in\n\
+	     \thttp://www.fsecure.com/v-descs/love.htm\n\
+	     \tIf you meant to send this file then please\n\
+	     \tpackage it up as a zip file and resend it."
+  seen finish
+endif
+
+# Attempt to catch embedded VBS attachments
+# in emails.   These were used as the basis for 
+# the ILOVEYOU virus and its variants
+# [vb_regexp]
+if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat)\"|[\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|shs|bat))[\\\\s;]"
+then
+  fail text "This message has been rejected because it has\n\
+	     \tan apparently executable attachment $1\n\
+	     \tThis form of attachment has been used by\n\
+             \trecent viruses such as that described in\n\
+	     \thttp://www.fsecure.com/v-descs/love.htm\n\
+	     \tIf you meant to send this file then please\n\
+	     \tpackage it up as a zip file and resend it."
+  seen finish
+endif
+
+#### Version history
+#
+# 0.01 5 May 2000
+#	Initial release
+# 0.02 8 May 2000
+#	Widened list of content-types accepted, added WSF extension
+# 0.03 8 May 2000
+#	Embedded the install notes in for those that don't do manuals
+# 0.04 9 May 2000
+#	Check global content-type header.  Efficiency mods to REs
+# 0.05 9 May 2000
+#	More minor efficiency mods, doc changes
+# 0.06 20 June 2000
+#	Added extension handling - thx to Douglas Gray Stephens & Jeff Carnahan
+# 0.07 19 July 2000
+#	Latest MS Outhouse bug catching
+# 0.08 19 July 2000
+#	Changed trigger length to 80 chars, fixed some spelling
+#
+#### Install Notes
+#
+# Exim filters run the exim filter language - a very primitive
+# scripting language - in place of a user .forward file, or on
+# a per system basis (on all messages passing through).
+# The filtering capability is documented in the main set of manuals
+# a copy of which can be found on the exim web site
+#	http://www.exim.org/
+#
+# To install, copy the filter file (with appropriate permissions)
+# to /etc/exim/system_filter.exim and add to your exim config file
+# [location is installation depedant - typicaly /etc/exim/config ]
+# at the top the line:-
+#	message_filter = /etc/exim/system_filter.exim
+#	message_body_visible = 5000
+#
+# Any message that matches the filter will then be bounced.
+# If you wish you can change the error message by editing it
+# in the section above - however be careful you don't break it.
+#
+# After install exim should be restarted - a kill -HUP to the
+# daemon will do this.
+#
+#### LIMITATIONS
+#
+# This filter tries to parse MIME with a regexp... that doesn't
+# work too well.  It will also only see the amount of the body
+# specified in message_body_visible
+#
+#### BASIS
+#
+# The regexp that is used to pickup MIME/uuencoded parts is replicated
+# below (in perl format).  You need to remember that exim converts
+# newlines to spaces in the message_body variable.
+#
+#  (?:Content-					# start of content header
+#  (?:Type: (?>\s*)				# rest of c/t header
+#    [\w-]+/[\w-]+				# content-type (any)
+#    |Disposition: (?>\s*)			# content-disposition hdr
+#    attachment)					# content-disposition
+#  ;(?>\s*)					# ; space or newline
+#  (?:file)?name=				# filename=/name= 
+#  |begin (?>\s+) [0-7]{3,4} (?>\s+)) 		# begin octal-mode
+#  (\"[^\"]+\.					# quoted filename.
+#	(?:vb[se]				# list of extns
+#	|ws[fh]
+#	|jse?
+#	|exe
+#	|com
+#	|shs
+#	|bat)
+#	\"					# end quote
+#  |[\w.-]+\.					# unquoted filename.ext
+#	(?:vb[se]				# list of extns
+#	|ws[fh]
+#	|jse?
+#	|exe
+#	|com
+#	|shs
+#	|bat)
+#  )						# end of filename capture
+#  [\s;]						# trailing ;/space/newline
+#
+#
+### [End]
