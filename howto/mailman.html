@@ -42,7 +42,13 @@
     configuration, with entries (within the list domain) for
     <tt>mailman</tt>, <tt>mailman-request</tt> and
     <tt>mailman-admin</tt> (plus any other global contact addresses
-    for the list master.</p>
+    for the list master).  These addresses point to a (or some - not
+    necessarily the same for all of these aliases) human rather than
+    being piped into mailman. You do <b>not</b> need to put per-list
+    entries into the system alias file, and doing so will most likely
+    break things since the user id used for delivery is likely to be
+    incorrect or not set (which causes an exim delivery time config
+    error).</p>
 
     <p>There are 3 config file sections below which need pasting into
     the appropriate parts of the main exim config file.  The first one
@@ -157,11 +163,17 @@ you like receiving tons of mail when a host is down.</p>
    <li>Mailman's detection of exim bounces needs improving - it really
    should make use of the extra header information that exim provides.
    It also should recognise and deal with or ignore delay warning
-   messages.</li>
+   messages.  <i>Mailman 2.0beta does handle exim bounces correctly,
+   but still passes delay warnings to the list administrator</i></li>
 
    <li>List existence is checked on whether there is a config.db file
    for a list.  If you delete lists by foul means, be aware of
    this.</li>
+
+   <li>If you are getting exim or mailman complaining about user ids
+   when you send mail to a list, check that the MAILMAN_UID and
+   MAILMAN_GID match those of mailman itself.  Also make sure you do
+   <b>not</b> have aliases in the main alias file for the list.</li>
 </ul>
 
     <h2>Other Tweaks</h2> 
@@ -184,9 +196,75 @@ require_files = /virtual/${domain}/mailman/lists/${lc:$local_part}/config.db
 
 </pre>
 
+    <h2>Exim List Efficiency Tweaks</h2>
+
+    <p>This is a set of configuration directives I used on the list
+    boxes I admin.  Some of these are necessary, others are cosmetic,
+    a few are probably superfluous - they work for me!</p>
+<pre>
+# definition of injecting IP addresses
+LOCAL_NETS=127.0.0.1/32
+#
+# Extra logging data - not necessary but makes the logs more
+# useful, but bigger
+# lookup all hostnames - puts hostnames into log as well as ips
+host_lookup = 0.0.0.0/0
+# tweak logging
+log_all_parents
+log_file_path = /var/log/exim/%s.log
+log_received_recipients
+log_refused_recipients
+log_received_sender
+log_smtp_confirmation
+#
+# RBL settings - these are more severe than I use
+rbl_domains = rbl.maps.vix.com/reject:relays.mail-abuse.org/reject:dul.maps.vix.com/reject:relays.orbs.org=127.0.0.2,127.0.0.3/reject
+rbl_hosts = !LOCAL_NETS:0.0.0.0/0
+rbl_log_rcpt_count
+recipients_reject_except=postmaster@*:*-admin@*
+#
+# relay control - from our local network only
+host_accept_relay = LOCAL_NETS
+#
+# delay warnings - second line is now default, but earlier versions of
+# exim need it setting
+delay_warning = 26h
+##delay_warning_condition = "${if match{$h_precedence:}{(?i)bulk|list|junk}{no}{yes}}"
+#
+# Verify receipient addresses on everything except local injects
+# DO NOT verify addresses from mailman - this would slow down
+# the acceptance of messages dramatically
+receiver_verify_hosts = !127.0.0.1/8:0.0.0.0/0
+sender_verify
+#
+# performance tweaks - 1st is good for linux, maybe less so for others
+split_spool_directory
+remote_max_parallel = 15
+</pre>
+
+<h2>List verification</h2>
+
+<p>This is how a set of address tests for the exim lists look on a
+working system. (command lines start with "&gt;")</p>
+<pre>
+> /usr/sbin/exim -v -bt exim-users
+exim-users@www.exim.org
+  deliver to exim-users in domain www.exim.org
+  director = list_director, transport = list_transport
+
+> /usr/sbin/exim -bt exim-users-request
+exim-users-request@www.exim.org
+  deliver to exim-users in domain www.exim.org
+  director = list_request_director, transport = list_request_transport
+
+> /usr/sbin/exim -bt exim-users-admin
+exim-users-admin@www.exim.org
+  deliver to exim-users in domain www.exim.org
+  director = list_admin_director, transport = list_admin_transport
+
     <hr>
     <address><a href="mailto:Postmaster@exim.org">Nigel Metheringham</a></address>
 <!-- Created: Mon Aug 25 15:46:41 BST 1997 -->
-    <h4>$Id: mailman.html,v 1.6 2000/04/09 22:02:34 nigel Exp $</h4>
+    <h4>$Id: mailman.html,v 1.1.1.1 2000/05/22 19:54:43 nigel Exp $</h4>
   </body>
 </html>
