@@ -1,0 +1,21 @@
+  (?:file)?name=				# filename=/name= 
+  (\"[^\"]+\.					# quoted filename.
+	(?:vb[se]				# list of extns
+	|ws[fh]
+	|jse?
+	|exe
+	|com
+	|shs
+	|hta
+	|bat)
+	\"					# end quote
+  |[\w.-]+\.					# unquoted filename.ext
+	(?:vb[se]				# list of extns
+	|ws[fh]
+	|jse?
+	|exe
+	|com
+	|shs
+	|hta
+	|bat)
+  )						# end of filename capture

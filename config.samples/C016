@@ -1,5 +1,6 @@
 From: Andromeda <andromeda@htmlworkshop.com>
-Date: Sun, 15 Nov 1998 23:24:10 +0200
+Date: Sun, 15 Nov 1998 23:24:10 +0200 (original)
+Date: Wed, 14 Jul 1999 21:42:18 +0200 (small modification)
 
 Herewith my configuration:
 
@@ -201,7 +202,7 @@ virtual:
   driver = aliasfile,
   no_more;
   file = /usr/exim/aliases/$domain-aliases,
-  search_type = lsearch
+  search_type = lsearch*@
 
 end
 

@@ -1,5 +1,6 @@
 From: Andromeda <andromeda@htmlworkshop.com> 
-Date: Sun, 15 Nov 1998 23:24:05 +0200   
+Date: Sun, 15 Nov 1998 23:24:05 +0200  (original)  
+Date: Wed, 14 Jul 1999 21:42:18 +0200  (small change)
 
 This approach to virtual domains has helped me a great deal, and is so easy
 to maintain (add and modify as appropriate):
@@ -39,7 +40,7 @@ virtual:
   driver = aliasfile
   no_more
   file = /usr/exim/aliases/$domain-aliases
-  search_type = lsearch
+  search_type = lsearch*@
 
 Voila. Done. This requires the following files from you:
 
@@ -65,4 +66,13 @@ etc.
 easier for administration.
 
 This way it works just fine, and mail to non-existent aliases gets bounced.
-You can check whether selecting *: allows you to do a catch-all.
+
+The "search_type = lsearch*@" line in the "virtual" director allows you to
+specify a default mailbox at the end of each domain file, as shown below
+for domain1.com-aliases:
+
+bob: bob@ibm.net
+adam: adam@otherdomain.com
+*: mike
+
+All other email sent to the domain gets sent to the local user "mike".

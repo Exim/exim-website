@@ -11,9 +11,9 @@
     List) is a means of identifying hosts that have been associated
     with the sending of spam mail.  A full description of the service
     and the technology and ethics behind it can be found at <a
-    href="http://maps.vix.com/rbl/"><tt>http://maps.vix.com/rbl/</tt></a>
+    href="http://www.mail-abuse.org/rbl/"><tt>http://www.mail-abuse.org/rbl/</tt></a>
     along with more general mail policy information at <a
-    href="http://maps.vix.com/"><tt>http://maps.vix.com/</tt></a>.</p>
+    href="http://www.mail-abuse.org/"><tt>http://www.mail-abuse.org/</tt></a>.</p>
 
     <p>In the few years since MAPS started operating, other similar
     services although with different aims, procedures and
@@ -48,21 +48,22 @@
    <h2>RBL Configuration Options</h2>
 
     <p>These are fully detailed in the <a
-    href="../exim-html-3.10/doc/html/spec.html" target="_top">Exim
+    href="../exim-html-3.20/doc/html/spec.html" target="_top">Exim
     Specification Document</a>. The specific section on RBL is <a
-    href="../exim-html-3.10/doc/html/spec_43.html#SEC758">here</a> and
+    href="../exim-html-3.20/doc/html/spec_46.html#SEC810">here</a> and
     the rbl directives are documented starting <a
-    href="../exim-html-3.10/doc/html/spec_11.html#SEC299">here</a></p>
+    href="../exim-html-3.20/doc/html/spec_11.html#SEC311">here</a></p>
 
     <p>A typical configuration would be a mail system which rejects
-    mail from machines that appear within the MAPS RBL list, and also
-    checks hosts in the ORBS lists but only marking each message has
-    coming via an RBLed host rather than rejecting them.  Additionally
-    all mail to the local postmaster always gets through, even if the
-    host is in the MAPS RBL list.  You also have a local private set
-    of IPs which relay out through this mail server on net
-    192.168.0.0/24 - these cannot be contacted from outside your
-    organisation so RBL is not an issue.</p>
+    mail from machines that appear within either the MAPS RBL list or
+    the MAPS DUL (Dial-Up List), and also checks hosts in the ORBS
+    lists but only marking each message has coming via an RBLed host
+    rather than rejecting them.  Additionally all mail to the local
+    postmaster always gets through, even if the host is in the MAPS
+    RBL list.  You also have a local private set of IPs which relay
+    out through this mail server on net 192.168.0.0/24 - these cannot
+    be contacted from outside your organisation so RBL is not an
+    issue.</p>
 
     <p>The configuration fragment (in the main part of the exim
     configuration file) to do this is:-</p>
@@ -70,7 +71,10 @@
     <pre>
 # reject messages whose sending host is in MAPS/RBL
 # add warning to messages whose sending host is in ORBS
-rbl_domains = rbl.maps.vix.com/reject : relays.orbs.org/warn
+rbl_domains = blackholes.mail-abuse.org/reject : \
+        dialups.mail-abuse.org/reject : \
+        relays.mail-abuse.org/reject : \
+        relays.orbs.org/warn
 # check all hosts other than those on internal network
 rbl_hosts = !192.168.0.0/24:0.0.0.0/0
 # but allow mail to postmaster@my.dom.ain even from rejected host
@@ -86,6 +90,6 @@ rbl_log_rcpt_count	# log recipient info of accepted RBLed messages
     <hr>
     <address><a href="mailto:Postmaster@exim.org">Nigel Metheringham</a></address>
 <!-- Created: Mon Aug 25 15:46:41 BST 1997 -->
-    <h4>$Id: rbl.html,v 1.1.1.1 2000/05/22 19:54:43 nigel Exp $</h4>
+    <h4>$Id: rbl.html,v 1.2 2000/08/01 08:34:21 nigel Exp $</h4>
   </body>
 </html>

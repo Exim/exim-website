@@ -1,0 +1,57 @@
+Date: Tue, 8 Feb 2000 11:19:35 -0200
+From: Joao Alves <cpd@cosco.com.br>
+
+These configurations enable exim and hylafax (www.hylafax.org)  work
+together, i mean sending fax by email (user@123456.fax).
+
+Obs: There is a problem faxmail does not  support email in html format. If
+someone solved this problem, pls tell me.
+
+a cortesy
+            Joao Alves/ Cosco Brazil
+
+-------------------------------------------
+
+
+exim.conf
+
+
+######################################################################
+#                      TRANSPORTS CONFIGURATION                      #
+######################################################################
+#                       ORDER DOES NOT MATTER                        #
+#     Only one appropriate transport is called for each delivery.    #
+######################################################################
+
+# A transport is used only when referenced from a director or a router that
+# successfully handles an address.
+
+# Estas configuracoes sao para habilitar a envio de fax por email
+fax:
+  driver = pipe
+  user = cpd
+  command ="/usr/bin/faxmail -d ${local_part}@${extract{1}{.}{$domain}}"
+  home_directory = /usr/bin
+
+######################################################################
+#                      ROUTERS CONFIGURATION                         #
+#            Specifies how remote addresses are handled              #
+######################################################################
+#                          ORDER DOES MATTER                         #
+#  A remote address is passed to each in turn until it is accepted.  #
+######################################################################
+
+# Estas configuracoes sao para habilitar o envia de fax por email
+fax:
+   driver = domainlist
+   transport = fax
+   route_list ="*.fax"
+
+# End of Exim configuration file
+
+
+
+
+--
+## List details at http://www.exim.org/mailman/listinfo/exim-users Exim details at http://www.exim.org/ ##
+

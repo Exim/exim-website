@@ -1,0 +1,43 @@
+From: mark david mcCreary <mdm@internet-tools.com>
+Date: Tue, 5 Dec 2000 09:25:20 -0600
+
+Exim 3.20 has a feature that allows a large mailing of a single message to
+be sent to many different relays.  This is useful for mailing lists, as it
+allows the message to be relayed to multiple machines, in groups of 100
+addresses, for final delivery.
+
+The router lists a host, but it does not really use that host.  Instead the
+list of host machines in the transport are used in a random order, thus
+getting a reasonable coverage and compensating for delivery machines and
+networks that are down.
+
+######################################################################
+#                      TRANPORTS CONFIGURATION                       #
+######################################################################
+
+one_hundred_smtp:
+  driver = smtp
+  gethostbyname
+  hosts = a.domain.com:\
+          b.domain.com:\
+          c.domain.com:\
+          d.domain.com
+  hosts_override
+  hosts_randomize
+  max_rcpt = 100
+
+######################################################################
+#                      ROUTERS CONFIGURATION                         #
+######################################################################
+
+disperse_mail:
+    driver = domainlist
+    transport = one_hundred_smtp
+    self = fail_soft
+    host_find_failed = fail_soft
+    route_list = "* a.domain.com bydns_a"
+
+mark david mcCreary
+Internet Tools, Inc.            1302 Waugh Drive, #438
+mdm@internet-tools.com          Houston, Texas 77019
+http://www.internet-tools.com   713.627.9600

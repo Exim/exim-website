@@ -3,7 +3,21 @@ From: David M Walker <davidw@datamgmt.com>
 
 Thanks to Philip and others I now have my ISP style config built and
 therefore am posting the final configuration fragments to the list in
-case anyone else wants to do a similar thing
+case anyone else wants to do a similar thing.
+
+Date: Mon, 26 Jul 1999 00:02:14 +0100
+From: David M Walker <davidw@datamgmt.com>
+
+Some time ago I posted ISP nstyle configuration C011 and continue
+to get mails of the form:
+
+>   But can you please explain me how do the clients get their
+>   email if it's placed in many directories and the password
+>   are stored in "private" passwd files. The popper is not able
+>   to understand it. What approach do you use?
+
+The way I approach this is described after the configuration.
+
 
 ######################################################################
 
@@ -133,3 +147,302 @@ virtual_alias:
    qualify_preserve_domain 
 
 end
+######################################################################
+
+
+Our domains each have a unique last number from their IP address
+in the form x.y.z.222 etc. but a simple serial number would do.
+We prefix this domain number with an 'm' because it's a bad thing 
+to create a username that starts with a digit. The 'm' stands for
+nothing special - originally I think it meant mail.
+
+As a result we get a username of the form m222.dwalker
+
+We now use the shell script below to create the user, setup
+symbolic links from /var/spool/mail/m222.dwalker to the user's
+account directory etc. This is either called from a web page via
+ssl or an ssh login.
+
+Therefore mail sent to dwalker@datamgmt.com will be accessable
+from a pop or imap account called m222.dwalker and uniqueness
+across multiple domains is preserved.
+
+
+#!/bin/ksh -
+
+PATH=${PATH}:/usr/sbin; export PATH
+
+# General Configuration
+export PROGNAME=`basename $0`
+export POPGID=198
+export SHELL=/bin/false
+export SYSPASS=/etc/passwd
+export SYSSHAD=/etc/shadow
+export PREFIX=m
+
+# Global Parameters
+export DOMAIN=""
+export DOMGID=""
+export DOMPASS=""
+export DOMROOT=""
+export DOMUID=""
+export DOMUSER=""
+export HOMEDIR=""
+export MAILBOX=""
+export MAILLNK=""
+export POPUSER=""
+export STRNGTST=""
+
+fn_check_exit()
+{
+ESTATUS=$1
+if [ "${ESTATUS}" != 0 ]
+then
+   echo "Command exited with non-zero value (${ESTATUS})"
+   exit ${ESTATUS}
+else
+   echo "Command successful"
+fi
+}
+
+fn_getdomain()
+{
+DOMUID=$(id -u ${USER})
+DOMGRP=${USER}
+. getdomain ${DOMGRP}
+
+# Derived Variables
+DOMROOT=/monza/clients/${DOMAIN}
+POPUSER=${PREFIX}${DOMUID}.${DOMUSER}
+DOMGID=${DOMUID}
+DOMPASS=${DOMROOT}/etc/passwd
+HOMEDIR=${DOMROOT}/users/${DOMUSER}
+MAILBOX=${DOMROOT}/mail/${DOMUSER}
+MAILLNK=/var/spool/mail/${POPUSER}
+}
+
+fn_mkpasswd()
+{
+STRNGTST=`grep "^${POPUSER}:" ${SYSPASS}`
+if [ -z "${STRNGTST}" ]
+then
+   echo "Making ${SYSPASS} entry"
+   useradd -u ${DOMUID} -g ${DOMGRP} -d ${HOMEDIR} -s ${SHELL} -m -n ${POPUSER}
+   fn_check_exit $?
+   #echo "${POPUSER}:x:${DOMUID}:${POPGID}::${HOMEDIR}:${SHELL}" >> ${SYSPASS}
+else
+   echo "User ${POPUSER} already in ${SYSPASS}"
+fi
+}
+
+fn_mkdomuser()
+{
+STRNGTST=`grep "^${DOMUSER}:" ${DOMPASS}`
+if [ -z "${STRNGTST}" ]
+then
+   echo "Making ${DOMPASS} entry"
+   echo "${DOMUSER}:x:${DOMUID}:${DOMGID}::${HOMEDIR}:" >> ${DOMPASS}
+else
+   echo "User ${DOMUSER} already in ${DOMPASS}"
+fi
+}
+
+fn_mkmaildir()
+{
+if [ ! -e ${HOMEDIR}/mail ]
+then
+    echo "Making ${HOMEDIR}/mail"
+    mkdir ${HOMEDIR}/mail
+    fn_check_exit $?
+    echo "Setting permissions on ${HOMEDIR}"
+    chown ${DOMUID}:${DOMGID} ${HOMEDIR}
+    fn_check_exit $?
+fi
+}
+    
+fn_creatembox()
+{
+if [ ! -e ${MAILBOX} ]
+then
+   echo "Creating empty mailbox"
+   touch ${MAILBOX}
+   fn_check_exit $?
+fi
+echo "Setting ownership"
+chown ${DOMUID}.mail ${MAILBOX}
+fn_check_exit $?
+echo "Setting permissions"
+chmod 660 ${MAILBOX}
+fn_check_exit $?
+}
+
+fn_dellink()
+{
+if [ -e ${MAILLNK} ]
+then
+   if [ -L ${MAILLNK} ]
+   then
+      echo "Removing old link"
+      rm ${MAILLNK}
+      fn_check_exit $?
+   else
+      echo "${MAILLNK} is not a link - moving to .old"
+      mv ${MAILLNK} ${MAILLNK}.old
+      fn_check_exit $?
+   fi
+fi
+}
+
+fn_mklink()
+{
+if [ -e ${MAILLNK} ]
+then
+   if [ -L ${MAILLNK} ]
+   then
+      echo "Removing old link"
+      rm ${MAILLNK}
+      fn_check_exit $?
+   else
+      echo "File ${MAILLNK} exists moving to .old"
+      mv ${MAILLNK} ${MAILLNK}.old
+      fn_check_exit $?
+   fi
+fi
+echo "Creating a new link"
+ln -s ${MAILBOX} ${MAILLNK}
+fn_check_exit $?
+}
+
+fn_setpasswd()
+{
+echo "Set password for ${DOMUSER}"
+passwd ${POPUSER}
+fn_check_exit $?
+}
+
+fn_delpopuser()
+{
+fn_getdomain
+fn_delpass
+fn_dellink
+echo ""
+echo "Pop account deleted for ${POPUSER}"
+echo "Files in the domain user and mail directories must be deleted manually"
+echo "The entry in the domain passwd file is also redundant"
+echo ""
+}
+
+fn_connect()
+{
+   echo ""
+   echo "E-Mail Address: ${DOMUSER}@${DOMAIN}"
+   echo "Pop username:   ${POPUSER}"
+   echo "Pop password:   ********"
+   echo "Inbound mail:   mail.${DOMAIN}"
+   echo "Inbound port:   110"
+   echo "Outbound mail:  mail.${DOMAIN}"
+   echo "Outbound mail:  25"
+   echo ""
+}
+
+fn_addpopuser()
+{
+fn_getdomain
+fn_mkpasswd
+fn_mkmaildir
+fn_mkdomuser
+fn_creatembox
+fn_mklink
+fn_setpasswd
+fn_connect
+}
+
+fn_setuserpass()
+{
+fn_getdomain
+fn_setpasswd
+fn_connect
+}
+
+fn_usage()
+{
+   echo "Usage: ${PROGNAME} -a username [add a user]"
+   echo "       ${PROGNAME} -c username [change a users password]"
+   echo "       ${PROGNAME} -d username [delete a user]"
+   echo "       ${PROGNAME} -l          [lists all user]"
+   echo ""
+   echo "There is also a -n option to set the prefix to null rather"
+   echo "than m for backward compatiblity with earlier versions"
+   echo "Note: -n must proceed any other parameters"
+   exit 1
+}
+
+fn_delpass()
+{
+STRNGTST=`grep "^${POPUSER}:" ${SYSPASS}`
+if [ -n "${STRNGTST}" ]
+then
+userdel ${POPUSER}
+fn_check_exit $?
+else
+   echo "User ${POPUSER} already deleted from ${SYSPASS}"
+fi
+}
+
+fn_listpops()
+{
+    fn_getdomain
+    echo "Username\t/etc/passwd\t/etc/shadow\tLocal Password"
+    for POPUSER in `grep "^${PREFIX}${DOMUID}\." ${SYSPASS} | cut -d: -f1 -s`
+    do
+       echo "${POPUSER}\tOK\t\t\c"
+       OKS=`grep "^${POPUSER}:" ${SYSSHAD}`
+       if [ -n "${OKS}" ]
+       then
+          echo "OK\t\t\c"
+       else
+          echo "Bad\t\t\c"
+       fi
+       DUS=`echo ${POPUSER} | cut -d"." -f2 -s`
+       OKD=`grep "^${DUS}:" ${DOMPASS}`
+       if [ -n "${OKD}" ]
+       then
+          echo "OK\t\c"
+       else
+          echo "Bad\t\c"
+       fi
+       echo ""
+    done
+}
+
+DONE=""
+while getopts a:c:d:ln PARAM
+do
+   case ${PARAM} in
+       a) DOMUSER=${OPTARG}
+	  fn_addpopuser
+          DONE=TRUE
+	  ;;
+       c) DOMUSER=${OPTARG}
+	  fn_setuserpass
+          DONE=TRUE
+	  ;;
+       d) DOMUSER=${OPTARG}
+	  fn_delpopuser
+          DONE=TRUE
+	  ;;
+       l) fn_listpops
+          DONE=TRUE
+	  ;;
+       n) PREFIX=""
+	  POPUSER=${PREFIX}${DOMUID}.${DOMUSER}
+	  ;;
+       ?) fn_usage
+   esac
+done
+shift $(($OPTIND -1))
+
+if [ -z "${DONE}" ]
+then
+   fn_usage
+fi

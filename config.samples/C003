@@ -57,6 +57,6 @@ where alpha, beta, and gamma are UUCP neighbors.
 
 
 For example, our mail server, hermes, uses UUCP to transport email to my
-laptop, ulysses.  Ulysses can poll hermes on TCP port 520 from anywhere
+laptop, ulysses.  Ulysses can poll hermes on TCP port 540 from anywhere
 on the net.  This is independent of ulysses's IP address, and there's
 no messing with SMTP/ETRN.

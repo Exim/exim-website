@@ -1,0 +1,162 @@
+Date: Mon, 19 Mar 2001 17:33:11 +0300
+From: "Alexei V. Alexandrov" <ava@elcomsoft.com>
+
+  Attaced  you  will  find a plain text file where i explain how to
+  setup  mailman  to use virtual environment (single setup for many
+  domains). I think this will help exim users.
+
+  If you have any questions, don not hesitate to contact me.
+
+
+Using Mailman in virtual environment.
+
+Download mailman and install it in a directory you prefer. (Note: compile mailman
+to use the GID that your virtual accounts use. mine is "virtual").
+Let`s presume that all virtual servers have an account in group named "virtual".
+Setup exim to use mailman in the following way:
+
+MAILMAN_HOME  = /virtual/usr/mailman
+MAILMAN_WRAP  = MAILMAN_HOME/mail/wrapper
+MAILMAN_UID   = exim
+MAILMAN_GID   = virtual
+
+######################################################################
+#                      TRANSPORTS CONFIGURATION                      #
+######################################################################
+
+mailman:
+        driver = pipe
+        command = MAILMAN_WRAP post ${lc:$local_part}
+        current_directory = MAILMAN_HOME
+        home_directory = MAILMAN_HOME
+        user = MAILMAN_UID
+        group = MAILMAN_GID
+
+mailman_request:
+        driver = pipe
+        command = MAILMAN_WRAP mailcmd ${lc:$local_part}
+        current_directory = MAILMAN_HOME
+        home_directory = MAILMAN_HOME
+        user = MAILMAN_UID
+        group = MAILMAN_GID
+
+mailman_admin:
+        driver = pipe
+        command = MAILMAN_WRAP mailowner ${lc:$local_part}
+        current_directory = MAILMAN_HOME
+        home_directory = MAILMAN_HOME
+        user = MAILMAN_UID
+        group = MAILMAN_GID
+
+######################################################################
+#                      DIRECTORS CONFIGURATION                       #
+#             Specifies how local addresses are handled              #
+######################################################################
+
+# Note: these directors should go after forward file driver
+#       and before smart user driver (if you use "catchall" for your
+#       virtual domains)
+
+virtual_list_owner:
+        driver = smartuser
+        require_files = MAILMAN_HOME/${lc:$domain}/lists/${lc:$local_part}/config.db
+        suffix = "-owner"
+        new_address = "${lc:$local_part}-admin@${domain}"
+
+virtual_owner_list:
+        driver = smartuser
+        require_files = MAILMAN_HOME/${lc:$domain}/lists/${lc:$local_part}/config.db
+        prefix = "owner-"
+        new_address = "${lc:$local_part}-admin@${domain}"
+
+virtual_list_admin:
+        driver = smartuser
+        suffix = -admin
+        require_files = MAILMAN_HOME/${lc:$domain}/lists/${lc:$local_part}/config.db
+        transport = mailman_admin
+
+virtual_list_request:
+        driver = smartuser
+        suffix = -request
+        require_files = MAILMAN_HOME/${lc:$domain}/lists/${lc:$local_part}/config.db
+        transport = mailman_request
+
+virtual_list:
+        driver = smartuser
+        require_files = MAILMAN_HOME/${lc:$domain}/lists/${lc:$local_part}/config.db
+        transport = mailman
+
+# The trick is that we create in MAILMAN_HOME directories named like domains that we
+# recieve mail for. The sufficient directory structure is the following:
+# MAILMAN_HOME
+# |__/data/
+# |__/lists/
+# |__/logs/
+# |__/qfiles/
+# |__/locks/
+
+We have succesfully setup exim to use mailman listmanager. Next we will have to tweak
+mailman to suite our virtual setup. What we do. Mailman has its default configuration
+stored in MAILMAN_HOME/Mailman/Defaults.py this file is imported by mm_cfg.py and is
+used by all other modules. We will twak it to use defaults.py for different domains.
+Here is how i did it:
+
+MAILMAN_HOME/Mailman/mm_cfg.py:
+
+import os
+import string
+
+def loadDefaults ( name ):
+        definition = ""
+        module = '/vhost/usr/mailman/' + name + '/Defaults.py'
+        hFile = open ( module, "r" )
+        for line in hFile.readlines():
+                definition = definition + line
+        definition = definition + "\n"
+        exec definition in globals()
+
+if os.environ.get('HTTP_HOST') :
+        junk, domain = tuple(string.split(os.environ['HTTP_HOST'], '.', 1))
+        loadDefaults(domain)
+elif os.environ.get('DOMAIN') :
+        loadDefaults(os.environ['DOMAIN'])
+else:
+        loadDefaults('Mailman')
+
+# from Defaults import *
+
+The Defaults.py is stored in the directory: MAILMAN_HOME/domain.com/Defaults.py
+and is not different from the original one. The lines you should modify are:
+
+DEFAULT_HOST_NAME   = 'domain.com'
+DEFAULT_URL         = 'http://mail.%s/' % DEFAULT_HOST_NAME
+
+LIST_DATA_DIR   = os.path.join(VAR_PREFIX, DEFAULT_HOST_NAME + '/lists')
+LOG_DIR         = os.path.join(VAR_PREFIX, DEFAULT_HOST_NAME + '/logs')
+LOCK_DIR        = os.path.join(VAR_PREFIX, DEFAULT_HOST_NAME + '/locks')
+DATA_DIR        = os.path.join(VAR_PREFIX, DEFAULT_HOST_NAME + '/data')
+QUEUE_DIR       = os.path.join(VAR_PREFIX, DEFAULT_HOST_NAME + '/qfiles')
+
+We use two environment variables on is HTTP_HOST (to be able to use mailman
+managment interface for different domains). Other one is DOMAIN (this variable
+is set by exim). Another thing is is to be able to run the man mailman script
+called qrunner. As users have there accounts in the system, they are able to use cron.
+Create a crontab file in the user`s directory with the following contents:
+
+DOMAIN=domain.com
+
+* * * * * /virtual/bin/python -S /virtual/usr/mailman/cron/qrunner
+
+This will set the DOMAIN variable so the qrunner will use the right settings.
+
+If you want to create a new list. first set the environment variable DOMAIN to the
+desired domain and run the command MAILMAN_HOME/bin/newlist
+
+About the managment interface everything is simple. Run the apache server and bind
+it to a specific address (for ex.: 192.168.10.10). Create for each domain DNS record
+listserv	IN	A	192.168.10.10
+When the user will point his browser to http://listserv.domain.com/ he will see a list
+of available mailing lists or he will get an error message indicating that the default settings
+for this domain are not available.
+
+That`s it. This setup works for me and it handles over 50 domains.

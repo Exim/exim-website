@@ -7,7 +7,7 @@ and would be glad if it could be included in the exim documentation.
 
 --------------------------------------------------------------------------8<---
 \input texinfo                                               @c -*- texinfo -*-
-@c $Id: C012,v 1.2 2000/01/09 21:33:19 nigel Exp $
+@c $Id: exim-uucp.texi,v 1.2 1998/10/24 19:35:37 david Rel $
 
 @c %** start of header
 @setfilename exim-uucp.info

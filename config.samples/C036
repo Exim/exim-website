@@ -1,0 +1,126 @@
+Date: 25 Jul 2000 13:30:24 +0200
+From: Oliver Seidel <seidel@in-medias-res.com>
+
+Hello Everybody,
+
+my aim was to have an LDAP-driven system for mail delivery.  My
+configuration uses an LDAP directory structure that operates as
+follows (sensitive parts replaced by "xxx"):
+
+dn: dc=in medias res,dc=com
+dc: in medias res
+objectclass: top
+objectclass: domain
+
+dn: ou=People,dc=in medias res,dc=com
+ou: People
+objectclass: top
+objectclass: organizationalUnit
+
+dn: uid=seidel,ou=People,dc=in medias res,dc=com
+telephonenumber: 02166 9999 xxx
+mobile: (none)
+mailalias: Oliver.Seidel
+mailalias: os10000
+mailalias: oslist
+objectclass: addressbook
+objectclass: account
+objectclass: shadowaccount
+objectclass: posixAccount
+objectclass: top
+mailbox: /var/spool/mail/seidel
+mail: os10000@in-medias-res.com
+uid: seidel
+cn: Oliver Seidel
+sn: Seidel
+givenname: Oliver
+loginshell: /bin/bash
+uidnumber: xxx
+gidnumber: xxx
+homedirectory: /home/seidel
+gecos: Oliver Seidel
+userpassword: {crypt}xxx
+
+This allows the use of the "MS Outlook" address book feature and
+allows the delivery of email to local mailboxes, with ".forward"
+processing.
+
+My Exim Makefile in "$(EXIM)/Local/Makefile" differs from the original
+in "$(EXIM)/src/EDITME" as follows:
+
+---------------------------------------------------------------------------
+< # AUTH_CRAM_MD5=yes
+---
+> AUTH_CRAM_MD5=yes
+339c339
+< # LOOKUP_LDAP=yes
+---
+> LOOKUP_LDAP=yes
+352a353,355
+> LOOKUP_INCLUDE= -I/tmp/openldap/include
+> LOOKUP_LIBS= -L/tmp/openldap/lib -lldap -llber
+> 
+360c363
+< # LDAP_LIB_TYPE=UMICHIGAN
+---
+> LDAP_LIB_TYPE=UMICHIGAN
+458c461
+< # SPOOL_DIRECTORY=/var/spool/exim
+---
+> SPOOL_DIRECTORY=/var/spool/exim
+---------------------------------------------------------------------------
+
+Finally, after building and installing exim, I use a "directors
+section" in the file "/usr/exim/configure" that contains the following
+entries:
+
+---------------------------------------------------------------------------
+ldap_aliases:
+  driver = aliasfile
+  search_type = ldap
+  query = "ldap://192.168.2.89:389/ou=People,dc=in%20medias%20res,dc=com?uid?one?(mailAlias=${local_part})"
+  new_director = ldap_forward
+
+ldap_forward:
+  driver = forwardfile
+  file = .forward
+  no_verify
+  no_expn
+  check_ancestor
+  filter = true
+  user = ${lookup ldap{ldap://192.168.2.89:389/uid=${local_part},ou=People,dc=in%20medias%20res,dc=com?uidnumber?base?}{$value}fail}
+  group = users
+  file_transport = address_file
+  pipe_transport = address_pipe
+  reply_transport = address_reply
+
+ldap_uids:
+  driver = aliasfile
+  search_type = ldap
+  query = "ldap://192.168.2.89:389/uid=${local_part},ou=People,dc=in%20medias%20res,dc=com?mailbox?base?"
+  user = ${lookup ldap{ldap://192.168.2.89:389/uid=${local_part},ou=People,dc=in%20medias%20res,dc=com?uidnumber?base?}{$value}fail}
+  group = users
+  file_transport = address_file
+  pipe_transport = address_pipe
+
+just_eat_it:
+  driver = smartuser
+  new_address = maildump@in-medias-res.com
+---------------------------------------------------------------------------
+
+The "ldap_aliases" director checks for entries of the form
+"mailalias".  This ensures that the names "os10000", "oslist" and
+"Oliver.Seidel" from the above example are recognised.  The difference
+between this director and the others lies in the fact that it looks up
+the entry "uid" (as can be seen between the "com?" and "?one".
+
+The director "ldap_forward" performs the processing of "~/.forward"
+files.  It needs to look up the UNIX uid number.
+
+The next entry handles direct delivery to the mailbox, and
+
+the last director handles unknown addresses.
+
+I hope I was of assistance and thanks to Philip for his software!
+
+Oliver Seidel

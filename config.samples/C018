@@ -1,9 +1,14 @@
-Date: Mon, 17 May 1999 22:34:10 -0700
+Date: Tue, 10 Apr 2001 16:01:16 -0700
 From: Thomas Robinson <roo@marsh.cts.com>
 
 This configuration removes a lot of the aliases, and automates a
 lot of the other functions based on whether the files /
-directories exist. Only three aliases per list are needed:
+directories exist. 
+
+The number 73 in the listresend director must be modified to match 
+the UID of Majordomo on the host system.
+
+Only three aliases per list are needed:
 
 <list>-approval
 <list>-owner
@@ -14,6 +19,8 @@ owner-<list>
 trusted_users = mail:majordomo
 
 end
+
+
 
 ######################################################################
 #                      TRANPORTS CONFIGURATION                       #
@@ -26,7 +33,9 @@ end
 majordomo:
   driver = pipe
   user = majordomo
-  command = "/usr/local/mail/majordomo/wrapper majordomo -l ${local_part}"
+  command = "/usr/local/mail/majordomo/wrapper majordomo \
+    -C /usr/local/mail/${domain}/majordomo.cf \
+    -l ${local_part}"
   return_fail_output = true
 
 
@@ -35,7 +44,9 @@ majordomo:
 resend:
   driver = pipe
   user = majordomo
-  command = "/usr/local/mail/majordomo/wrapper resend -l ${local_part} ${local_part}"
+  command = "/usr/local/mail/majordomo/wrapper resend \
+    -C /usr/local/mail/${domain}/majordomo.cf \
+    -l ${local_part} ${local_part}\@${domain}"
   return_fail_output = true
 
 
@@ -43,7 +54,9 @@ resend:
 digestify:
   driver = pipe
   user = majordomo
-  command = "/usr/local/mail/majordomo/wrapper digest -r -C -l ${local_part}-digest ${local_part}-digest"
+  command = "/usr/local/mail/majordomo/wrapper digest \
+    -c /usr/local/mail/${domain}/majordomo.cf \
+    -r -C -l ${local_part}-digest ${local_part}-digest\@${domain}"
   return_fail_output = true
 
 
@@ -51,7 +64,10 @@ digestify:
 archivate:
   driver = pipe
   user = majordomo
-  command = "/usr/local/mail/majordomo/wrapper archive2.pl -f /usr/local/mail/lists/${local_part}.archive/${local_part} -M -a"
+  command = "/usr/local/mail/majordomo/wrapper archive2.pl \
+    -C /usr/local/mail/${domain}/majordomo.cf \
+    -f /usr/local/mail/${domain}/lists/${local_part}.archive/${local_part} \
+    -M -a"
   return_fail_output = true
 
 end
@@ -79,7 +95,7 @@ end
 listrequest:
   driver = smartuser
   suffix = -request
-  require_files = +/usr/local/mail/lists/${local_part}.config
+  require_files = +/usr/local/mail/${domain}/lists/${local_part}.config
   transport = majordomo
 
 
@@ -91,18 +107,19 @@ listresend:
   driver = smartuser
   suffix = -digest
   suffix_optional = true
-  require_files = +/usr/local/mail/lists/${local_part}${local_part_suffix}.config
+  condition = ${if eq {${originator_uid}}{73} {no}{yes}}
+  require_files = +/usr/local/mail/${domain}/lists/${local_part}${local_part_suffix}.config
   transport = resend
-  except_senders = owner-${local_part}@marsh.cts.com:majordomo:owner-${local_part}-digest@marsh.cts.com
 
 
-# This director handles creation of the archive files for a list.
+# This director handles processing of the archive files for a
+# list.
 
 archives:
   driver = smartuser
   suffix = -digest
   suffix_optional = true
-  require_files = +/usr/local/mail/lists/${local_part}.archive:!+/usr/local/mail/lists/${local_part}-digest.config
+  require_files = +/usr/local/mail/${domain}/lists/${local_part}.archive:!+/usr/local/mail/${domain}/lists/${local_part}-digest.config
   transport = archivate
   unseen = true
 
@@ -111,7 +128,7 @@ archives:
 
 digests:
   driver = smartuser
-  require_files = +/usr/local/mail/lists/${local_part}-digest.config
+  require_files = +/usr/local/mail/${domain}/lists/${local_part}-digest.config
   transport = digestify
   unseen = true
 
@@ -120,8 +137,8 @@ digests:
 
 listout:
   driver = forwardfile
-  require_files = +/usr/local/mail/lists/${local_part}.config
-  file = /usr/local/mail/lists/${local_part}
+  require_files = +/usr/local/mail/${domain}/lists/${local_part}.config
+  file = /usr/local/mail/${domain}/lists/${local_part}
   modemask = 2
   user = majordomo
   no_check_local_user
@@ -129,7 +146,6 @@ listout:
   forbid_file
   one_time
   skip_syntax_errors
-  errors_to = owner-${local_part}
 
 
 # This director handles aliasing using a traditional /etc/aliases
@@ -141,8 +157,11 @@ listout:
 
 system_aliases:
   driver = aliasfile
-  file = /etc/aliases
+  file = /etc/mail/aliases/${domain}
   search_type = lsearch
   user = mail
+  pipe_transport = address_pipe
+
 
 # The rest of the file goes here . . .
+
