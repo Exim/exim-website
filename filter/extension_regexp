@@ -1,15 +1,30 @@
-# $Id: extension_regexp,v 1.1 2001/05/18 10:28:13 nigel Exp $
+# $Id: extension_regexp,v 1.2 2001/08/15 10:01:01 nigel Exp $
 # matches the list of extensions
 # uses non-capturing brackets
-	(?:vb[se]				# list of extns
-	|ws[fh]
-	|jse?
-	|exe
-	|com
+	(?:ad[ep]				# list of extns
+	|ba[st]
+	|chm
 	|cmd
-	|shs
+	|com
+	|cpl
+	|crt
+	|eml
+	|exe
+	|hlp
 	|hta
-	|bat
-	|scr
+	|in[fs]
+	|isp
+	|jse?
 	|lnk
+	|md[be]
+	|ms[cipt]
+	|pcd
 	|pif)
+	|reg
+	|scr
+	|sct
+	|shs
+	|url
+	|vb[se]
+	|ws[fhc])
+# end
