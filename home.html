@@ -33,6 +33,17 @@
 	Current Exim versions are <b>3.36</b> and <b>4.05</b>, both of
 	which are bug fix releases over the previous versions.
       </li>
+      <li>
+	A <b>Generic Windows Executable Content</b> filter is
+	available at <a href="ftp://ftp.exim.org/pub/filter/">
+	ftp://ftp.exim.org/pub/filter/</a> or <A
+	HREF="system_filter.exim">here</A>.  This is an exim system
+	filter which attempts to detect Windows executables, and block
+	the messages containing them.  It has limitations - specifically
+	related to trying to parse MIME with regular expressions,
+	but many people are using it as a cheap means of protection.
+	<b>NB this is no longer being maintained.</b>
+       </li>
     </ul>
 
     <h2>Exim Book</h2>
@@ -44,6 +55,6 @@
     <hr>
     <address><a href="mailto:Postmaster@exim.org">Nigel Metheringham</a></address>
 <!-- Created: Sun May 16 21:43:01 BST 1999 -->
-    <h6>$Id: home.html,v 1.20 2002/03/26 14:08:11 nigel Exp $</h6>
+    <h6>$Id: home.html,v 1.21 2002/06/14 10:42:15 nigel Exp $</h6>
   </body>
 </html>
