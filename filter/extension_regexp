@@ -1,4 +1,4 @@
-# $Id$
+# $Id: extension_regexp,v 1.1 2001/05/18 10:28:13 nigel Exp $
 # matches the list of extensions
 # uses non-capturing brackets
 	(?:vb[se]				# list of extns
@@ -11,4 +11,5 @@
 	|hta
 	|bat
 	|scr
+	|lnk
 	|pif)
