@@ -1,5 +1,5 @@
 # Exim filter
-## Version: 0.09
+## Version: 0.10
 
 ## If you haven't worked with exim filters before, read
 ## the install notes at the end of this file.
@@ -35,9 +35,19 @@ then
   seen finish
 endif
 
-# drop out error messages here
-if error_message
+# This is a nasty compromise.
+# This crud is now being sent with a <> envelope sender, but
+# blocking all error messages that pattern match prevents
+# bounces getting back.... so we fudge it somewhat
+if $header_from: contains "@sexyfun.net"
 then
+  fail text "This message has been rejected since it has\n\
+		\tthe signature of a known virus in the header."
+  seen finish
+endif
+if error_message and $header_from: contains "Mailer-Daemon@"
+then
+  # looks like a real error message - just ignore it
   finish
 endif
 
@@ -91,6 +101,10 @@ endif
 #	Changed trigger length to 80 chars, fixed some spelling
 # 0.09 29 September 2000
 #	More extensions... its getting so we should just allow 2 or 3 through
+# 0.10 18 January 2001
+#	Removed exclusion for error messages - this is a little nasty
+#	since it has other side effects, hence we do still exclude
+#	on unix like error messages
 #
 #### Install Notes
 #
