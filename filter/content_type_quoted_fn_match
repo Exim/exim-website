@@ -1,9 +1,0 @@
-# $Id$
-#
-# Match the content-type header with quoted filename
-#
-#include content_type_header
-  (\"[^\"]+\.					# quoted filename.
-#include extension_regexp
-  \"						# end quote
-  )						# end of filename capture

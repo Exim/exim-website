@@ -1,3 +1,0 @@
-# $Id$
-# Matches the header part
-  (?:file)?name=				# filename=/name= 

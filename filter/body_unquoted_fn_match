@@ -1,9 +1,0 @@
-# $Id: body_unquoted_fn_match,v 1.2 2001/08/15 10:01:01 nigel Exp $
-#
-# Match a body attachment with unquoted filename
-#
-#include header_regexp
-  (\S+\.						# unquoted filename.ext
-#include extension_regexp
-  )						# end of filename capture
-  [\s;]						# trailing ;/space/newline
