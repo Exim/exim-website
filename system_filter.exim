@@ -1,6 +1,6 @@
 # Exim filter
-## Version: 0.12
-#	$Id: system_filter.exim,v 1.4 2001/03/20 21:24:40 nigel Exp $
+## Version: 0.13
+#	$Id: system_filter.exim,v 1.3 2001/05/18 10:28:13 nigel Exp $
 
 ## If you haven't worked with exim filters before, read
 ## the install notes at the end of this file.
@@ -53,8 +53,35 @@ then
 endif
 
 # Look for single part MIME messages with suspicious name extensions
-# Check Content-Type header [vb2_regexp]
-if $header_content-type: matches "(?:file)?name=(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif)\"|[\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif))"
+# Check Content-Type header using quoted filename [content_type_quoted_fn_match]
+if $header_content-type: matches "(?:file)?name=(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif)\")"
+then
+  fail text "This message has been rejected because it has\n\
+	     \tpotentially executable content $1\n\
+	     \tThis form of attachment has been used by\n\
+             \trecent viruses or other malware.\n\
+	     \tIf you meant to send this file then please\n\
+	     \tpackage it up as a zip file and resend it."
+  seen finish
+endif
+# same again using unquoted filename [content_type_unquoted_fn_match]
+if $header_content-type: matches "(?:file)?name=([\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif))"
+then
+  fail text "This message has been rejected because it has\n\
+	     \tpotentially executable content $1\n\
+	     \tThis form of attachment has been used by\n\
+             \trecent viruses or other malware.\n\
+	     \tIf you meant to send this file then please\n\
+	     \tpackage it up as a zip file and resend it."
+  seen finish
+endif
+
+
+# Attempt to catch embedded VBS attachments
+# in emails.   These were used as the basis for 
+# the ILOVEYOU virus and its variants
+# Quoted filename - [body_quoted_fn_match]
+if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif)\")[\\\\s;]"
 then
   fail text "This message has been rejected because it has\n\
 	     \ta potentially executable attachment $1\n\
@@ -64,12 +91,8 @@ then
 	     \tpackage it up as a zip file and resend it."
   seen finish
 endif
-
-# Attempt to catch embedded VBS attachments
-# in emails.   These were used as the basis for 
-# the ILOVEYOU virus and its variants
-# [vb_regexp]
-if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))(\"[^\"]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif)\"|[\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif))[\\\\s;]"
+# same again using unquoted filename [body_unquoted_fn_match]
+if $message_body matches "(?:Content-(?:Type:(?>\\\\s*)[\\\\w-]+/[\\\\w-]+|Disposition:(?>\\\\s*)attachment);(?>\\\\s*)(?:file)?name=|begin(?>\\\\s+)[0-7]{3,4}(?>\\\\s+))([\\\\w.-]+\\\\.(?:vb[se]|ws[fh]|jse?|exe|com|cmd|shs|hta|bat|scr|pif))[\\\\s;]"
 then
   fail text "This message has been rejected because it has\n\
 	     \ta potentially executable attachment $1\n\
@@ -109,6 +132,11 @@ endif
 #	** Missed changing version number at top of file :-(
 # 0.12 10 May, 2001
 #	Added HTA extension
+# 0.13 22 May, 2001
+#	Reformatted regexps and code to build them so that they are
+#	shorter than the limits on pre exim 3.20 filters.  This will
+#	make them significantly less efficient, but I am getting so
+#	many queries about this that requiring 3.2x appears unsupportable.
 #
 #### Install Notes
 #
