@@ -1,4 +1,12 @@
-# $Id: robots.txt,v 1.2 2000/01/09 21:33:19 nigel Exp $
+# $Id: robots.txt,v 1.1.1.1 2000/05/22 19:54:41 nigel Exp $
 User-agent: *
-Disallow: /mailman/
+Disallow: /mailman/admin/
+Disallow: /mailman/admindb/
+Disallow: /mailman/edithtml/
+Disallow: /mailman/handle_opts/
+Disallow: /mailman/listinfo/
+Disallow: /mailman/options/
+Disallow: /mailman/private/
+Disallow: /mailman/roster/
+Disallow: /mailman/subscribe/
 Disallow: /ftp/
