@@ -603,7 +603,7 @@
 
 <pre>
   # Reject bounce (null sender) messages to the list
-  reject   message = "Recipient never sends mail so cannot cause bounces"
+  deny     message = "Recipient never sends mail so cannot cause bounces"
            senders = :
            domains = +mm_domains
            condition = ${if exists{MM_LISTCHK} {yes}{no}}
@@ -616,11 +616,11 @@
 
 <pre>
   # Reject bounce (null sender) messages to the list
-  reject   message = "Recipient never sends mail so cannot cause bounces"
+  deny     message = "Recipient never sends mail so cannot cause bounces"
            senders = :
            domains = +mm_domains
            local_parts = \N^.*-(admin|join|leave|owner|request)$\N
-  reject   message = "Recipient never sends mail so cannot cause bounces"
+  deny     message = "Recipient never sends mail so cannot cause bounces"
            senders = :
            domains = +mm_domains
            local_parts = \N^.*-(subscribe|unsubscribe)$\N
@@ -645,7 +645,7 @@
 
 <pre>
   # Do callback verification unless Mailman incoming bounce
-  reject   !local_parts = *-bounces : *-bounces+*
+  deny     !local_parts = *-bounces : *-bounces+*
            !verify = sender/callout=30s,defer_ok
 
 </pre>
@@ -749,6 +749,6 @@
     You</i>.</p>
 
     <hr>
-    <h4>$Id: mailman21.html,v 1.4 2004/06/25 12:42:53 nigel Exp $</h4>
+    <h4>$Id: mailman21.html,v 1.5 2004/06/28 13:39:38 nigel Exp $</h4>
   </body>
 </html>
