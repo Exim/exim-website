@@ -1,8 +1,8 @@
-# $Id: content_type_unquoted_fn_match,v 1.1 2001/05/18 10:28:13 nigel Exp $
+# $Id: content_type_unquoted_fn_match,v 1.2 2001/08/15 10:01:01 nigel Exp $
 #
 # Match the content-type header with quoted filename
 #
 #include content_type_header
-  (.+\.						# unquoted filename.ext
+  (\S+\.						# unquoted filename.ext
 #include extension_regexp
   )						# end of filename capture
