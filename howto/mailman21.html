@@ -264,7 +264,7 @@
     Unfortunately, lots of servers send bounce messages with a bogus
     address in the header, and there are plenty that sound bounces
     with bogus envelope senders (even though they're supposed to just
-    use an epmty envelope sender for bounces).</p>
+    use an empty envelope sender for bounces).</p>
 
     <p>In order to ensure that Mailman can disable/remove bouncing
     addresses, you generally want to receive bounces for Mailman
@@ -285,13 +285,13 @@
   # Accept bounces to lists even if callbacks or other checks would fail
   warn     message      = X-WhitelistedRCPT-nohdrfromcallback: Yes
            condition    = \
-           ${if and {{match{$local_part}{(.*)-bounces\+.*}}
+           ${if and {{match{$local_part}{(.*)-bounces\+.*}} \
                      {exists {MAILMAN_HOME/lists/$1/config.pck}}} \
                 {yes}{no}}
                 {yes}{no}}
 
   accept   condition    = \
-           ${if and {{match{$local_part}{(.*)-bounces\+.*}}
+           ${if and {{match{$local_part}{(.*)-bounces\+.*}} \
                      {exists {MAILMAN_HOME/lists/$1/config.pck}}} \
                 {yes}{no}}
                 {yes}{no}}
@@ -399,6 +399,6 @@
     Overhauled/reformatted/clarified/simplified by Greg Ward.</p>
 
     <hr>
-    <h4>$Id: mailman.html,v 1.3 2002/06/14 10:42:18 nigel Exp $</h4>
+    <h4>$Id: mailman21.html,v 1.1 2002/10/16 20:21:53 nigel Exp $</h4>
   </body>
 </html>
