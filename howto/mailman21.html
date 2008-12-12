@@ -460,7 +460,7 @@
   mailman_verp_router:
     driver = dnslookup
     # we only consider messages sent in through loopback
-    condition = ${if or{{eq{$sender_host_address}{127.0.0.1}}
+    condition = ${if or{{eq{$sender_host_address}{127.0.0.1}} \
                         {eq{$sender_host_address}{::1}}}{yes}{no}}
     # we do not do this for traffic going to the local machine
     domains = !+local_domains:!+mm_domains
