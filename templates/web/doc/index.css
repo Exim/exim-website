@@ -1,0 +1,62 @@
+#options {
+	padding:			1em 0 0 2em;
+}
+
+#options img {
+	margin:				10px 4px 0 0;
+	float:				left;
+}
+
+#options img.collapse {
+	margin-right:			0.5em;
+}
+
+#options img:hover {
+	cursor:				pointer;
+}
+
+#chapters a {
+	text-decoration:		none;
+}
+
+#chapters, .chapter, .section {
+	float:				left;
+	clear:				both;
+	list-style:			none;
+	white-space:			nowrap;
+}
+
+#chapters li.chapter .button {
+	width:				12px;
+	height:				12px;
+	margin:				10px 10px 0 0;
+	background-repeat:		no-repeat;
+	float:				left;
+	display:			none;
+}
+
+#chapters li.chapter .button:hover {
+	cursor:				pointer;
+}
+
+#chapters.expandable li.chapter .button {
+	display:			block;
+	background-image:		url('../../../../doc/plus-12x12.png');
+}
+
+#chapters.expandable li.chapter span.chapter_title.nosub {
+	margin-left:			22px;
+}
+
+#chapters.expandable li.chapter ul.sections {
+	display:			none;
+}
+
+#chapters.expandable li.chapter.open .button {
+	background-image:		url('../../../../doc/minus-12x12.png');
+}
+
+#chapters.expandable li.chapter.open ul.sections {
+	display:			block;
+}
+

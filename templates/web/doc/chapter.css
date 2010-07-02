@@ -1,0 +1,21 @@
+.previous_page, .next_page {
+	font-size:			1.2em;
+}
+
+.previous_page {
+	float:				left;
+	clear:				left;
+}
+
+.next_page {
+	float:				right;
+	clear:				right;
+}
+
+#chapter table {
+	margin-bottom:			1em;
+}
+
+#chapter table td {
+	padding-left:			1em;
+}
