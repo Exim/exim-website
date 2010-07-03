@@ -21,11 +21,6 @@
 
 	</xsl:variable>
  
-	<!-- JavaScript -->
-		<xsl:variable name="html.body.append">
-			<script type="text/javascript" src="{$docroot}/index.js"/>
-		</xsl:variable>
-		
 	<!-- CONTENT -->
 		<xsl:template name="content">
 

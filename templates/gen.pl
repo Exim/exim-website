@@ -9,10 +9,6 @@ use XML::LibXSLT;
 
 my $canonical_url = 'http://www.exim.org/';
 
-# ./gen.pl --web    --latest 4.72 --tmpl /var/www/mike/exim.grepular.com/template --docroot /var/www/mike/exim.grepular.com/htdocs
-# ./gen.pl --spec   --latest 4.72 --tmpl /var/www/mike/exim.grepular.com/template --docroot /var/www/mike/exim.grepular.com/htdocs spec.xml
-# ./gen.pl --filter --latest 4.72 --tmpl /var/www/mike/exim.grepular.com/template --docroot /var/www/mike/exim.grepular.com/htdocs filter.xml
-
 ## Parse arguments
   my %opt = parse_arguments();
 
@@ -91,6 +87,16 @@ my $canonical_url = 'http://www.exim.org/';
           print "Generating  : docroot:/$path\n";
           transform( $xml,
              "$opt{tmpl}/doc/index.xsl",
+             "$opt{docroot}/$path",
+          );
+       }
+
+     ## Generate a Table of Contents XML file
+       {
+          my $path = "exim-html-$version/doc/html/spec_html/".($type eq 'filter'?'filter_toc':'index_toc').".xml";
+          print "Generating  : docroot:/$path\n";
+          transform( $xml,
+             "$opt{tmpl}/doc/toc.xsl",
              "$opt{docroot}/$path",
           );
        }

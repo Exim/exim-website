@@ -17,6 +17,7 @@
       <xsl:variable name="html.head.robots" select="'noodp,noydir,index,follow'"/>
       <xsl:variable name="html.head.append"/>
       <xsl:variable name="html.body.append"/>
+      <xsl:variable name="html.body.outer.append"/>
 
    <!-- The main template code -->
       <xsl:template match="/">
@@ -95,6 +96,8 @@
                          <div class="left_bar"/>
                          <div class="right_bar"/>
 
+                      <!-- Append anything to the outer container? -->
+                         <xsl:copy-of select="$html.body.outer.append"/>
                    </div>
 
                 <!-- Load latest version of jQuery 1.4 from the Google CDN -->

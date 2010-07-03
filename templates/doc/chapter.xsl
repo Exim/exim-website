@@ -28,6 +28,14 @@
          <script type="text/javascript" src="{$docroot}/doc/chapter.js"/>
       </xsl:variable>
 
+   <!-- Table of Contents -->
+      <xsl:variable name="html.body.outer.append">
+         <div id="toc">
+            <ul class="hidden"/>
+            <img src="../../../../doc/contents.png" width="16" height="155"/>
+         </div>
+      </xsl:variable>
+
    <!-- CONTENT -->
       <xsl:template match="/chapter">
 
