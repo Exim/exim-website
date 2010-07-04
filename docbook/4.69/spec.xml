@@ -12,15 +12,17 @@
 <bookinfo>
 <title>Specification of the Exim Mail Transfer Agent</title>
 <titleabbrev>The Exim MTA</titleabbrev>
-<date>29 May 2010</date>
-<author><firstname>Exim</firstname><surname>Maintainers</surname></author>
-<authorinitials>EM</authorinitials>
+<date>23 August 2007</date>
+<author><firstname>Philip</firstname><surname>Hazel</surname></author>
+<authorinitials>PH</authorinitials>
+<affiliation><orgname>University of Cambridge Computing Service</orgname></affiliation>
+<address>New Museums Site, Pembroke Street, Cambridge CB2 3QH, England</address>
 <revhistory><revision>
-  <revnumber>4.72</revnumber>
-  <date>29 May 2010</date>
-  <authorinitials>EM</authorinitials>
+  <revnumber>4.68</revnumber>
+  <date>23 August 2007</date>
+  <authorinitials>PH</authorinitials>
 </revision></revhistory>
-<copyright><year>2009</year><holder>University of Cambridge</holder></copyright>
+<copyright><year>2007</year><holder>University of Cambridge</holder></copyright>
 </bookinfo>
 <chapter id="CHID1">
 <title>Introduction</title>
@@ -198,8 +200,8 @@ contributors.
 <indexterm role="concept">
 <primary>documentation</primary>
 </indexterm>
-This edition of the Exim specification applies to version 4.72 of Exim.
-Substantive changes from the 4.71 edition are marked in some
+This edition of the Exim specification applies to version 4.69 of Exim.
+Substantive changes from the 4.68 edition are marked in some
 renditions of the document; this paragraph is so marked if the rendition is
 capable of showing a change indicator.
 </para>
@@ -299,6 +301,14 @@ directory are:
 <entry>specification of the filter language</entry>
 </row>
 <row>
+<entry><filename>pcrepattern.txt</filename></entry>
+<entry>specification of PCRE regular expressions</entry>
+</row>
+<row>
+<entry><filename>pcretest.txt</filename></entry>
+<entry>specification of the PCRE testing program</entry>
+</row>
+<row>
 <entry><filename>Exim3.upgrade</filename></entry>
 <entry>upgrade notes from release 2 to release 3</entry>
 </row>
@@ -340,7 +350,7 @@ Squared, formerly Planet Online Ltd, whose support I gratefully acknowledge.
 </indexterm>
 As well as Exim distribution tar files, the Exim web site contains a number of
 differently formatted versions of the documentation. A recent addition to the
-online information is the Exim wiki (<emphasis role="bold"><ulink url="http://wiki.exim.org">http://wiki.exim.org</ulink></emphasis>),
+online information is the Exim wiki <phrase revisionflag="changed">(<emphasis role="bold"><ulink url="http://wiki.exim.org">http://wiki.exim.org</ulink></emphasis>)</phrase>,
 which contains what used to be a separate FAQ, as well as various other
 examples, tips, and know-how that have been contributed by Exim users.
 </para>
@@ -348,7 +358,7 @@ examples, tips, and know-how that have been contributed by Exim users.
 <indexterm role="concept">
 <primary>Bugzilla</primary>
 </indexterm>
-An Exim Bugzilla exists at <emphasis role="bold"><ulink url="http://bugs.exim.org">http://bugs.exim.org</ulink></emphasis>. You can use
+An Exim Bugzilla exists at <phrase revisionflag="changed"><emphasis role="bold"><ulink url="http://bugs.exim.org">http://bugs.exim.org</ulink></emphasis></phrase>. You can use
 this to report bugs, and also to add items to the wish list. Please search
 first to check that you are not duplicating a previous entry.
 </para>
@@ -426,8 +436,8 @@ information will be posted at <emphasis role="bold"><ulink url="http://www-tus.c
 <indexterm role="concept">
 <primary>reporting bugs</primary>
 </indexterm>
-Reports of obvious bugs can be emailed to <emphasis>bugs@exim.org</emphasis> or reported
-via the Bugzilla (<emphasis role="bold"><ulink url="http://bugs.exim.org">http://bugs.exim.org</ulink></emphasis>). However, if you are unsure
+Reports of obvious bugs <phrase revisionflag="changed">can be emailed to <emphasis>bugs@exim.org</emphasis> or reported
+via the Bugzilla (<emphasis role="bold"><ulink url="http://bugs.exim.org">http://bugs.exim.org</ulink></emphasis>).</phrase> However, if you are unsure
 whether some behaviour is a bug or not, the best thing to do is to post a
 message to the <emphasis>exim-dev</emphasis> mailing list and have it discussed.
 </para>
@@ -485,14 +495,14 @@ The <filename>.bz2</filename> file is usually a lot smaller than the <filename>.
 <indexterm role="concept">
 <primary>public key for signed distribution</primary>
 </indexterm>
-The distributions are currently signed with Nigel Metheringham&#x2019;s GPG key. The
+The distributions are currently signed with Philip Hazel&#x2019;s GPG key. The
 corresponding public key is available from a number of keyservers, and there is
-also a copy in the file <filename>nigel-pubkey.asc</filename>. The signatures for the tar bundles are
+also a copy in the file <filename>Public-Key</filename>. The signatures for the tar bundles are
 in:
 </para>
 <literallayout>
-<filename>exim-n.nn.tar.gz.asc</filename>
-<filename>exim-n.nn.tar.bz2.asc</filename>
+<filename>exim-n.nn.tar.gz.sig</filename>
+<filename>exim-n.nn.tar.bz2.sig</filename>
 </literallayout>
 <para>
 For each released version, the log of changes is made separately available in a
@@ -785,11 +795,12 @@ A number of pieces of external code are included in the Exim distribution.
 <itemizedlist>
 <listitem>
 <para>
-Regular expressions are supported in the main Exim program and in the
-Exim monitor using the freely-distributable PCRE library, copyright
-&copy; University of Cambridge. The source to PCRE is no longer shipped with
-Exim, so you will need to use the version of PCRE shipped with your system,
-or obtain and install the full version of the library from
+Regular expressions are supported in the main Exim program and in the Exim
+monitor using the freely-distributable PCRE library, copyright &copy;
+University of Cambridge. The source is distributed in the directory
+<filename>src/pcre</filename>. However, this is a cut-down version of PCRE. If you want to use
+the PCRE library in other programs, you should obtain and install the full
+version of the library from
 <emphasis role="bold"><ulink url="ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre">ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre</ulink></emphasis>.
 </para>
 </listitem>
@@ -2090,7 +2101,7 @@ for only a short time (see <option>timeout_frozen_after</option> and
 <para>
 Exim is distributed as a gzipped or bzipped tar file which, when unpacked,
 creates a directory with the name of the current release (for example,
-<filename>exim-4.72</filename>) into which the following files are placed:
+<filename>exim-4.69</filename>) into which the following files are placed:
 </para>
 <informaltable frame="none">
 <tgroup cols="2" colsep="0" rowsep="0">
@@ -2190,23 +2201,6 @@ Symbolic links to the sources are installed in this directory, which is where
 the actual building takes place. In most cases, Exim can discover the machine
 architecture and operating system for itself, but the defaults can be
 overridden if necessary.
-</para>
-</section>
-<section id="SECTpcre">
-<title>PCRE library</title>
-<para>
-<indexterm role="concept">
-<primary>PCRE library</primary>
-</indexterm>
-Exim no longer has an embedded PCRE library as the vast majority of
-modern systems include PCRE as a system library, although you may need
-to install the PCRE or PCRE development package for your operating
-system. If your system has a normal PCRE installation the Exim build
-process will need no further configuration. If the library or the
-headers are in an unusual location you will need to set the PCRE_LIBS
-and INCLUDE directives appropriately. If your operating system has no
-PCRE support then you will need to obtain and build the current PCRE
-from <emphasis role="bold"><ulink url="ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/">ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/</ulink></emphasis>.
 </para>
 </section>
 <section id="SECTdb">
@@ -3014,8 +3008,9 @@ but this usage is deprecated.
 <secondary>what is not installed</secondary>
 </indexterm>
 Running <emphasis>make install</emphasis> does not copy the Exim 4 conversion script
-<emphasis>convert4r4</emphasis>. You will probably run this only once if you are
-upgrading from Exim 3. None of the documentation files in the <filename>doc</filename>
+<emphasis>convert4r4</emphasis>, or the <emphasis>pcretest</emphasis> test program. You will probably run the
+first of these only once (if you are upgrading from Exim 3), and the second
+isn&#x2019;t really part of Exim. None of the documentation files in the <filename>doc</filename>
 directory are copied, except for the info files when you have set
 INFO_DIRECTORY, as described in section <xref linkend="SECTinsinfdoc"/> below.
 </para>
@@ -3023,7 +3018,7 @@ INFO_DIRECTORY, as described in section <xref linkend="SECTinsinfdoc"/> below.
 For the utility programs, old versions are renamed by adding the suffix <filename>.O</filename>
 to their names. The Exim binary itself, however, is handled differently. It is
 installed under a name that includes the version number and the compile number,
-for example <filename>exim-4.72-1</filename>. The script then arranges for a symbolic link
+for example <filename>exim-4.69-1</filename>. The script then arranges for a symbolic link
 called <filename>exim</filename> to point to the binary. If you are updating a previous version
 of Exim, the script takes care to ensure that the name <filename>exim</filename> is never absent
 from the directory (as seen by other processes).
@@ -4201,10 +4196,6 @@ local part) and outputs what it finds.
 <primary>options</primary>
 <secondary>transport &ndash; extracting</secondary>
 </indexterm>
-<indexterm role="concept">
-<primary>options</primary>
-<secondary>authenticator &ndash; extracting</secondary>
-</indexterm>
 If one of the words <option>router</option>, <option>transport</option>, or <option>authenticator</option> is given,
 followed by the name of an appropriate driver instance, the option settings for
 that driver are output. For example:
@@ -4219,16 +4210,6 @@ using one of the words <option>router_list</option>, <option>transport_list</opt
 <option>authenticator_list</option>, and a complete list of all drivers with their option
 settings can be obtained by using <option>routers</option>, <option>transports</option>, or
 <option>authenticators</option>.
-</para>
-<para>
-<indexterm role="concept">
-<primary>options</primary>
-<secondary>macro &ndash; extracting</secondary>
-</indexterm>
-If invoked by an admin user, then <option>macro</option>, <option>macro_list</option> and <option>macros</option>
-are available, similarly to the drivers.  Because macros are sometimes used
-for storing passwords, this option is restricted.
-The output format is one item per line.
 </para>
 </listitem></varlistentry>
 <varlistentry>
@@ -7254,7 +7235,7 @@ strings such as SQL statements are defined separately as macros, for example:
 </para>
 <literallayout class="monospaced">
 ALIAS_QUERY = select mailbox from user where \
-              login='${quote_mysql:$local_part}';
+              login=${quote_mysql:$local_part};
 </literallayout>
 <para>
 This can then be used in a <command>redirect</command> router setting like this:
@@ -8873,11 +8854,6 @@ To make the authenticators work, you can use a string expansion
 expression like one of the examples in <xref linkend="CHAPplaintext"/>.
 </para>
 <para>
-Beware that the sequence of the parameters to PLAIN and LOGIN differ; the
-usercode and password are in different positions.  <xref linkend="CHAPplaintext"/>
-covers both.
-</para>
-<para>
 <indexterm role="concept" startref="IIDconfiwal" class="endofrange"/>
 </para>
 </section>
@@ -8902,11 +8878,13 @@ O&#x2019;Reilly (see <emphasis role="bold"><ulink url="http://www.oreilly.com/ca
 </para>
 <para>
 The documentation for the syntax and semantics of the regular expressions that
-are supported by PCRE is included in the PCRE distribution, and no further
-description is included here. The PCRE functions are called from Exim using
-the default option settings (that is, with no PCRE options set), except that
-the PCRE_CASELESS option is set when the matching is required to be
-case-insensitive.
+are supported by PCRE is included in plain text in the file
+<filename>doc/pcrepattern.txt</filename> in the Exim distribution, and also in the HTML
+tarbundle of Exim documentation. It describes in detail the features of the
+regular expressions that PCRE supports, so no further description is included
+here. The PCRE functions are called from Exim using the default option settings
+(that is, with no PCRE options set), except that the PCRE_CASELESS option is
+set when the matching is required to be case-insensitive.
 </para>
 <para>
 In most cases, when a regular expression is required in an Exim configuration,
@@ -8952,6 +8930,55 @@ domains = ^\\d{3}\\.example\$
 if you want <emphasis>example</emphasis> to be the top-level domain. The backslash before the
 $ is needed because string expansion also interprets dollar characters.
 </para>
+<section id="SECID59">
+<title>Testing regular expressions</title>
+<para>
+<indexterm role="concept">
+<primary>testing</primary>
+<secondary>regular expressions</secondary>
+</indexterm>
+<indexterm role="concept">
+<primary>regular expressions</primary>
+<secondary>testing</secondary>
+</indexterm>
+<indexterm role="concept">
+<primary><emphasis>pcretest</emphasis></primary>
+</indexterm>
+A program called <emphasis>pcretest</emphasis> forms part of the PCRE distribution and is built
+with PCRE during the process of building Exim. It is primarily intended for
+testing PCRE itself, but it can also be used for experimenting with regular
+expressions. After building Exim, the binary can be found in the build
+directory (it is not installed anywhere automatically). There is documentation
+of various options in <filename>doc/pcretest.txt</filename>, but for simple testing, none are
+needed. This is the output of a sample run of <emphasis>pcretest</emphasis>:
+</para>
+<literallayout>
+<literal>  re&gt; </literal><emphasis role="bold"><literal>/^([@]+)@.+\.(ac|edu)\.(?!kr)[a-z]{2}$/</literal></emphasis>
+<literal>data&gt; </literal><emphasis role="bold"><literal>x@y.ac.uk</literal></emphasis>
+<literal> 0: x@y.ac.uk</literal>
+<literal> 1: x</literal>
+<literal> 2: ac</literal>
+<literal>data&gt; </literal><emphasis role="bold"><literal>x@y.ac.kr</literal></emphasis>
+<literal>No match</literal>
+<literal>data&gt; </literal><emphasis role="bold"><literal>x@y.edu.com</literal></emphasis>
+<literal>No match</literal>
+<literal>data&gt; </literal><emphasis role="bold"><literal>x@y.edu.co</literal></emphasis>
+<literal> 0: x@y.edu.co</literal>
+<literal> 1: x</literal>
+<literal> 2: edu</literal>
+</literallayout>
+<para>
+Input typed by the user is shown in bold face. After the <quote>re&gt;</quote> prompt, a
+regular expression enclosed in delimiters is expected. If this compiles without
+error, <quote>data&gt;</quote> prompts are given for strings against which the expression is
+matched. An empty data line causes a new regular expression to be read. If the
+match is successful, the captured substring values (that is, what would be in
+the variables <varname>$0</varname>, <varname>$1</varname>, <varname>$2</varname>, etc.) are shown. The above example tests for
+an email address whose domain ends with either <quote>ac</quote> or <quote>edu</quote> followed by a
+two-character top-level domain that is not <quote>kr</quote>. The local part is captured
+in <varname>$1</varname> and the <quote>ac</quote> or <quote>edu</quote> in <varname>$2</varname>.
+</para>
+</section>
 </chapter>
 
 <chapter id="CHAPfdlookup">
@@ -9253,7 +9280,7 @@ being interpreted as a key terminator. For example:
 </para>
 <literallayout class="monospaced">
 1.2.3.4:           data for 1.2.3.4
-192.168.0.0/16:    data for 192.168.0.0/16
+192.168.0.0/16     data for 192.168.0.0/16
 "abcd::cdab":      data for abcd::cdab
 "abcd:abcd::/32"   data for abcd:abcd::/32
 </literallayout>
@@ -10037,24 +10064,6 @@ ${lookup dnsdb{&gt;: a=host1.example}}
 It is permitted to specify a space as the separator character. Further
 white space is ignored.
 </para>
-<para revisionflag="changed">
-<indexterm role="concept">
-<primary>TXT record</primary>
-<secondary>in <command>dnsdb</command> lookup</secondary>
-</indexterm>
-For TXT records with multiple items of data, only the first item is returned,
-unless a separator for them is specified using a comma after the separator
-character followed immediately by the TXT record item separator. To concatenate
-items without a separator, use a semicolon instead.
-</para>
-<literallayout class="monospaced" revisionflag="changed">
-${lookup dnsdb{&gt;\n,: txt=a.b.example}}
-${lookup dnsdb{&gt;\n; txt=a.b.example}}
-</literallayout>
-<para revisionflag="changed">
-It is permitted to specify a space as the separator character. Further
-white space is ignored.
-</para>
 </section>
 <section id="SECID66">
 <title>Pseudo dnsdb record types</title>
@@ -10756,9 +10765,9 @@ If any MySQL, PostgreSQL, Oracle, or InterBase lookups are used, the
 <option>mysql_servers</option>, <option>pgsql_servers</option>, <option>oracle_servers</option>, or <option>ibase_servers</option>
 option (as appropriate) must be set to a colon-separated list of server
 information.
-(For MySQL and PostgreSQL only, the global option need not be set if all
+<phrase revisionflag="changed">(For MySQL and PostgreSQL only, the global option need not be set if all
 queries contain their own server information &ndash; see section
-<xref linkend="SECTspeserque"/>.) Each item in the list is a slash-separated list of four
+<xref linkend="SECTspeserque"/>.)</phrase> Each item in the list is a slash-separated list of four
 items: host name, database name, user name, and password. In the case of
 Oracle, the host name field is used for the <quote>service name</quote>, and the database
 name field is not used and should be empty. For example:
@@ -10841,7 +10850,7 @@ mysql_servers = slave1/db/name/pw:\
 In an updating lookup, you could then write:
 </para>
 <literallayout class="monospaced">
-${lookup mysql{servers=master; UPDATE ...} }
+${lookup mysql{servers=master; UPDATE ...}
 </literallayout>
 <para>
 That query would then be sent only to the master server. If, on the other hand,
@@ -10849,7 +10858,7 @@ the master is not to be used for reading, and so is not present in the global
 option, you can still update it by a query of this form:
 </para>
 <literallayout class="monospaced">
-${lookup pgsql{servers=master/db/name/pw; UPDATE ...} }
+${lookup pgsql{servers=master/db/name/pw; UPDATE ...}
 </literallayout>
 </section>
 <section id="SECID73">
@@ -14418,22 +14427,6 @@ yields an unchanged string.
 </para>
 </listitem></varlistentry>
 <varlistentry>
-<term><emphasis role="bold">${randint:</emphasis>&lt;<emphasis>n</emphasis>&gt;<emphasis role="bold">}</emphasis></term>
-<listitem>
-<para>
-<indexterm role="concept">
-<primary>random number</primary>
-</indexterm>
-This operator returns a somewhat random number which is less than the
-supplied number and is at least 0.  The quality of this randomness depends
-on how Exim was built; the values are not suitable for keying material.
-If Exim is linked against OpenSSL then RAND_pseudo_bytes() is used.
-Otherwise, the implementation may be arc4random(), random() seeded by
-srandomdev() or srandom(), or a custom implementation even weaker than
-random().
-</para>
-</listitem></varlistentry>
-<varlistentry>
 <term><emphasis role="bold">${rfc2047:</emphasis>&lt;<emphasis>string</emphasis>&gt;<emphasis role="bold">}</emphasis></term>
 <listitem>
 <para>
@@ -14743,32 +14736,6 @@ lower case), signifying multiplication by 1024 or 1024*1024, respectively.
 As a special case, the numerical value of an empty string is taken as
 zero.
 </para>
-</listitem></varlistentry>
-<varlistentry>
-<term><emphasis role="bold">bool&nbsp;{</emphasis>&lt;<emphasis>string</emphasis>&gt;<emphasis role="bold">}</emphasis></term>
-<listitem>
-<para>
-<indexterm role="concept">
-<primary>expansion</primary>
-<secondary>boolean parsing</secondary>
-</indexterm>
-<indexterm role="concept">
-<primary><option>bool</option> expansion condition</primary>
-</indexterm>
-This condition turns a string holding a true or false representation into
-a boolean state.  It parses <quote>true</quote>, <quote>false</quote>, <quote>yes</quote> and <quote>no</quote>
-(case-insensitively); also positive integer numbers map to true if non-zero,
-false if zero.  Leading whitespace is ignored.
-All other string values will result in expansion failure.
-</para>
-<para>
-When combined with ACL variables, this expansion condition will let you
-make decisions in one place and act on those decisions in another place.
-For example,
-</para>
-<literallayout class="monospaced">
-${if bool{$acl_m_privileged_sender} ...
-</literallayout>
 </listitem></varlistentry>
 <varlistentry>
 <term><emphasis role="bold">crypteq&nbsp;{</emphasis>&lt;<emphasis>string1</emphasis>&gt;<emphasis role="bold">}{</emphasis>&lt;<emphasis>string2</emphasis>&gt;<emphasis role="bold">}</emphasis></term>
@@ -15550,12 +15517,6 @@ configuration, you might have this:
 </para>
 <literallayout class="monospaced">
 server_condition = ${if pwcheck{$auth1:$auth2}}
-</literallayout>
-<para>
-Again, for a PLAIN authenticator configuration, this would be:
-</para>
-<literallayout class="monospaced">
-server_condition = ${if pwcheck{$auth2:$auth3}}
 </literallayout>
 </listitem></varlistentry>
 <varlistentry>
@@ -16481,7 +16442,7 @@ This is an obsolete name for <varname>$received_port</varname>.
 <primary><varname>$item</varname></primary>
 </indexterm>
 This variable is used during the expansion of <emphasis role="bold">forall</emphasis> and <emphasis role="bold">forany</emphasis>
-conditions (see section <xref linkend="SECTexpcond"/>), and <emphasis role="bold">filter</emphasis>, <emphasis role="bold">map</emphasis>, and
+conditions (see section <xref linkend="SECTexpcond"/>), and <emphasis role="bold">filter</emphasis>, <emphasis role="bold">man</emphasis>, and
 <emphasis role="bold">reduce</emphasis> items (see section <xref linkend="SECTexpcond"/>). In other circumstances, it is
 empty.
 </para>
@@ -16946,7 +16907,7 @@ precise size of the file that has been written. See also
 <primary>RCPT</primary>
 <secondary>value of <varname>$message_size</varname></secondary>
 </indexterm>
-While running a per message ACL (mail/rcpt/predata), <varname>$message_size</varname>
+While running an ACL at the time of an SMTP RCPT command, <varname>$message_size</varname>
 contains the size supplied on the MAIL command, or -1 if no size was given. The
 value may not, of course, be truthful.
 </para>
@@ -18047,9 +18008,9 @@ details of the <command>smtp</command> transport.
 When a message is received from a remote host over an encrypted SMTP
 connection, and Exim is configured to request a certificate from the client,
 the value of the Distinguished Name of the certificate is made available in the
-<varname>$tls_peerdn</varname> during subsequent processing. Like <varname>$tls_cipher</varname>, the
+<varname>$tls_peerdn</varname> during subsequent processing. <phrase revisionflag="changed">Like <varname>$tls_cipher</varname>, the
 value is retained during message delivery, except during outbound SMTP
-deliveries.
+deliveries.</phrase>
 </para>
 </listitem></varlistentry>
 <varlistentry>
@@ -18854,7 +18815,7 @@ listed in more than one group.
 <entry>for unique message ids in clusters</entry>
 </row>
 <row>
-<entry><option>message_body_newlines</option></entry>
+<entry><phrase revisionflag="changed"><option>message_body_newlines</option></phrase></entry>
 <entry>retain newlines in <varname>$message_body</varname></entry>
 </row>
 <row>
@@ -19061,7 +19022,7 @@ listed in more than one group.
 <colspec colwidth="254pt" align="left"/>
 <tbody>
 <row>
-<entry><option>ibase_servers</option></entry>
+<entry><phrase revisionflag="changed"><option>ibase_servers</option></phrase></entry>
 <entry>InterBase servers</entry>
 </row>
 <row>
@@ -19077,15 +19038,15 @@ listed in more than one group.
 <entry>lookup files held open</entry>
 </row>
 <row>
-<entry><option>mysql_servers</option></entry>
+<entry><phrase revisionflag="changed"><option>mysql_servers</option></phrase></entry>
 <entry>default MySQL servers</entry>
 </row>
 <row>
-<entry><option>oracle_servers</option></entry>
+<entry><phrase revisionflag="changed"><option>oracle_servers</option></phrase></entry>
 <entry>Oracle servers</entry>
 </row>
 <row>
-<entry><option>pgsql_servers</option></entry>
+<entry><phrase revisionflag="changed"><option>pgsql_servers</option></phrase></entry>
 <entry>default PostgreSQL servers</entry>
 </row>
 <row>
@@ -19205,7 +19166,7 @@ listed in more than one group.
 <entry>queue incoming if load high</entry>
 </row>
 <row>
-<entry><option>queue_only_load_latch</option></entry>
+<entry><phrase revisionflag="changed"><option>queue_only_load_latch</option></phrase></entry>
 <entry>don&#x2019;t re-evaluate load for each message</entry>
 </row>
 <row>
@@ -19476,10 +19437,6 @@ listed in more than one group.
 <row>
 <entry><option>gnutls_require_protocols</option></entry>
 <entry>control GnuTLS protocols</entry>
-</row>
-<row>
-<entry><option>gnutls_compat_mode</option></entry>
-<entry>use GnuTLS compatibility mode</entry>
 </row>
 <row>
 <entry><option>tls_advertise_hosts</option></entry>
@@ -19961,7 +19918,7 @@ See also the <emphasis>Policy controls</emphasis> section above.
 <entry>no immediate delivery if load is high</entry>
 </row>
 <row>
-<entry><option>queue_only_load_latch</option></entry>
+<entry><phrase revisionflag="changed"><option>queue_only_load_latch</option></phrase></entry>
 <entry>don&#x2019;t re-evaluate load for each message</entry>
 </row>
 <row>
@@ -21951,7 +21908,7 @@ dns_check_names_pattern = \
 </literallayout>
 <para>
 which permits only letters, digits, slashes, and hyphens in components, but
-they must start and end with a letter or digit. Slashes are not, in fact,
+they must start and end with a letter or digit. <phrase revisionflag="changed">Slashes</phrase> are not, in fact,
 permitted in host names, but they are found in certain NS records (which can be
 accessed in Exim by using a <option>dnsdb</option> lookup). If you set
 <option>allow_utf8_domains</option>, you must modify this pattern, or set the option to an
@@ -22745,32 +22702,6 @@ server. For details, see section <xref linkend="SECTreqciphgnu"/>.
 </para>
 <para>
 <indexterm role="option">
-<primary><option>gnutls_compat_mode</option></primary>
-</indexterm>
-</para>
-<informaltable frame="all">
-<tgroup cols="4" colsep="0" rowsep="0">
-<colspec colwidth="8*" align="left"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="right"/>
-<tbody>
-<row>
-<entry><option>gnutls_compat_mode</option></entry>
-<entry>Use: <emphasis>main</emphasis></entry>
-<entry>Type: <emphasis>boolean</emphasis></entry>
-<entry>Default: <emphasis>unset</emphasis></entry>
-</row>
-</tbody>
-</tgroup>
-</informaltable>
-<para>
-This option controls whether GnuTLS is used in compatibility mode in an Exim
-server. This reduces security slightly, but improves interworking with older
-implementations of TLS.
-</para>
-<para>
-<indexterm role="option">
 <primary><option>headers_charset</option></primary>
 </indexterm>
 </para>
@@ -23017,10 +22948,10 @@ do.
 By default, Exim just checks the syntax of HELO and EHLO commands (see
 <option>helo_accept_junk_hosts</option> and <option>helo_allow_chars</option>). However, some sites like
 to do more extensive checking of the data supplied by these commands. The ACL
-condition <literal>verify = helo</literal> is provided to make this possible.
+condition <literal>verify</literal> <literal>=</literal> <literal>helo</literal> is provided to make this possible.
 Formerly, it was necessary also to set this option (<option>helo_try_verify_hosts</option>)
 to force the check to occur. From release 4.53 onwards, this is no longer
-necessary. If the check has not been done before <literal>verify = helo</literal> is
+necessary. If the check has not been done before <literal>verify</literal> <literal>=</literal> <literal>helo</literal> is
 encountered, it is done at that time. Consequently, this option is obsolete.
 Its specification is retained here for backwards compatibility.
 </para>
@@ -23058,7 +22989,7 @@ available) yields the calling host address.
 <para>
 However, the EHLO or HELO command is not rejected if any of the checks
 fail. Processing continues, but the result of the check is remembered, and can
-be detected later in an ACL by the <literal>verify = helo</literal> condition.
+be detected later in an ACL by the <literal>verify</literal> <literal>=</literal> <literal>helo</literal> condition.
 </para>
 <para>
 <indexterm role="option">
@@ -23201,8 +23132,8 @@ this check fails, Exim behaves as if the name lookup failed.
 </indexterm>
 After any kind of failure, the host name (in <varname>$sender_host_name</varname>) remains
 unset, and <varname>$host_lookup_failed</varname> is set to the string <quote>1</quote>. See also
-<option>dns_again_means_nonexist</option>, <option>helo_lookup_domains</option>, and
-<literal>verify = reverse_host_lookup</literal> in ACLs.
+<option>dns_again_means_nonexist</option>, <option>helo_lookup_domains</option>, and <literal>verify</literal> <literal>=</literal>
+<literal>reverse_host_lookup</literal> in ACLs.
 </para>
 <para>
 <indexterm role="option">
@@ -33327,10 +33258,10 @@ redirection items of the form
 :fail:
 </literallayout>
 <para>
-respectively. When a redirection list contains such an item, it applies
-to the entire redirection; any other items in the list are ignored. Any
-text following <emphasis>:fail:</emphasis> or <emphasis>:defer:</emphasis> is placed in the error text
-associated with the failure. For example, an alias file might contain:
+respectively. When a redirection list contains such an item, it applies to the
+entire redirection; any other items in the list are ignored (<emphasis>:blackhole:</emphasis> is
+different). Any text following <emphasis>:fail:</emphasis> or <emphasis>:defer:</emphasis> is placed in the error
+text associated with the failure. For example, an alias file might contain:
 </para>
 <literallayout class="monospaced">
 X.Employee:  :fail: Gone away, no forwarding address
@@ -36286,9 +36217,11 @@ are all run in parallel, like a shell pipeline.
 </para>
 <para>
 The filter can perform any transformations it likes, but of course should take
-care not to break RFC 2822 syntax. Exim does not check the result, except to
-test for a final newline when SMTP is in use. All messages transmitted over
-SMTP must end with a newline, so Exim supplies one if it is missing.
+care not to break RFC 2822 syntax. A demonstration Perl script is provided in
+<filename>util/transport-filter.pl</filename>; this makes a few arbitrary modifications just to
+show the possibilities. Exim does not check the result, except to test for a
+final newline when SMTP is in use. All messages transmitted over SMTP must end
+with a newline, so Exim supplies one if it is missing.
 </para>
 <para>
 <indexterm role="concept">
@@ -39978,8 +39911,8 @@ delivers the message to it using the LMTP protocol.
 </informaltable>
 <para>
 The transport is aborted if the created process or Unix domain socket does not
-respond to LMTP commands or message input within this timeout. Delivery
-is deferred, and will be tried again later. Here is an example of a typical
+respond to LMTP commands or message input within this timeout. <phrase revisionflag="changed">Delivery
+is deferred, and will be tried again later.</phrase> Here is an example of a typical
 LMTP transport:
 </para>
 <literallayout class="monospaced">
@@ -41199,7 +41132,6 @@ procmail_pipe:
   envelope_to_add
   check_string = "From "
   escape_string = "&gt;From "
-  umask = 077
   user = $local_part
   group = mail
 
@@ -41869,7 +41801,7 @@ it may also consult other sources of information such as <filename>/etc/hosts</f
 <tbody>
 <row>
 <entry><option>gnutls_require_kx</option></entry>
-<entry>Use: <emphasis>smtp</emphasis></entry>
+<entry>Use: <emphasis>main</emphasis></entry>
 <entry>Type: <emphasis>string</emphasis></entry>
 <entry>Default: <emphasis>unset</emphasis></entry>
 </row>
@@ -41894,7 +41826,7 @@ client. For details, see section <xref linkend="SECTreqciphgnu"/>.
 <tbody>
 <row>
 <entry><option>gnutls_require_mac</option></entry>
-<entry>Use: <emphasis>smtp</emphasis></entry>
+<entry>Use: <emphasis>main</emphasis></entry>
 <entry>Type: <emphasis>string</emphasis></entry>
 <entry>Default: <emphasis>unset</emphasis></entry>
 </row>
@@ -41919,7 +41851,7 @@ client. For details, see section <xref linkend="SECTreqciphgnu"/>.
 <tbody>
 <row>
 <entry><option>gnutls_require_protocols</option></entry>
-<entry>Use: <emphasis>smtp</emphasis></entry>
+<entry>Use: <emphasis>main</emphasis></entry>
 <entry>Type: <emphasis>string</emphasis></entry>
 <entry>Default: <emphasis>unset</emphasis></entry>
 </row>
@@ -41929,32 +41861,6 @@ client. For details, see section <xref linkend="SECTreqciphgnu"/>.
 <para>
 This option controls the protocols when GnuTLS is used in an Exim
 client. For details, see section <xref linkend="SECTreqciphgnu"/>.
-</para>
-<para>
-<indexterm role="option">
-<primary><option>gnutls_compat_mode</option></primary>
-</indexterm>
-</para>
-<informaltable frame="all">
-<tgroup cols="4" colsep="0" rowsep="0">
-<colspec colwidth="8*" align="left"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="right"/>
-<tbody>
-<row>
-<entry><option>gnutls_compat_mode</option></entry>
-<entry>Use: <emphasis>smtp</emphasis></entry>
-<entry>Type: <emphasis>boolean</emphasis></entry>
-<entry>Default: <emphasis>unset</emphasis></entry>
-</row>
-</tbody>
-</tgroup>
-</informaltable>
-<para>
-This option controls whether GnuTLS is used in compatibility mode in an Exim
-server. This reduces security slightly, but improves interworking with older
-implementations of TLS.
 </para>
 <para>
 <indexterm role="option">
@@ -42492,8 +42398,8 @@ unauthenticated. See also <option>hosts_require_auth</option>, and chapter
 <primary><varname>$host_address</varname></primary>
 </indexterm>
 This option specifies which interface to bind to when making an outgoing SMTP
-call. The value is an IP address, not an interface name such as
-<literal>eth0</literal>. Do not confuse this with the interface address that was used when a
+call. <phrase revisionflag="changed">The value is an IP address, not an interface name such as
+<literal>eth0</literal>.</phrase> Do not confuse this with the interface address that was used when a
 message was received, which is in <varname>$received_ip_address</varname>, formerly known as
 <varname>$interface_address</varname>. The name was changed to minimize confusion with the
 outgoing interface address. There is no variable that contains an outgoing
@@ -43655,7 +43561,7 @@ rewriting rule is skipped unless the relevant addresses are being processed.
 <literal>s</literal>       rewrite the <emphasis>Sender:</emphasis> header
 <literal>t</literal>       rewrite the <emphasis>To:</emphasis> header
 </literallayout>
-<para>
+<para revisionflag="changed">
 "All headers" means all of the headers listed above that can be selected
 individually, plus their <emphasis>Resent-</emphasis> versions. It does not include
 other headers such as <emphasis>Subject:</emphasis> etc.
@@ -45663,21 +45569,18 @@ login:
   driver = plaintext
   public_name = LOGIN
   server_prompts = Username:: : Password::
-  server_condition = ${if and{{
-    !eq{}{$auth1} }{ \
-    ldapauth{user="cn=${quote_ldap_dn:$auth1},ou=people,o=example.org" \
-             pass=${quote:$auth2} \
-             ldap://ldap.example.org/} }} }
+  server_condition = ${if ldapauth \
+    {user="cn=${quote_ldap_dn:$auth1},ou=people,o=example.org" \
+    pass=${quote:$auth2} \
+    ldap://ldap.example.org/}}
   server_set_id = uid=$auth1,ou=people,o=example.org
 </literallayout>
 <para>
-We have to check that the username is not empty before using it, because LDAP
-does not permit empty DN components. We must also use the <option>quote_ldap_dn</option>
-operator to correctly quote the DN for authentication. However, the basic
-<option>quote</option> operator, rather than any of the LDAP quoting operators, is the
-correct one to use for the password, because quoting is needed only to make
-the password conform to the Exim syntax. At the LDAP level, the password is an
-uninterpreted string.
+Note the use of the <option>quote_ldap_dn</option> operator to correctly quote the DN for
+authentication. However, the basic <option>quote</option> operator, rather than any of the
+LDAP quoting operators, is the correct one to use for the password, because
+quoting is needed only to make the password conform to the Exim syntax. At the
+LDAP level, the password is an uninterpreted string.
 </para>
 </section>
 <section id="SECID174">
@@ -46185,7 +46088,7 @@ sasl_cram_md5:
 sasl_plain:
   driver = cyrus_sasl
   public_name = PLAIN
-  server_set_id = $auth2
+  server_set_id = $auth1
 </literallayout>
 <para>
 Cyrus SASL does implement the LOGIN authentication method, even though it is
@@ -46245,7 +46148,7 @@ dovecot_plain:
   driver = dovecot
   public_name = PLAIN
   server_socket = /var/run/dovecot/auth-client
-  server_set_id = $auth2
+  server_set_id = $auth1
 
 dovecot_ntlm:
   driver = dovecot
@@ -46640,11 +46543,11 @@ sections <xref linkend="SECTreqciphssl"/> and <xref linkend="SECTreqciphgnu"/>.
 <section id="SECID181">
 <title>GnuTLS parameter computation</title>
 <para>
-GnuTLS uses D-H parameters that may take a substantial amount of time
+GnuTLS uses RSA and D-H parameters that may take a substantial amount of time
 to compute. It is unreasonable to re-compute them for every TLS session.
 Therefore, Exim keeps this data in a file in its spool directory, called
 <filename>gnutls-params</filename>. The file is owned by the Exim user and is readable only by
-its owner. Every Exim process that start up GnuTLS reads the D-H
+its owner. Every Exim process that start up GnuTLS reads the RSA and D-H
 parameters from this file. If the file does not exist, the first Exim process
 that needs it computes the data and writes it to a temporary file which is
 renamed once it is complete. It does not matter if several Exim processes do
@@ -46988,8 +46891,8 @@ incoming message (by default &ndash; you can, of course, change this), and it is
 also included in the log line that records a message&#x2019;s arrival, keyed by
 <quote>X=</quote>, unless the <option>tls_cipher</option> log selector is turned off. The <option>encrypted</option>
 condition can be used to test for specific cipher suites in ACLs.
-(For outgoing SMTP deliveries, <varname>$tls_cipher</varname> is reset &ndash; see section
-<xref linkend="SECID185"/>.)
+<phrase revisionflag="changed">(For outgoing SMTP deliveries, <varname>$tls_cipher</varname> is reset &ndash; see section
+<xref linkend="SECID185"/>.)</phrase>
 </para>
 <para>
 Once TLS has been established, the ACLs that run for subsequent SMTP commands
@@ -47145,11 +47048,14 @@ unencrypted.
 The <option>tls_certificate</option> and <option>tls_privatekey</option> options of the <command>smtp</command>
 transport provide the client with a certificate, which is passed to the server
 if it requests it. If the server is Exim, it will request a certificate only if
-<option>tls_verify_hosts</option> or <option>tls_try_verify_hosts</option> matches the client.
+<option>tls_verify_hosts</option> or <option>tls_try_verify_hosts</option> matches the client. <emphasis role="bold">Note</emphasis>:
+These options must be set in the <command>smtp</command> transport for Exim to use TLS when it
+is operating as a client. Exim does not assume that a server certificate (set
+by the global options of the same name) should also be used when operating as a
+client.
 </para>
 <para>
-If the <option>tls_verify_certificates</option> option is set on the <command>smtp</command> transport, it
-must name a file or,
+If <option>tls_verify_certificates</option> is set, it must name a file or,
 for OpenSSL only (not GnuTLS), a directory, that contains a collection of
 expected server certificates. The client verifies the server&#x2019;s certificate
 against this collection, taking into account any revoked certificates that are
@@ -47161,13 +47067,6 @@ If
 list of permitted cipher suites. If either of these checks fails, delivery to
 the current host is abandoned, and the <command>smtp</command> transport tries to deliver to
 alternative hosts, if any.
-</para>
-<para>
- <emphasis role="bold">Note</emphasis>:
-These options must be set in the <command>smtp</command> transport for Exim to use TLS when it
-is operating as a client. Exim does not assume that a server certificate (set
-by the global options of the same name) should also be used when operating as a
-client.
 </para>
 <para>
 <indexterm role="variable">
@@ -47498,7 +47397,7 @@ options in the main part of the configuration. These options are:
 <entry>ACL for content-scanning MIME parts</entry>
 </row>
 <row>
-<entry>&nbsp;&nbsp;&nbsp;&nbsp;<option>acl_smtp_notquit</option></entry>
+<entry>&nbsp;&nbsp;&nbsp;&nbsp;<phrase revisionflag="changed"><option>acl_smtp_notquit</option></phrase></entry>
 <entry>ACL for non-QUIT terminations</entry>
 </row>
 <row>
@@ -47705,10 +47604,7 @@ connection is closed. In these special cases, the QUIT ACL does not run.
 <section id="SECTNOTQUITACL">
 <title>The not-QUIT ACL</title>
 <para>
-<indexterm role="variable">
-<primary><varname>$acl_smtp_notquit</varname></primary>
-</indexterm>
-The not-QUIT ACL, specified by <option>acl_smtp_notquit</option>, is run in most cases when
+The not-QUIT ACL, specified by <option>smtp_notquit_acl</option>, is run in most cases when
 an SMTP session ends without sending QUIT. However, when Exim itself is is bad
 trouble, such as being unable to write to its log files, this ACL is not run,
 because it might try to do things (such as write to log files) that make the
@@ -48165,7 +48061,7 @@ the sending entity receives a <quote>success</quote> response. However, <option>
 recipients to be discarded. If it is used in an ACL for RCPT, just the one
 recipient is discarded; if used for MAIL, DATA or in the non-SMTP ACL, all the
 message&#x2019;s recipients are discarded. Recipients that are discarded before DATA
-do not appear in the log line when the <option>received_recipients</option> log selector is set.
+do not appear in the log line when the <option>log_recipients</option> log selector is set.
 </para>
 <para>
 If the <option>log_message</option> modifier is set when <option>discard</option> operates,
@@ -48697,8 +48593,7 @@ ACL fragment writes no logging information when access is denied:
 </literallayout>
 <para>
 This modifier can be used in SMTP and non-SMTP ACLs. It applies to both
-permanent and temporary rejections. Its effect lasts for the rest of the
-current ACL.
+permanent and temporary rejections.
 </para>
 </listitem></varlistentry>
 <varlistentry>
@@ -49144,7 +49039,7 @@ This control is permitted only for the MAIL, RCPT, and start of data ACLs (the
 latter is the one defined by <option>acl_smtp_predata</option>). Setting it tells Exim that
 the current message is a submission from a local MUA. In this case, Exim
 operates in <quote>submission mode</quote>, and applies certain fixups to the message if
-necessary. For example, it adds a <emphasis>Date:</emphasis> header line if one is not present.
+necessary. For example, it add a <emphasis>Date:</emphasis> header line if one is not present.
 This control is not permitted in the <option>acl_smtp_data</option> ACL, because that is too
 late (the message has already been created).
 </para>
@@ -49164,7 +49059,7 @@ that may be received in the same SMTP connection.
 <primary>submission fixups, suppressing</primary>
 </indexterm>
 This control applies to locally submitted (non TCP/IP) messages, and is the
-complement of <literal>control = submission</literal>. It disables the fixups that are
+complement of <literal>control</literal> <literal>=</literal> <literal>submission</literal>. It disables the fixups that are
 normally applied to locally-submitted messages. Specifically:
 </para>
 <itemizedlist>
@@ -49212,8 +49107,8 @@ Locally submitted, fixups applied: the default.
 </listitem>
 <listitem>
 <para>
-Locally submitted, no fixups applied: use
-<literal>control = suppress_local_fixups</literal>.
+Locally submitted, no fixups applied: use <literal>control</literal> <literal>=</literal>
+<literal>suppress_local_fixups</literal>.
 </para>
 </listitem>
 <listitem>
@@ -49223,7 +49118,7 @@ Remotely submitted, no fixups applied: the default.
 </listitem>
 <listitem>
 <para>
-Remotely submitted, fixups applied: use <literal>control = submission</literal>.
+Remotely submitted, fixups applied: use <literal>control</literal> <literal>=</literal> <literal>submission</literal>.
 </para>
 </listitem>
 </itemizedlist>
@@ -50133,9 +50028,7 @@ verified as a sender.
 </indexterm>
 In its simplest form, the <option>dnslists</option> condition tests whether the calling host
 is on at least one of a number of DNS lists by looking up the inverted IP
-address in one or more DNS domains. (Note that DNS list domains are not mail
-domains, so the <literal>+</literal> syntax for named lists doesn&#x2019;t work - it is used for
-special options instead.) For example, if the calling host&#x2019;s IP
+address in one or more DNS domains. For example, if the calling host&#x2019;s IP
 address is 192.168.62.43, and the ACL statement is
 </para>
 <literallayout class="monospaced">
@@ -50797,7 +50690,7 @@ parameter <emphasis>m</emphasis> is the maximum number of messages that a client
 send in each time interval. It also specifies the number of messages permitted
 in a fast burst. By increasing both <emphasis>m</emphasis> and <emphasis>p</emphasis> but keeping <emphasis>m/p</emphasis>
 constant, you can allow a client to send more messages in a burst without
-changing its long-term sending rate limit. Conversely, if <emphasis>m</emphasis> and <emphasis>p</emphasis> are
+changing its overall sending rate limit. Conversely, if <emphasis>m</emphasis> and <emphasis>p</emphasis> are
 both small, messages must be sent at an even rate.
 </para>
 <para>
@@ -50808,24 +50701,23 @@ instructions when it is run with no arguments.
 </para>
 <para>
 The key is used to look up the data for calculating the client&#x2019;s average
-sending rate. This data is stored in Exim&#x2019;s spool directory, alongside the
-retry and other hints databases. The default key is <varname>$sender_host_address</varname>,
-which means Exim computes the sending rate of each client host IP address.
+sending rate. This data is stored in a database maintained by Exim in its spool
+directory, alongside the retry and other hints databases. The default key is
+<varname>$sender_host_address</varname>, which applies the limit to each client host IP address.
 By changing the key you can change how Exim identifies clients for the purpose
 of ratelimiting. For example, to limit the sending rate of each authenticated
 user, independent of the computer they are sending from, set the key to
 <varname>$authenticated_id</varname>. You must ensure that the lookup key is meaningful; for
 example, <varname>$authenticated_id</varname> is only meaningful if the client has
-authenticated (which you can check with the <option>authenticated</option> ACL condition).
+authenticated, and you can check with the <option>authenticated</option> ACL condition.
 </para>
 <para>
-The lookup key does not have to identify clients: If you want to limit the
-rate at which a recipient receives messages, you can use the key
-<literal>$local_part@$domain</literal> with the <option>per_rcpt</option> option (see below) in a RCPT
-ACL.
+If you want to limit the rate at which a recipient receives messages, you can
+use the key <literal>$local_part@$domain</literal> with the <option>per_rcpt</option> option (see below) in
+a RCPT ACL.
 </para>
 <para>
-Internally, Exim appends the smoothing constant <emphasis>p</emphasis> and the options onto the
+Internally, Exim includes the smoothing constant <emphasis>p</emphasis> and the options in the
 lookup key because they alter the meaning of the stored data. This is not true
 for the limit <emphasis>m</emphasis>, so you can alter the configured maximum rate and Exim will
 still remember clients&#x2019; past behaviour, but if you alter the other ratelimit
@@ -50852,23 +50744,22 @@ the default if none of the <option>per_*</option> options is specified.
 <para>
 The <option>per_byte</option> option limits the sender&#x2019;s email bandwidth. Note that it is
 best to use this option in the DATA ACL; if it is used in an earlier ACL it
-relies on the SIZE parameter specified by the client in its MAIL command,
-which may be inaccurate or completely missing. You can follow the limit <emphasis>m</emphasis>
-in the configuration with K, M, or G to specify limits in kilobytes,
-megabytes, or gigabytes, respectively.
+relies on the SIZE parameter on the MAIL command, which may be inaccurate or
+completely missing. You can follow the limit <emphasis>m</emphasis> in the configuration with K,
+M, or G to specify limits in kilobytes, megabytes, or gigabytes, respectively.
 </para>
-<para>
+<para revisionflag="changed">
 The <option>per_rcpt</option> option causes Exim to limit the rate at which
 recipients are accepted. To be effective, it would need to be used in
 either the <option>acl_smtp_rcpt</option> or the <option>acl_not_smtp</option> ACL. In the
 <option>acl_smtp_rcpt</option> ACL, the number of recipients is incremented by one.
 In the case of a locally submitted message in the <option>acl_not_smtp</option> ACL,
-the number of recipients is incremented by the <option>$recipients_count</option>
+the number of recipients incremented is equal to <option>$recipients_count</option>
 for the entire message. Note that in either case the rate limiting
 engine will see a message with many recipients as a large high-speed
 burst.
 </para>
-<para>
+<para revisionflag="changed">
 The <option>per_cmd</option> option causes Exim to recompute the rate every time the
 condition is processed. This can be used to limit the SMTP command rate.
 This command is essentially an alias of <option>per_rcpt</option> to make it clear
@@ -50887,19 +50778,18 @@ rest of the ACL. The default mode is leaky, which avoids a sender&#x2019;s
 over-aggressive retry rate preventing it from getting any email through.
 </para>
 <para>
-The <option>strict</option> option means that the client&#x2019;s recorded rate is always
-updated. The effect of this is that Exim measures the client&#x2019;s average rate
-of attempts to send email, which can be much higher than the maximum it is
-actually allowed. If the client is over the limit it may be subjected to
-counter-measures by the ACL until it slows down below the maximum rate. If
-the client stops attempting to send email for the time specified in the <emphasis>p</emphasis>
-parameter then its computed rate will decay exponentially to 37% of its peak
-value. You can work out the time (the number of smoothing periods) that a
-client is subjected to counter-measures after an over-limit burst with this
-formula:
+The <option>strict</option> option means that the client&#x2019;s recorded rate is always updated.
+The effect of this is that Exim measures the client&#x2019;s average rate of attempts
+to send email, which can be much higher than the maximum <phrase revisionflag="changed">it is actually
+allowed. If the client is over the limit it may be subjected to
+counter-measures in the ACL until it slows down below the maximum rate.</phrase> The
+smoothing period determines the time it takes for a high sending rate to decay
+exponentially to 37% of its peak value, which means that you can work out the
+time (the number of smoothing periods) that a client is subjected to
+counter-measures after an over-limit burst with this formula:
 </para>
 <literallayout class="monospaced">
-        ln(peakrate/maxrate)
+ln(peakrate/maxrate)
 </literallayout>
 <para>
 The <option>leaky</option> (default) option means that the client&#x2019;s recorded rate is not
@@ -50974,7 +50864,7 @@ For example:
 </para>
 <literallayout class="monospaced">
 acl_check_connect:
-  deny ratelimit = 100 / 5m / strict / per_cmd / noupdate
+  deny ratelimit = 100 / 5m / strict / noupdate
        log_message = RATE: $sender_rate/$sender_rate_period \
                      (max $sender_rate_limit)
 </literallayout>
@@ -51826,8 +51716,22 @@ timeout checks succeed. The <varname>$prvscheck_result</varname> variable contai
 of the checks (empty for failure, <quote>1</quote> for success).
 </para>
 <para>
-There is one more issue you must consider when implementing prvs-signing:
-you have to ensure that the routers accept prvs-signed addresses and
+There are two more issues you must consider when implementing prvs-signing.
+Firstly, you need to ensure that prvs-signed addresses are not blocked by your
+ACLs. A prvs-signed address contains a slash character, but the default Exim
+configuration contains this statement in the RCPT ACL:
+</para>
+<literallayout class="monospaced">
+deny    message       = Restricted characters in address
+        domains       = +local_domains
+        local_parts   = ^[.] : ^.*[@%!/|]
+</literallayout>
+<para>
+This is a conservative rule that blocks local parts that contain slashes. You
+should remove the slash in the last line.
+</para>
+<para>
+Secondly, you have to ensure that the routers accept prvs-signed addresses and
 deliver them correctly. The easiest way to handle this is to use a <command>redirect</command>
 router to remove the signature with a configuration along these lines:
 </para>
@@ -52465,12 +52369,6 @@ condition defers.
 <emphasis role="bold">Warning</emphasis>: It is not possible to use the UNIX socket connection method with
 multiple <option>spamd</option> servers.
 </para>
-<para>
-The <option>spamd_address</option> variable is expanded before use if it starts with
-a dollar sign. In this case, the expansion may return a string that is
-used as the list so that multiple spamd servers can be the result of an
-expansion.
-</para>
 </section>
 <section id="SECID206">
 <title>Calling SpamAssassin from an Exim ACL</title>
@@ -52542,9 +52440,7 @@ for inclusion in log or reject messages.
 <listitem>
 <para>
 The spam score of the message, multiplied by ten, as an integer value. For
-example <quote>34</quote> or <quote>305</quote>. It may appear to disagree with <varname>$spam_score</varname>
-because <varname>$spam_score</varname> is rounded and <varname>$spam_score_int</varname> is truncated.
-The integer value is useful for numeric comparisons in
+example <quote>34</quote> or <quote>305</quote>. This is useful for numeric comparisons in
 conditions. This variable is special; its value is saved with the message, and
 written to Exim&#x2019;s spool file. This means that it can be used during the whole
 life of the message on your Exim system, in particular, in routers or
@@ -52571,16 +52467,15 @@ message. Useful for inclusion in headers or reject messages.
 </listitem></varlistentry>
 </variablelist>
 <para>
-The <option>spam</option> condition caches its results unless expansion in
-spamd_address was used. If you call it again with the same user name, it
-does not scan again, but rather returns the same values as before.
+The <option>spam</option> condition caches its results. If you call it again with the same
+user name, it does not scan again, but rather returns the same values as
+before.
 </para>
 <para>
-The <option>spam</option> condition returns DEFER if there is any error while running
-the message through SpamAssassin or if the expansion of spamd_address
-failed. If you want to treat DEFER as FAIL (to pass on to the next ACL
-statement block), append <literal>/defer_ok</literal> to the right-hand side of the
-spam condition, like this:
+The <option>spam</option> condition returns DEFER if there is any error while running the
+message through SpamAssassin. If you want to treat DEFER as FAIL (to pass on to
+the next ACL statement block), append <literal>/defer_ok</literal> to the right-hand side of
+the spam condition, like this:
 </para>
 <literallayout class="monospaced">
 deny message = This message was classified as SPAM
@@ -52637,7 +52532,7 @@ cases.
 These ACLs are called (possibly many times) just before the <option>acl_smtp_data</option>
 ACL in the case of an SMTP message, or just before the <option>acl_not_smtp</option> ACL in
 the case of a non-SMTP message. However, a MIME ACL is called only if the
-message contains a <emphasis>Content-Type:</emphasis> header line. When a call to a MIME
+message contains a <phrase revisionflag="changed"><emphasis>Content-Type:</emphasis></phrase> header line. When a call to a MIME
 ACL does not yield <quote>accept</quote>, ACL processing is aborted and the appropriate
 result code is sent to the client. In the case of an SMTP message, the
 <option>acl_smtp_data</option> ACL is not called when this happens.
@@ -55784,8 +55679,8 @@ If a message contains a number of different addresses, all those with the same
 characteristics (for example, the same envelope sender) that resolve to the
 same set of hosts, in the same order, are sent in a single SMTP transaction,
 even if they are for different domains, unless there are more than the setting
-of the <option>max_rcpt</option>s option in the <command>smtp</command> transport allows, in which case
-they are split into groups containing no more than <option>max_rcpt</option>s addresses
+of the <option>max_rcpts</option> option in the <command>smtp</command> transport allows, in which case
+they are split into groups containing no more than <option>max_rcpts</option> addresses
 each. If <option>remote_max_parallel</option> is greater than one, such groups may be sent
 in parallel sessions. The order of hosts with identical MX values is not
 significant when checking whether addresses can be batched in this way.
@@ -61642,566 +61537,6 @@ unqualified domain <emphasis>foundation</emphasis>.
 </chapter>
 
 <chapter id="CHID12">
-<title>Support for DKIM (DomainKeys Identified Mail) - RFC4871</title>
-<titleabbrev>DKIM Support</titleabbrev>
-<para>
-<indexterm role="concept">
-<primary>DKIM</primary>
-</indexterm>
-</para>
-<para>
-Since version 4.70, DKIM support is compiled into Exim by default. It can be
-disabled by setting DISABLE_DKIM=yes in Local/Makefile.
-</para>
-<para>
-Exim&#x2019;s DKIM implementation allows to
-</para>
-<orderedlist numeration="arabic">
-<listitem>
-<para>
-Sign outgoing messages: This function is implemented in the SMTP transport.
-It can co-exist with all other Exim features, including transport filters.
-</para>
-</listitem>
-<listitem>
-<para>
-Verify signatures in incoming messages: This is implemented by an additional
-ACL (acl_smtp_dkim), which can be called several times per message, with
-different signature context.
-</para>
-</listitem>
-</orderedlist>
-<para>
-In typical Exim style, the verification implementation does not include any
-default "policy". Instead it enables you to build your own policy using
-Exim&#x2019;s standard controls.
-</para>
-<para>
-Please note that verification of DKIM signatures in incoming mail is turned
-on by default for logging purposes. For each signature in incoming email,
-exim will log a line displaying the most important signature details, and the
-signature status. Here is an example:
-</para>
-<literallayout class="monospaced">
-2009-09-09 10:22:28 1MlIRf-0003LU-U3 DKIM: d=facebookmail.com s=q1-2009b c=relaxed/relaxed a=rsa-sha1 i=@facebookmail.com t=1252484542 [verification succeeded]
-</literallayout>
-<para>
-You might want to turn off DKIM verification processing entirely for internal
-or relay mail sources. To do that, set the <option>dkim_disable_verify</option> ACL
-control modifier. This should typically be done in the RCPT ACL, at points
-where you accept mail from relay sources (internal hosts or authenticated
-senders).
-</para>
-<section id="SECID513">
-<title>Signing outgoing messages</title>
-<para>
-<indexterm role="concept">
-<primary>DKIM</primary>
-<secondary>signing</secondary>
-</indexterm>
-</para>
-<para>
-Signing is implemented by setting private options on the SMTP transport.
-These options take (expandable) strings as arguments.
-</para>
-<para>
-<indexterm role="option">
-<primary><option>dkim_domain</option></primary>
-</indexterm>
-</para>
-<informaltable frame="all">
-<tgroup cols="4" colsep="0" rowsep="0">
-<colspec colwidth="8*" align="left"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="right"/>
-<tbody>
-<row>
-<entry><option>dkim_domain</option></entry>
-<entry>Use: <emphasis>smtp</emphasis></entry>
-<entry>Type: <emphasis>string</emphasis>&dagger;<emphasis></emphasis></entry>
-<entry>Default: <emphasis>unset</emphasis></entry>
-</row>
-</tbody>
-</tgroup>
-</informaltable>
-<para>
-MANDATORY
-The domain you want to sign with. The result of this expanded
-option is put into the <option>$dkim_domain</option> expansion variable.
-</para>
-<para>
-<indexterm role="option">
-<primary><option>dkim_selector</option></primary>
-</indexterm>
-</para>
-<informaltable frame="all">
-<tgroup cols="4" colsep="0" rowsep="0">
-<colspec colwidth="8*" align="left"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="right"/>
-<tbody>
-<row>
-<entry><option>dkim_selector</option></entry>
-<entry>Use: <emphasis>smtp</emphasis></entry>
-<entry>Type: <emphasis>string</emphasis>&dagger;<emphasis></emphasis></entry>
-<entry>Default: <emphasis>unset</emphasis></entry>
-</row>
-</tbody>
-</tgroup>
-</informaltable>
-<para>
-MANDATORY
-This sets the key selector string. You can use the <option>$dkim_domain</option> expansion
-variable to look up a matching selector. The result is put in the expansion
-variable <option>$dkim_selector</option> which should be used in the <option>dkim_private_key</option>
-option along with <option>$dkim_domain</option>.
-</para>
-<para>
-<indexterm role="option">
-<primary><option>dkim_private_key</option></primary>
-</indexterm>
-</para>
-<informaltable frame="all">
-<tgroup cols="4" colsep="0" rowsep="0">
-<colspec colwidth="8*" align="left"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="right"/>
-<tbody>
-<row>
-<entry><option>dkim_private_key</option></entry>
-<entry>Use: <emphasis>smtp</emphasis></entry>
-<entry>Type: <emphasis>string</emphasis>&dagger;<emphasis></emphasis></entry>
-<entry>Default: <emphasis>unset</emphasis></entry>
-</row>
-</tbody>
-</tgroup>
-</informaltable>
-<para>
-MANDATORY
-This sets the private key to use. You can use the <option>$dkim_domain</option> and
-<option>$dkim_selector</option> expansion variables to determine the private key to use.
-The result can either
-</para>
-<itemizedlist>
-<listitem>
-<para>
-be a valid RSA private key in ASCII armor, including line breaks.
-</para>
-</listitem>
-<listitem>
-<para>
-start with a slash, in which case it is treated as a file that contains
-the private key.
-</para>
-</listitem>
-<listitem>
-<para>
-be "0", "false" or the empty string, in which case the message will not
-be signed. This case will not result in an error, even if <option>dkim_strict</option>
-is set.
-</para>
-</listitem>
-</itemizedlist>
-<para>
-<indexterm role="option">
-<primary><option>dkim_canon</option></primary>
-</indexterm>
-</para>
-<informaltable frame="all">
-<tgroup cols="4" colsep="0" rowsep="0">
-<colspec colwidth="8*" align="left"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="right"/>
-<tbody>
-<row>
-<entry><option>dkim_canon</option></entry>
-<entry>Use: <emphasis>smtp</emphasis></entry>
-<entry>Type: <emphasis>string</emphasis>&dagger;<emphasis></emphasis></entry>
-<entry>Default: <emphasis>unset</emphasis></entry>
-</row>
-</tbody>
-</tgroup>
-</informaltable>
-<para>
-OPTIONAL
-This option sets the canonicalization method used when signing a message.
-The DKIM RFC currently supports two methods: "simple" and "relaxed".
-The option defaults to "relaxed" when unset. Note: the current implementation
-only supports using the same canonicalization method for both headers and body.
-</para>
-<para>
-<indexterm role="option">
-<primary><option>dkim_strict</option></primary>
-</indexterm>
-</para>
-<informaltable frame="all">
-<tgroup cols="4" colsep="0" rowsep="0">
-<colspec colwidth="8*" align="left"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="right"/>
-<tbody>
-<row>
-<entry><option>dkim_strict</option></entry>
-<entry>Use: <emphasis>smtp</emphasis></entry>
-<entry>Type: <emphasis>string</emphasis>&dagger;<emphasis></emphasis></entry>
-<entry>Default: <emphasis>unset</emphasis></entry>
-</row>
-</tbody>
-</tgroup>
-</informaltable>
-<para>
-OPTIONAL
-This  option  defines  how  Exim  behaves  when  signing a message that
-should be signed fails for some reason.  When the expansion evaluates to
-either "1" or "true", Exim will defer. Otherwise Exim will send the message
-unsigned. You can use the <option>$dkim_domain</option> and <option>$dkim_selector</option> expansion
-variables here.
-</para>
-<para>
-<indexterm role="option">
-<primary><option>dkim_sign_headers</option></primary>
-</indexterm>
-</para>
-<informaltable frame="all">
-<tgroup cols="4" colsep="0" rowsep="0">
-<colspec colwidth="8*" align="left"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="center"/>
-<colspec colwidth="6*" align="right"/>
-<tbody>
-<row>
-<entry><option>dkim_sign_headers</option></entry>
-<entry>Use: <emphasis>smtp</emphasis></entry>
-<entry>Type: <emphasis>string</emphasis>&dagger;<emphasis></emphasis></entry>
-<entry>Default: <emphasis>unset</emphasis></entry>
-</row>
-</tbody>
-</tgroup>
-</informaltable>
-<para>
-OPTIONAL
-When set, this option must expand to (or be specified as) a colon-separated
-list of header names. Headers with these names will be included in the message
-signature. When unspecified, the header names recommended in RFC4871 will be
-used.
-</para>
-</section>
-<section id="SECID514">
-<title>Verifying DKIM signatures in incoming mail</title>
-<para>
-<indexterm role="concept">
-<primary>DKIM</primary>
-<secondary>verification</secondary>
-</indexterm>
-</para>
-<para>
-Verification of DKIM signatures in incoming email is implemented via the
-<option>acl_smtp_dkim</option> ACL. By default, this ACL is called once for each
-syntactically(!) correct signature in the incoming message.
-</para>
-<para>
-To evaluate the signature in the ACL a large number of expansion variables
-containing the signature status and its details are set up during the
-runtime of the ACL.
-</para>
-<para>
-Calling the ACL only for existing signatures is not sufficient to build
-more advanced policies. For that reason, the global option
-<option>dkim_verify_signers</option>, and a global expansion variable
-<option>$dkim_signers</option> exist.
-</para>
-<para>
-The global option <option>dkim_verify_signers</option> can be set to a colon-separated
-list of DKIM domains or identities for which the ACL <option>acl_smtp_dkim</option> is
-called. It is expanded when the message has been received. At this point,
-the expansion variable <option>$dkim_signers</option> already contains a colon-
-separated list of signer domains and identities for the message. When
-<option>dkim_verify_signers</option> is not specified in the main configuration,
-it defaults as:
-</para>
-<literallayout class="monospaced">
-dkim_verify_signers = $dkim_signers
-</literallayout>
-<para>
-This leads to the default behaviour of calling <option>acl_smtp_dkim</option> for each
-DKIM signature in the message. Current DKIM verifiers may want to explicitly
-call the ACL for known domains or identities. This would be achieved as follows:
-</para>
-<literallayout class="monospaced">
-dkim_verify_signers = paypal.com:ebay.com:$dkim_signers
-</literallayout>
-<para>
-This would result in <option>acl_smtp_dkim</option> always being called for "paypal.com"
-and "ebay.com", plus all domains and identities that have signatures in the message.
-You can also be more creative in constructing your policy. Example:
-</para>
-<literallayout class="monospaced">
-dkim_verify_signers = $sender_address_domain:$dkim_signers
-</literallayout>
-<para>
-If a domain or identity is listed several times in the (expanded) value of
-<option>dkim_verify_signers</option>, the ACL is only called once for that domain or identity.
-</para>
-<para>
-Inside the <option>acl_smtp_dkim</option>, the following expansion variables are
-available (from most to least important):
-</para>
-<variablelist>
-<varlistentry>
-<term><option>$dkim_cur_signer</option></term>
-<listitem>
-<para>
-The signer that is being evaluated in this ACL run. This can be domain or
-an identity. This is one of the list items from the expanded main option
-<option>dkim_verify_signers</option> (see above).
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_verify_status</option></term>
-<listitem>
-<para>
-A string describing the general status of the signature. One of
-</para>
-<itemizedlist>
-<listitem>
-<para>
-<option>none</option>: There is no signature in the message for the current domain or
-identity (as reflected by <option>$dkim_cur_signer</option>).
-</para>
-</listitem>
-<listitem>
-<para>
-<option>invalid</option>: The signature could not be verified due to a processing error.
-More detail is available in <option>$dkim_verify_reason</option>.
-</para>
-</listitem>
-<listitem>
-<para>
-<option>fail</option>: Verification of the signature failed.  More detail is
-available in <option>$dkim_verify_reason</option>.
-</para>
-</listitem>
-<listitem>
-<para>
-<option>pass</option>: The signature passed verification. It is valid.
-</para>
-</listitem>
-</itemizedlist>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_verify_reason</option></term>
-<listitem>
-<para>
-A string giving a litte bit more detail when <option>$dkim_verify_status</option> is either
-"fail" or "invalid". One of
-</para>
-<itemizedlist>
-<listitem>
-<para>
-<option>pubkey_unavailable</option> (when <option>$dkim_verify_status</option>="invalid"): The public
-key for the domain could not be retrieved. This may be a temporary problem.
-</para>
-</listitem>
-<listitem>
-<para>
-<option>pubkey_syntax</option> (when <option>$dkim_verify_status</option>="invalid"): The public key
-record for the domain is syntactically invalid.
-</para>
-</listitem>
-<listitem>
-<para>
-<option>bodyhash_mismatch</option> (when <option>$dkim_verify_status</option>="fail"): The calculated
-body hash does not match the one specified in the signature header. This
-means that the message body was modified in transit.
-</para>
-</listitem>
-<listitem>
-<para>
-<option>signature_incorrect</option> (when <option>$dkim_verify_status</option>="fail"): The signature
-could not be verified. This may mean that headers were modified,
-re-written or otherwise changed in a way which is incompatible with
-DKIM verification. It may of course also mean that the signature is forged.
-</para>
-</listitem>
-</itemizedlist>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_domain</option></term>
-<listitem>
-<para>
-The signing domain. IMPORTANT: This variable is only populated if there is
-an actual signature in the message for the current domain or identity (as
-reflected by <option>$dkim_cur_signer</option>).
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_identity</option></term>
-<listitem>
-<para>
-The signing identity, if present. IMPORTANT: This variable is only populated
-if there is an actual signature in the message for the current domain or
-identity (as reflected by <option>$dkim_cur_signer</option>).
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_selector</option></term>
-<listitem>
-<para>
-The key record selector string
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_algo</option></term>
-<listitem>
-<para>
-The algorithm used. One of &#x2019;rsa-sha1&#x2019; or &#x2019;rsa-sha256&#x2019;.
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_canon_body</option></term>
-<listitem>
-<para>
-The body canonicalization method. One of &#x2019;relaxed&#x2019; or &#x2019;simple&#x2019;.
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>dkim_canon_headers</option></term>
-<listitem>
-<para>
-The header canonicalization method. One of &#x2019;relaxed&#x2019; or &#x2019;simple&#x2019;.
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_copiedheaders</option></term>
-<listitem>
-<para>
-A transcript of headers and their values which are included in the signature
-(copied from the &#x2019;z=&#x2019; tag of the signature).
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_bodylength</option></term>
-<listitem>
-<para>
-The number of signed body bytes. If zero ("0"), the body is unsigned. If no
-limit was set by the signer, "9999999999999" is returned. This makes sure
-that this variable always expands to an integer value.
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_created</option></term>
-<listitem>
-<para>
-UNIX timestamp reflecting the date and time when the signature was created.
-When this was not specified by the signer, "0" is returned.
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_expires</option></term>
-<listitem>
-<para>
-UNIX timestamp reflecting the date and time when the signer wants the
-signature to be treated as "expired". When this was not specified by the
-signer, "9999999999999" is returned. This makes it possible to do useful
-integer size comparisons against this value.
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_headernames</option></term>
-<listitem>
-<para>
-A colon-separated list of names of headers included in the signature.
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_key_testing</option></term>
-<listitem>
-<para>
-"1" if the key record has the "testing" flag set, "0" if not.
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_key_nosubdomaining</option></term>
-<listitem>
-<para>
-"1" if the key record forbids subdomaining, "0" otherwise.
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_key_srvtype</option></term>
-<listitem>
-<para>
-Service type (tag s=) from the key record. Defaults to "*" if not specified
-in the key record.
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_key_granularity</option></term>
-<listitem>
-<para>
-Key granularity (tag g=) from the key record. Defaults to "*" if not specified
-in the key record.
-</para>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>$dkim_key_notes</option></term>
-<listitem>
-<para>
-Notes from the key record (tag n=)
-</para>
-</listitem></varlistentry>
-</variablelist>
-<para>
-In addition, two ACL conditions are provided:
-</para>
-<variablelist>
-<varlistentry>
-<term><option>dkim_signers</option></term>
-<listitem>
-<para>
-ACL condition that checks a colon-separated list of domains or identities
-for a match against the domain or identity that the ACL is currently verifying
-(reflected by <option>$dkim_cur_signer</option>). This is typically used to restrict an ACL
-verb to a group of domains or identities, like:
-</para>
-<literallayout class="monospaced">
-# Warn when message apparently from GMail has no signature at all
-warn log_message = GMail sender without DKIM signature
-     sender_domains = gmail.com
-     dkim_signers = gmail.com
-     dkim_status = none
-</literallayout>
-</listitem></varlistentry>
-<varlistentry>
-<term><option>dkim_status</option></term>
-<listitem>
-<para>
-ACL condition that checks a colon-separated list of possible DKIM verification
-results agains the actual result of verification. This is typically used
-to restrict an ACL verb to a list of verification outcomes, like:
-</para>
-<literallayout class="monospaced">
-deny message = Message from Paypal with invalid or missing signature
-     sender_domains = paypal.com:paypal.de
-     dkim_signers = paypal.com:paypal.de
-     dkim_status = none:invalid:fail
-</literallayout>
-<para>
-The possible status keywords are: &#x2019;none&#x2019;,&#x2019;invalid&#x2019;,&#x2019;fail&#x2019; and &#x2019;pass&#x2019;. Please
-see the documentation of the <option>$dkim_verify_status</option> expansion variable above
-for more information of what they mean.
-</para>
-</listitem></varlistentry>
-</variablelist>
-</section>
-</chapter>
-
-<chapter id="CHID13">
 <title>Adding new drivers or lookup types</title>
 <titleabbrev>Adding drivers or lookups</titleabbrev>
 <para>

@@ -12,12 +12,12 @@
 <bookinfo>
 <title>Specification of the Exim Mail Transfer Agent</title>
 <titleabbrev>The Exim MTA</titleabbrev>
-<date>29 May 2010</date>
+<date>5 November 2009</date>
 <author><firstname>Exim</firstname><surname>Maintainers</surname></author>
 <authorinitials>EM</authorinitials>
 <revhistory><revision>
-  <revnumber>4.72</revnumber>
-  <date>29 May 2010</date>
+  <revnumber>4.71</revnumber>
+  <date>5 November 2009</date>
   <authorinitials>EM</authorinitials>
 </revision></revhistory>
 <copyright><year>2009</year><holder>University of Cambridge</holder></copyright>
@@ -198,8 +198,8 @@ contributors.
 <indexterm role="concept">
 <primary>documentation</primary>
 </indexterm>
-This edition of the Exim specification applies to version 4.72 of Exim.
-Substantive changes from the 4.71 edition are marked in some
+This edition of the Exim specification applies to version 4.71 of Exim.
+Substantive changes from the 4.69 edition are marked in some
 renditions of the document; this paragraph is so marked if the rendition is
 capable of showing a change indicator.
 </para>
@@ -784,7 +784,7 @@ A number of pieces of external code are included in the Exim distribution.
 </para>
 <itemizedlist>
 <listitem>
-<para>
+<para revisionflag="changed">
 Regular expressions are supported in the main Exim program and in the
 Exim monitor using the freely-distributable PCRE library, copyright
 &copy; University of Cambridge. The source to PCRE is no longer shipped with
@@ -2090,7 +2090,7 @@ for only a short time (see <option>timeout_frozen_after</option> and
 <para>
 Exim is distributed as a gzipped or bzipped tar file which, when unpacked,
 creates a directory with the name of the current release (for example,
-<filename>exim-4.72</filename>) into which the following files are placed:
+<filename>exim-4.71</filename>) into which the following files are placed:
 </para>
 <informaltable frame="none">
 <tgroup cols="2" colsep="0" rowsep="0">
@@ -3008,7 +3008,7 @@ configuration. (If a default alias file is created, its name <emphasis>is</empha
 For backwards compatibility, ROOT is used if DESTDIR is not set,
 but this usage is deprecated.
 </para>
-<para>
+<para revisionflag="changed">
 <indexterm role="concept">
 <primary>installing Exim</primary>
 <secondary>what is not installed</secondary>
@@ -3023,7 +3023,7 @@ INFO_DIRECTORY, as described in section <xref linkend="SECTinsinfdoc"/> below.
 For the utility programs, old versions are renamed by adding the suffix <filename>.O</filename>
 to their names. The Exim binary itself, however, is handled differently. It is
 installed under a name that includes the version number and the compile number,
-for example <filename>exim-4.72-1</filename>. The script then arranges for a symbolic link
+for example <filename>exim-4.71-1</filename>. The script then arranges for a symbolic link
 called <filename>exim</filename> to point to the binary. If you are updating a previous version
 of Exim, the script takes care to ensure that the name <filename>exim</filename> is never absent
 from the directory (as seen by other processes).
@@ -4220,7 +4220,7 @@ using one of the words <option>router_list</option>, <option>transport_list</opt
 settings can be obtained by using <option>routers</option>, <option>transports</option>, or
 <option>authenticators</option>.
 </para>
-<para>
+<para revisionflag="changed">
 <indexterm role="concept">
 <primary>options</primary>
 <secondary>macro &ndash; extracting</secondary>
@@ -8872,7 +8872,7 @@ password are correct. In the examples it just produces an error message.
 To make the authenticators work, you can use a string expansion
 expression like one of the examples in <xref linkend="CHAPplaintext"/>.
 </para>
-<para>
+<para revisionflag="changed">
 Beware that the sequence of the parameters to PLAIN and LOGIN differ; the
 usercode and password are in different positions.  <xref linkend="CHAPplaintext"/>
 covers both.
@@ -8900,7 +8900,7 @@ regular expressions is discussed in many Perl reference books, and also in
 Jeffrey Friedl&#x2019;s <emphasis>Mastering Regular Expressions</emphasis>, which is published by
 O&#x2019;Reilly (see <emphasis role="bold"><ulink url="http://www.oreilly.com/catalog/regex2/">http://www.oreilly.com/catalog/regex2/</ulink></emphasis>).
 </para>
-<para>
+<para revisionflag="changed">
 The documentation for the syntax and semantics of the regular expressions that
 are supported by PCRE is included in the PCRE distribution, and no further
 description is included here. The PCRE functions are called from Exim using
@@ -10034,24 +10034,6 @@ by the new separator at the start of the query. For example:
 ${lookup dnsdb{&gt;: a=host1.example}}
 </literallayout>
 <para>
-It is permitted to specify a space as the separator character. Further
-white space is ignored.
-</para>
-<para revisionflag="changed">
-<indexterm role="concept">
-<primary>TXT record</primary>
-<secondary>in <command>dnsdb</command> lookup</secondary>
-</indexterm>
-For TXT records with multiple items of data, only the first item is returned,
-unless a separator for them is specified using a comma after the separator
-character followed immediately by the TXT record item separator. To concatenate
-items without a separator, use a semicolon instead.
-</para>
-<literallayout class="monospaced" revisionflag="changed">
-${lookup dnsdb{&gt;\n,: txt=a.b.example}}
-${lookup dnsdb{&gt;\n; txt=a.b.example}}
-</literallayout>
-<para revisionflag="changed">
 It is permitted to specify a space as the separator character. Further
 white space is ignored.
 </para>
@@ -14744,10 +14726,10 @@ As a special case, the numerical value of an empty string is taken as
 zero.
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><emphasis role="bold">bool&nbsp;{</emphasis>&lt;<emphasis>string</emphasis>&gt;<emphasis role="bold">}</emphasis></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 <indexterm role="concept">
 <primary>expansion</primary>
 <secondary>boolean parsing</secondary>
@@ -14761,12 +14743,12 @@ a boolean state.  It parses <quote>true</quote>, <quote>false</quote>, <quote>ye
 false if zero.  Leading whitespace is ignored.
 All other string values will result in expansion failure.
 </para>
-<para>
+<para revisionflag="changed">
 When combined with ACL variables, this expansion condition will let you
 make decisions in one place and act on those decisions in another place.
 For example,
 </para>
-<literallayout class="monospaced">
+<literallayout class="monospaced" revisionflag="changed">
 ${if bool{$acl_m_privileged_sender} ...
 </literallayout>
 </listitem></varlistentry>
@@ -15551,10 +15533,10 @@ configuration, you might have this:
 <literallayout class="monospaced">
 server_condition = ${if pwcheck{$auth1:$auth2}}
 </literallayout>
-<para>
+<para revisionflag="changed">
 Again, for a PLAIN authenticator configuration, this would be:
 </para>
-<literallayout class="monospaced">
+<literallayout class="monospaced" revisionflag="changed">
 server_condition = ${if pwcheck{$auth2:$auth3}}
 </literallayout>
 </listitem></varlistentry>
@@ -16941,7 +16923,7 @@ doing a delivery in maildir format, the value of <varname>$message_size</varname
 precise size of the file that has been written. See also
 <varname>$message_body_size</varname>, <varname>$body_linecount</varname>, and <varname>$body_zerocount</varname>.
 </para>
-<para>
+<para revisionflag="changed">
 <indexterm role="concept">
 <primary>RCPT</primary>
 <secondary>value of <varname>$message_size</varname></secondary>
@@ -22743,12 +22725,12 @@ server. For details, see section <xref linkend="SECTreqciphgnu"/>.
 This option controls the protocols when GnuTLS is used in an Exim
 server. For details, see section <xref linkend="SECTreqciphgnu"/>.
 </para>
-<para>
+<para revisionflag="changed">
 <indexterm role="option">
 <primary><option>gnutls_compat_mode</option></primary>
 </indexterm>
 </para>
-<informaltable frame="all">
+<informaltable frame="all" revisionflag="changed">
 <tgroup cols="4" colsep="0" rowsep="0">
 <colspec colwidth="8*" align="left"/>
 <colspec colwidth="6*" align="center"/>
@@ -22764,7 +22746,7 @@ server. For details, see section <xref linkend="SECTreqciphgnu"/>.
 </tbody>
 </tgroup>
 </informaltable>
-<para>
+<para revisionflag="changed">
 This option controls whether GnuTLS is used in compatibility mode in an Exim
 server. This reduces security slightly, but improves interworking with older
 implementations of TLS.
@@ -33326,7 +33308,7 @@ redirection items of the form
 :defer:
 :fail:
 </literallayout>
-<para>
+<para revisionflag="changed">
 respectively. When a redirection list contains such an item, it applies
 to the entire redirection; any other items in the list are ignored. Any
 text following <emphasis>:fail:</emphasis> or <emphasis>:defer:</emphasis> is placed in the error text
@@ -36284,7 +36266,7 @@ destination. The process that writes the message to the filter, the
 filter itself, and the original process that reads the result and delivers it
 are all run in parallel, like a shell pipeline.
 </para>
-<para>
+<para revisionflag="changed">
 The filter can perform any transformations it likes, but of course should take
 care not to break RFC 2822 syntax. Exim does not check the result, except to
 test for a final newline when SMTP is in use. All messages transmitted over
@@ -41199,7 +41181,6 @@ procmail_pipe:
   envelope_to_add
   check_string = "From "
   escape_string = "&gt;From "
-  umask = 077
   user = $local_part
   group = mail
 
@@ -41930,12 +41911,12 @@ client. For details, see section <xref linkend="SECTreqciphgnu"/>.
 This option controls the protocols when GnuTLS is used in an Exim
 client. For details, see section <xref linkend="SECTreqciphgnu"/>.
 </para>
-<para>
+<para revisionflag="changed">
 <indexterm role="option">
 <primary><option>gnutls_compat_mode</option></primary>
 </indexterm>
 </para>
-<informaltable frame="all">
+<informaltable frame="all" revisionflag="changed">
 <tgroup cols="4" colsep="0" rowsep="0">
 <colspec colwidth="8*" align="left"/>
 <colspec colwidth="6*" align="center"/>
@@ -41951,7 +41932,7 @@ client. For details, see section <xref linkend="SECTreqciphgnu"/>.
 </tbody>
 </tgroup>
 </informaltable>
-<para>
+<para revisionflag="changed">
 This option controls whether GnuTLS is used in compatibility mode in an Exim
 server. This reduces security slightly, but improves interworking with older
 implementations of TLS.
@@ -45670,7 +45651,7 @@ login:
              ldap://ldap.example.org/} }} }
   server_set_id = uid=$auth1,ou=people,o=example.org
 </literallayout>
-<para>
+<para revisionflag="changed">
 We have to check that the username is not empty before using it, because LDAP
 does not permit empty DN components. We must also use the <option>quote_ldap_dn</option>
 operator to correctly quote the DN for authentication. However, the basic
@@ -47162,7 +47143,7 @@ list of permitted cipher suites. If either of these checks fails, delivery to
 the current host is abandoned, and the <command>smtp</command> transport tries to deliver to
 alternative hosts, if any.
 </para>
-<para>
+<para revisionflag="changed">
  <emphasis role="bold">Note</emphasis>:
 These options must be set in the <command>smtp</command> transport for Exim to use TLS when it
 is operating as a client. Exim does not assume that a server certificate (set
@@ -47702,9 +47683,9 @@ client are given temporary error responses until QUIT is received or the
 connection is closed. In these special cases, the QUIT ACL does not run.
 </para>
 </section>
-<section id="SECTNOTQUITACL">
+<section id="SECTNOTQUITACL" revisionflag="changed">
 <title>The not-QUIT ACL</title>
-<para>
+<para revisionflag="changed">
 <indexterm role="variable">
 <primary><varname>$acl_smtp_notquit</varname></primary>
 </indexterm>
@@ -51825,7 +51806,7 @@ the third string (in this case <quote>1</quote>), whether or not the cryptograph
 timeout checks succeed. The <varname>$prvscheck_result</varname> variable contains the result
 of the checks (empty for failure, <quote>1</quote> for success).
 </para>
-<para>
+<para revisionflag="changed">
 There is one more issue you must consider when implementing prvs-signing:
 you have to ensure that the routers accept prvs-signed addresses and
 deliver them correctly. The easiest way to handle this is to use a <command>redirect</command>
@@ -55784,8 +55765,8 @@ If a message contains a number of different addresses, all those with the same
 characteristics (for example, the same envelope sender) that resolve to the
 same set of hosts, in the same order, are sent in a single SMTP transaction,
 even if they are for different domains, unless there are more than the setting
-of the <option>max_rcpt</option>s option in the <command>smtp</command> transport allows, in which case
-they are split into groups containing no more than <option>max_rcpt</option>s addresses
+of the <option>max_rcpts</option> option in the <command>smtp</command> transport allows, in which case
+they are split into groups containing no more than <option>max_rcpts</option> addresses
 each. If <option>remote_max_parallel</option> is greater than one, such groups may be sent
 in parallel sessions. The order of hosts with identical MX values is not
 significant when checking whether addresses can be batched in this way.
@@ -61641,75 +61622,75 @@ unqualified domain <emphasis>foundation</emphasis>.
 </section>
 </chapter>
 
-<chapter id="CHID12">
+<chapter id="CHID12" revisionflag="changed">
 <title>Support for DKIM (DomainKeys Identified Mail) - RFC4871</title>
 <titleabbrev>DKIM Support</titleabbrev>
-<para>
+<para revisionflag="changed">
 <indexterm role="concept">
 <primary>DKIM</primary>
 </indexterm>
 </para>
-<para>
+<para revisionflag="changed">
 Since version 4.70, DKIM support is compiled into Exim by default. It can be
 disabled by setting DISABLE_DKIM=yes in Local/Makefile.
 </para>
-<para>
+<para revisionflag="changed">
 Exim&#x2019;s DKIM implementation allows to
 </para>
-<orderedlist numeration="arabic">
+<orderedlist numeration="arabic" revisionflag="changed">
 <listitem>
-<para>
+<para revisionflag="changed">
 Sign outgoing messages: This function is implemented in the SMTP transport.
 It can co-exist with all other Exim features, including transport filters.
 </para>
 </listitem>
 <listitem>
-<para>
+<para revisionflag="changed">
 Verify signatures in incoming messages: This is implemented by an additional
 ACL (acl_smtp_dkim), which can be called several times per message, with
 different signature context.
 </para>
 </listitem>
 </orderedlist>
-<para>
+<para revisionflag="changed">
 In typical Exim style, the verification implementation does not include any
 default "policy". Instead it enables you to build your own policy using
 Exim&#x2019;s standard controls.
 </para>
-<para>
+<para revisionflag="changed">
 Please note that verification of DKIM signatures in incoming mail is turned
 on by default for logging purposes. For each signature in incoming email,
 exim will log a line displaying the most important signature details, and the
 signature status. Here is an example:
 </para>
-<literallayout class="monospaced">
+<literallayout class="monospaced" revisionflag="changed">
 2009-09-09 10:22:28 1MlIRf-0003LU-U3 DKIM: d=facebookmail.com s=q1-2009b c=relaxed/relaxed a=rsa-sha1 i=@facebookmail.com t=1252484542 [verification succeeded]
 </literallayout>
-<para>
+<para revisionflag="changed">
 You might want to turn off DKIM verification processing entirely for internal
 or relay mail sources. To do that, set the <option>dkim_disable_verify</option> ACL
 control modifier. This should typically be done in the RCPT ACL, at points
 where you accept mail from relay sources (internal hosts or authenticated
 senders).
 </para>
-<section id="SECID513">
+<section id="SECID513" revisionflag="changed">
 <title>Signing outgoing messages</title>
-<para>
+<para revisionflag="changed">
 <indexterm role="concept">
 <primary>DKIM</primary>
 <secondary>signing</secondary>
 </indexterm>
 </para>
-<para>
+<para revisionflag="changed">
 Signing is implemented by setting private options on the SMTP transport.
 These options take (expandable) strings as arguments.
 </para>
-<para>
+<para revisionflag="changed">
 <indexterm role="option">
 <primary><option>dkim_domain</option></primary>
 </indexterm>
 </para>
-<informaltable frame="all">
+<informaltable frame="all" revisionflag="changed">
 <tgroup cols="4" colsep="0" rowsep="0">
 <colspec colwidth="8*" align="left"/>
 <colspec colwidth="6*" align="center"/>
@@ -61725,17 +61706,17 @@ These options take (expandable) strings as arguments.
 </tbody>
 </tgroup>
 </informaltable>
-<para>
+<para revisionflag="changed">
 MANDATORY
 The domain you want to sign with. The result of this expanded
 option is put into the <option>$dkim_domain</option> expansion variable.
 </para>
-<para>
+<para revisionflag="changed">
 <indexterm role="option">
 <primary><option>dkim_selector</option></primary>
 </indexterm>
 </para>
-<informaltable frame="all">
+<informaltable frame="all" revisionflag="changed">
 <tgroup cols="4" colsep="0" rowsep="0">
 <colspec colwidth="8*" align="left"/>
 <colspec colwidth="6*" align="center"/>
@@ -61751,19 +61732,19 @@ option is put into the <option>$dkim_domain</option> expansion variable.
 </tbody>
 </tgroup>
 </informaltable>
-<para>
+<para revisionflag="changed">
 MANDATORY
 This sets the key selector string. You can use the <option>$dkim_domain</option> expansion
 variable to look up a matching selector. The result is put in the expansion
 variable <option>$dkim_selector</option> which should be used in the <option>dkim_private_key</option>
 option along with <option>$dkim_domain</option>.
 </para>
-<para>
+<para revisionflag="changed">
 <indexterm role="option">
 <primary><option>dkim_private_key</option></primary>
 </indexterm>
 </para>
-<informaltable frame="all">
+<informaltable frame="all" revisionflag="changed">
 <tgroup cols="4" colsep="0" rowsep="0">
 <colspec colwidth="8*" align="left"/>
 <colspec colwidth="6*" align="center"/>
@@ -61779,38 +61760,38 @@ option along with <option>$dkim_domain</option>.
 </tbody>
 </tgroup>
 </informaltable>
-<para>
+<para revisionflag="changed">
 MANDATORY
 This sets the private key to use. You can use the <option>$dkim_domain</option> and
 <option>$dkim_selector</option> expansion variables to determine the private key to use.
 The result can either
 </para>
-<itemizedlist>
+<itemizedlist revisionflag="changed">
 <listitem>
-<para>
+<para revisionflag="changed">
 be a valid RSA private key in ASCII armor, including line breaks.
 </para>
 </listitem>
 <listitem>
-<para>
+<para revisionflag="changed">
 start with a slash, in which case it is treated as a file that contains
 the private key.
 </para>
 </listitem>
 <listitem>
-<para>
+<para revisionflag="changed">
 be "0", "false" or the empty string, in which case the message will not
 be signed. This case will not result in an error, even if <option>dkim_strict</option>
 is set.
 </para>
 </listitem>
 </itemizedlist>
-<para>
+<para revisionflag="changed">
 <indexterm role="option">
 <primary><option>dkim_canon</option></primary>
 </indexterm>
 </para>
-<informaltable frame="all">
+<informaltable frame="all" revisionflag="changed">
 <tgroup cols="4" colsep="0" rowsep="0">
 <colspec colwidth="8*" align="left"/>
 <colspec colwidth="6*" align="center"/>
@@ -61826,19 +61807,19 @@ is set.
 </tbody>
 </tgroup>
 </informaltable>
-<para>
+<para revisionflag="changed">
 OPTIONAL
 This option sets the canonicalization method used when signing a message.
 The DKIM RFC currently supports two methods: "simple" and "relaxed".
 The option defaults to "relaxed" when unset. Note: the current implementation
 only supports using the same canonicalization method for both headers and body.
 </para>
-<para>
+<para revisionflag="changed">
 <indexterm role="option">
 <primary><option>dkim_strict</option></primary>
 </indexterm>
 </para>
-<informaltable frame="all">
+<informaltable frame="all" revisionflag="changed">
 <tgroup cols="4" colsep="0" rowsep="0">
 <colspec colwidth="8*" align="left"/>
 <colspec colwidth="6*" align="center"/>
@@ -61854,7 +61835,7 @@ only supports using the same canonicalization method for both headers and body.
 </tbody>
 </tgroup>
 </informaltable>
-<para>
+<para revisionflag="changed">
 OPTIONAL
 This  option  defines  how  Exim  behaves  when  signing a message that
 should be signed fails for some reason.  When the expansion evaluates to
@@ -61862,12 +61843,12 @@ either "1" or "true", Exim will defer. Otherwise Exim will send the message
 unsigned. You can use the <option>$dkim_domain</option> and <option>$dkim_selector</option> expansion
 variables here.
 </para>
-<para>
+<para revisionflag="changed">
 <indexterm role="option">
 <primary><option>dkim_sign_headers</option></primary>
 </indexterm>
 </para>
-<informaltable frame="all">
+<informaltable frame="all" revisionflag="changed">
 <tgroup cols="4" colsep="0" rowsep="0">
 <colspec colwidth="8*" align="left"/>
 <colspec colwidth="6*" align="center"/>
@@ -61883,7 +61864,7 @@ variables here.
 </tbody>
 </tgroup>
 </informaltable>
-<para>
+<para revisionflag="changed">
 OPTIONAL
 When set, this option must expand to (or be specified as) a colon-separated
 list of header names. Headers with these names will be included in the message
@@ -61891,31 +61872,31 @@ signature. When unspecified, the header names recommended in RFC4871 will be
 used.
 </para>
 </section>
-<section id="SECID514">
+<section id="SECID514" revisionflag="changed">
 <title>Verifying DKIM signatures in incoming mail</title>
-<para>
+<para revisionflag="changed">
 <indexterm role="concept">
 <primary>DKIM</primary>
 <secondary>verification</secondary>
 </indexterm>
 </para>
-<para>
+<para revisionflag="changed">
 Verification of DKIM signatures in incoming email is implemented via the
 <option>acl_smtp_dkim</option> ACL. By default, this ACL is called once for each
 syntactically(!) correct signature in the incoming message.
 </para>
-<para>
+<para revisionflag="changed">
 To evaluate the signature in the ACL a large number of expansion variables
 containing the signature status and its details are set up during the
 runtime of the ACL.
 </para>
-<para>
+<para revisionflag="changed">
 Calling the ACL only for existing signatures is not sufficient to build
 more advanced policies. For that reason, the global option
 <option>dkim_verify_signers</option>, and a global expansion variable
 <option>$dkim_signers</option> exist.
 </para>
-<para>
+<para revisionflag="changed">
 The global option <option>dkim_verify_signers</option> can be set to a colon-separated
 list of DKIM domains or identities for which the ACL <option>acl_smtp_dkim</option> is
 called. It is expanded when the message has been received. At this point,
@@ -61924,104 +61905,104 @@ separated list of signer domains and identities for the message. When
 <option>dkim_verify_signers</option> is not specified in the main configuration,
 it defaults as:
 </para>
-<literallayout class="monospaced">
+<literallayout class="monospaced" revisionflag="changed">
 dkim_verify_signers = $dkim_signers
 </literallayout>
-<para>
+<para revisionflag="changed">
 This leads to the default behaviour of calling <option>acl_smtp_dkim</option> for each
 DKIM signature in the message. Current DKIM verifiers may want to explicitly
 call the ACL for known domains or identities. This would be achieved as follows:
 </para>
-<literallayout class="monospaced">
+<literallayout class="monospaced" revisionflag="changed">
 dkim_verify_signers = paypal.com:ebay.com:$dkim_signers
 </literallayout>
-<para>
+<para revisionflag="changed">
 This would result in <option>acl_smtp_dkim</option> always being called for "paypal.com"
 and "ebay.com", plus all domains and identities that have signatures in the message.
 You can also be more creative in constructing your policy. Example:
 </para>
-<literallayout class="monospaced">
+<literallayout class="monospaced" revisionflag="changed">
 dkim_verify_signers = $sender_address_domain:$dkim_signers
 </literallayout>
-<para>
+<para revisionflag="changed">
 If a domain or identity is listed several times in the (expanded) value of
 <option>dkim_verify_signers</option>, the ACL is only called once for that domain or identity.
 </para>
-<para>
+<para revisionflag="changed">
 Inside the <option>acl_smtp_dkim</option>, the following expansion variables are
 available (from most to least important):
 </para>
-<variablelist>
-<varlistentry>
+<variablelist revisionflag="changed">
+<varlistentry revisionflag="changed">
 <term><option>$dkim_cur_signer</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 The signer that is being evaluated in this ACL run. This can be domain or
 an identity. This is one of the list items from the expanded main option
 <option>dkim_verify_signers</option> (see above).
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_verify_status</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 A string describing the general status of the signature. One of
 </para>
-<itemizedlist>
+<itemizedlist revisionflag="changed">
 <listitem>
-<para>
+<para revisionflag="changed">
 <option>none</option>: There is no signature in the message for the current domain or
 identity (as reflected by <option>$dkim_cur_signer</option>).
 </para>
 </listitem>
 <listitem>
-<para>
+<para revisionflag="changed">
 <option>invalid</option>: The signature could not be verified due to a processing error.
 More detail is available in <option>$dkim_verify_reason</option>.
 </para>
 </listitem>
 <listitem>
-<para>
+<para revisionflag="changed">
 <option>fail</option>: Verification of the signature failed.  More detail is
 available in <option>$dkim_verify_reason</option>.
 </para>
 </listitem>
 <listitem>
-<para>
+<para revisionflag="changed">
 <option>pass</option>: The signature passed verification. It is valid.
 </para>
 </listitem>
 </itemizedlist>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_verify_reason</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 A string giving a litte bit more detail when <option>$dkim_verify_status</option> is either
 "fail" or "invalid". One of
 </para>
-<itemizedlist>
+<itemizedlist revisionflag="changed">
 <listitem>
-<para>
+<para revisionflag="changed">
 <option>pubkey_unavailable</option> (when <option>$dkim_verify_status</option>="invalid"): The public
 key for the domain could not be retrieved. This may be a temporary problem.
 </para>
 </listitem>
 <listitem>
-<para>
+<para revisionflag="changed">
 <option>pubkey_syntax</option> (when <option>$dkim_verify_status</option>="invalid"): The public key
 record for the domain is syntactically invalid.
 </para>
 </listitem>
 <listitem>
-<para>
+<para revisionflag="changed">
 <option>bodyhash_mismatch</option> (when <option>$dkim_verify_status</option>="fail"): The calculated
 body hash does not match the one specified in the signature header. This
 means that the message body was modified in transit.
 </para>
 </listitem>
 <listitem>
-<para>
+<para revisionflag="changed">
 <option>signature_incorrect</option> (when <option>$dkim_verify_status</option>="fail"): The signature
 could not be verified. This may mean that headers were modified,
 re-written or otherwise changed in a way which is incompatible with
@@ -62030,146 +62011,146 @@ DKIM verification. It may of course also mean that the signature is forged.
 </listitem>
 </itemizedlist>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_domain</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 The signing domain. IMPORTANT: This variable is only populated if there is
 an actual signature in the message for the current domain or identity (as
 reflected by <option>$dkim_cur_signer</option>).
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_identity</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 The signing identity, if present. IMPORTANT: This variable is only populated
 if there is an actual signature in the message for the current domain or
 identity (as reflected by <option>$dkim_cur_signer</option>).
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_selector</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 The key record selector string
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_algo</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 The algorithm used. One of &#x2019;rsa-sha1&#x2019; or &#x2019;rsa-sha256&#x2019;.
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_canon_body</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 The body canonicalization method. One of &#x2019;relaxed&#x2019; or &#x2019;simple&#x2019;.
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>dkim_canon_headers</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 The header canonicalization method. One of &#x2019;relaxed&#x2019; or &#x2019;simple&#x2019;.
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_copiedheaders</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 A transcript of headers and their values which are included in the signature
 (copied from the &#x2019;z=&#x2019; tag of the signature).
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_bodylength</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 The number of signed body bytes. If zero ("0"), the body is unsigned. If no
 limit was set by the signer, "9999999999999" is returned. This makes sure
 that this variable always expands to an integer value.
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_created</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 UNIX timestamp reflecting the date and time when the signature was created.
 When this was not specified by the signer, "0" is returned.
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_expires</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 UNIX timestamp reflecting the date and time when the signer wants the
 signature to be treated as "expired". When this was not specified by the
 signer, "9999999999999" is returned. This makes it possible to do useful
 integer size comparisons against this value.
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_headernames</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 A colon-separated list of names of headers included in the signature.
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_key_testing</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 "1" if the key record has the "testing" flag set, "0" if not.
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_key_nosubdomaining</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 "1" if the key record forbids subdomaining, "0" otherwise.
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_key_srvtype</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 Service type (tag s=) from the key record. Defaults to "*" if not specified
 in the key record.
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_key_granularity</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 Key granularity (tag g=) from the key record. Defaults to "*" if not specified
 in the key record.
 </para>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>$dkim_key_notes</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 Notes from the key record (tag n=)
 </para>
 </listitem></varlistentry>
 </variablelist>
-<para>
+<para revisionflag="changed">
 In addition, two ACL conditions are provided:
 </para>
-<variablelist>
-<varlistentry>
+<variablelist revisionflag="changed">
+<varlistentry revisionflag="changed">
 <term><option>dkim_signers</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 ACL condition that checks a colon-separated list of domains or identities
 for a match against the domain or identity that the ACL is currently verifying
 (reflected by <option>$dkim_cur_signer</option>). This is typically used to restrict an ACL
 verb to a group of domains or identities, like:
 </para>
-<literallayout class="monospaced">
+<literallayout class="monospaced" revisionflag="changed">
 # Warn when message apparently from GMail has no signature at all
 warn log_message = GMail sender without DKIM signature
      sender_domains = gmail.com
@@ -62177,21 +62158,21 @@ warn log_message = GMail sender without DKIM signature
      dkim_status = none
 </literallayout>
 </listitem></varlistentry>
-<varlistentry>
+<varlistentry revisionflag="changed">
 <term><option>dkim_status</option></term>
 <listitem>
-<para>
+<para revisionflag="changed">
 ACL condition that checks a colon-separated list of possible DKIM verification
 results agains the actual result of verification. This is typically used
 to restrict an ACL verb to a list of verification outcomes, like:
 </para>
-<literallayout class="monospaced">
+<literallayout class="monospaced" revisionflag="changed">
 deny message = Message from Paypal with invalid or missing signature
      sender_domains = paypal.com:paypal.de
      dkim_signers = paypal.com:paypal.de
      dkim_status = none:invalid:fail
 </literallayout>
-<para>
+<para revisionflag="changed">
 The possible status keywords are: &#x2019;none&#x2019;,&#x2019;invalid&#x2019;,&#x2019;fail&#x2019; and &#x2019;pass&#x2019;. Please
 see the documentation of the <option>$dkim_verify_status</option> expansion variable above
 for more information of what they mean.
