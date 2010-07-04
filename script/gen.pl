@@ -1,9 +1,12 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use CSS::Minifier::XS;
 use File::Copy;
 use File::Find;
+use File::Slurp;
 use File::Spec;
+use JavaScript::Minifier::XS;
 use XML::LibXML;
 use XML::LibXSLT;
 
@@ -52,10 +55,21 @@ sub do_web {
                     ## Skip if the file hasn't changed (mtime based)
                     return if -f "$opt{docroot}/$path" && ( stat("$opt{tmpl}/web/$path") )[9] == ( stat("$opt{docroot}/$path") )[9];
 
-                    ## Copy
-                    print "Copying to  : docroot:/$path\n";
-                    copy( "$opt{tmpl}/web/$path", "$opt{docroot}/$path" ) or die "$path: $!";
-
+                    if ( $path =~ /(.+)\.css$/ ) {
+                        print "CSS to  : docroot:/$path\n";
+                        my $content = read_file("$opt{tmpl}/web/$path");
+                        write_file( "$opt{docroot}/$path", CSS::Minifier::XS::minify($content) );
+                    }
+                    elsif ( $path =~ /(.+)\.js$/ ) {
+                        print "JS to  : docroot:/$path\n";
+                        my $content = read_file("$opt{tmpl}/web/$path");
+                        write_file( "$opt{docroot}/$path", JavaScript::Minifier::XS::minify($content) );
+                    }
+                    else {
+                        ## Copy
+                        print "Copying to  : docroot:/$path\n";
+                        copy( "$opt{tmpl}/web/$path", "$opt{docroot}/$path" ) or die "$path: $!";
+                    }
                     ## Set mtime
                     utime( time, ( stat("$opt{tmpl}/web/$path") )[9], "$opt{docroot}/$path" );
                 }
