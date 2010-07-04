@@ -38,10 +38,10 @@
 				<p>A list of mirror sites is maintained within mirmon - see the links below for lists of mirrors and their current status:-</p>
 				<ul>
 					<li>
-						<a href="{$docroot}/mirmon/ftp_mirrors.html">Download Mirrors</a>
+						<a href="http://www.exim.org/mirmon/ftp_mirrors.html">Download Mirrors</a>
 					</li>
 					<li>
-						<a href="{$docroot}/mirmon/www_mirrors.html">Website Mirrors</a>
+						<a href="http://www.exim.org/mirmon/www_mirrors.html">Website Mirrors</a>
 					</li>
 				</ul>
 
