@@ -38,10 +38,6 @@
 						<xsl:text>Jennifer Greenley, of </xsl:text><a href="http://www.sharpblue.com/">Sharpblue</a>
 						<p>Designed the new Exim logo, in 2002.</p>
 					</li>
-					<li>
-						<a href="http://www.energis-squared.net/">Energis Squared</a><xsl:text> (formerly Planet Online)</xsl:text>
-						<p>Provided the UK web site, the domain name registration and various other resources for the Exim community. Energis Squared also use Exim for their mail systems including systems with a userbase of several million users.</p>
-					</li>
 				</ul>
 
 		</xsl:template>
