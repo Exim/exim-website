@@ -163,7 +163,11 @@ sub xref_fixup {
     foreach my $chapter ( $xml->findnodes('/book/chapter') ) {
         ++$chapter_counter;
 
-        my $chapter_id    = $chapter->getAttribute('id');
+        my $chapter_id = $chapter->getAttribute('id');
+        unless ($chapter_id) {    # synthesise missing id
+            $chapter_id = sprintf( 'chapter_noid_%04d', $chapter_counter );
+            $chapter->setAttribute( 'id', $chapter_id );
+        }
         my $chapter_title = $chapter->findvalue('title');
 
         $index{$chapter_id} = { chapter_id => $chapter_counter, chapter_title => $chapter_title };
@@ -173,7 +177,11 @@ sub xref_fixup {
         foreach my $section ( $chapter->findnodes('section') ) {
             ++$section_counter;
 
-            my $section_id    = $section->getAttribute('id');
+            my $section_id = $section->getAttribute('id');
+            unless ($section_id) {    # synthesise missing id
+                $section_id = sprintf( 'section_noid_%04d_%04d', $chapter_counter, $section_counter );
+                $section->setAttribute( 'id', $section_id );
+            }
             my $section_title = $section->findvalue('title');
 
             $index{$section_id} =
