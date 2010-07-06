@@ -1,261 +1,270 @@
 /* Reset CSS */
-	html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,code,del,dfn,em,img,q,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;font-weight:inherit;font-style:inherit;font-size:100%;font-family:inherit;vertical-align:baseline;}body{line-height:1.5;}table{border-collapse:separate;border-spacing:0;}caption,th,td{text-align:left;font-weight:normal;}table,td,th{vertical-align:middle;}blockquote:before,blockquote:after,q:before,q:after{content:"";}blockquote,q{quotes:"" "";}a img{border:none;}
+html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,code,del,dfn,em,img,q,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-size: 100%;
+  font-family: inherit;
+  vertical-align: baseline;
+}
 
 /* Fonts */
 
-	body {
-		font-size:		      62.5%;
-		font-family:		    Verdana, Arial, Helvetica, Sans-Serif;
-	}
+  body {
+    font-size:          62.5%;
+    font-family:        Verdana, Arial, Helvetica, Sans-Serif;
+  }
 
 /* Header Defaults */
 
-	h1, h2, h3, h4, h5, h6 { font-family:serif; line-height:1.7; font-weight: bold; }
-	h1 { font-size: 3.0em; text-align: center; }
-	h2 { font-size: 2.2em; text-align: center; }
-	h3 { font-size: 1.7em; }
-	h4 { font-size: 1.5em; }
-	h5 { font-size: 1.3em; }
-	h6 { font-size: 1.1em; }
+  h1, h2, h3, h4, h5, h6 { font-family:serif; line-height:1.7; font-weight: bold; }
+  h1 { font-size: 3.0em; text-align: center; }
+  h2 { font-size: 2.2em; text-align: center; }
+  h3 { font-size: 1.7em; }
+  h4 { font-size: 1.5em; }
+  h5 { font-size: 1.3em; }
+  h6 { font-size: 1.1em; }
 
 /* Shrink header sizes on thin windows (phones?) */
-	@media all and ( max-width:640px ){
-		h1 { font-size: 2.4em; }
-		h2 { font-size: 1.4em; }
-		h3 { font-size: 1.25em;  }
-		h4 { font-size: 1.2em; }
-		h5 { font-size: 1.15em;  }
-		h6 { font-size: 1.1em; }
-	}
+  @media all and ( max-width:640px ){
+    h1 { font-size: 2.4em; }
+    h2 { font-size: 1.4em; }
+    h3 { font-size: 1.25em;  }
+    h4 { font-size: 1.2em; }
+    h5 { font-size: 1.15em;  }
+    h6 { font-size: 1.1em; }
+  }
 
 /* Anchor Defaults */
 
-	a	  { color: #037094; }
-	a:visited { color: #335024; }
-	a:hover, a:visited:hover { color: #000; }
+  a   { color: #037094; }
+  a:visited { color: #335024; }
+  a:hover, a:visited:hover { color: #000; }
 
 /* Some more Defaults */
 
-	html, body {
-		height:				100%;
-		background-color:		#fff;
-	}
-	.hidden {
-		display:			none;
-	}
-	#inner ul, #inner ol {
-		padding:			0 0 1em 4em;
-	}
-	#inner p, #inner pre {
-		padding:			0 0 1em 1em;
-	}
-	#inner pre {
-		font-family:			monospace;
-        	white-space:                    pre-wrap;       /* css-3 */
-        	white-space:                    -moz-pre-wrap;  /* Mozilla, since 1999 */
-        	white-space:                    -pre-wrap;      /* Opera 4-6 */
-        	white-space:                    -o-pre-wrap;    /* Opera 7 */
-        	word-wrap:                      break-word;     /* Internet Explorer 5.5+ */
-	}
-	#inner > * {
-		padding-left:			1em;
-		padding-right:			1em;
-	}
-	@media all and ( max-width:640px ){ #inner > * { padding:0; } }
+  html, body {
+    height:       100%;
+    background-color:   #fff;
+  }
+  .hidden {
+    display:      none;
+  }
+  #inner ul, #inner ol {
+    padding:      0 0 1em 4em;
+  }
+  #inner p, #inner pre {
+    padding:      0 0 1em 1em;
+  }
+  #inner pre {
+    font-family:      monospace;
+          white-space:                    pre-wrap;       /* css-3 */
+          white-space:                    -moz-pre-wrap;  /* Mozilla, since 1999 */
+          white-space:                    -pre-wrap;      /* Opera 4-6 */
+          white-space:                    -o-pre-wrap;    /* Opera 7 */
+          word-wrap:                      break-word;     /* Internet Explorer 5.5+ */
+  }
+  #inner > * {
+    padding-left:     1em;
+    padding-right:      1em;
+  }
+  @media all and ( max-width:640px ){ #inner > * { padding:0; } }
 
 /* Main Header */
 
-	#header {
-		position:			absolute;
-		top:				0;
-		left:				0;
-		height:				2em; /* 60px */
-		width:				100%;
-		line-height:			2;   /* 60px */
-		background-color:		#000;
-		z-index:			1000;
+  #header {
+    position:     absolute;
+    top:        0;
+    left:       0;
+    height:       2em; /* 60px */
+    width:        100%;
+    line-height:      2;   /* 60px */
+    background-color:   #000;
+    z-index:      1000;
 
-		background-color:		#1f3c5a; /* For browsers without gradient support */
-		filter:				progid:DXImageTransform.Microsoft.gradient(startColorstr='#032044', endColorstr='#1f3c5a'); /* IE */
-		background:			-webkit-gradient(linear,left top,left bottom,from(#032044),to(#1f3c5a)); /* Webkit */
-		background:			-moz-linear-gradient(top, #032044, #1f3c5a); /* Firefox >= 3.6 */
-	}
-	@media all and ( max-width:640px ){
-		#header {
-			height:			2.5em; /* 60px */
-			line-height:		2.5;   /* 60px */
-		}
-	}
+    background-color:   #1f3c5a; /* For browsers without gradient support */
+    filter:       progid:DXImageTransform.Microsoft.gradient(startColorstr='#032044', endColorstr='#1f3c5a'); /* IE */
+    background:     -webkit-gradient(linear,left top,left bottom,from(#032044),to(#1f3c5a)); /* Webkit */
+    background:     -moz-linear-gradient(top, #032044, #1f3c5a); /* Firefox >= 3.6 */
+  }
+  @media all and ( max-width:640px ){
+    #header {
+      height:     2.5em; /* 60px */
+      line-height:    2.5;   /* 60px */
+    }
+  }
 
-	body > #header.fixed {
-		position:			fixed;
-	}
+  body > #header.fixed {
+    position:     fixed;
+  }
 
-	#header a {
-		color:				#fff;
-		white-space:			nowrap;
-	}
+  #header a {
+    color:        #fff;
+    white-space:      nowrap;
+  }
 
-	#header a:hover {
-		color:				#aaf;
-	}
+  #header a:hover {
+    color:        #aaf;
+  }
 
-	#header, .navigation {
-		opacity:			0.925;
-	}
+  #header, .navigation {
+    opacity:      0.925;
+  }
 
 /* Outer Container (Positionining) */
 
-	#outer {
-		position:			absolute;
-		top:				0;
-		left:				0;
-		width:				100%;
-		min-height:			100%;
-		height:				auto !important;
-		height:				100%;
-		background-color:		#fff;
-	}
+  #outer {
+    position:     absolute;
+    top:        0;
+    left:       0;
+    width:        100%;
+    min-height:     100%;
+    height:       auto !important;
+    height:       100%;
+    background-color:   #fff;
+  }
 
 /* Grey Side Bars */
 
-	#outer .left_bar, #outer .right_bar {
-		display:			none;
-	}
+  #outer .left_bar, #outer .right_bar {
+    display:      none;
+  }
 
-	#outer > .left_bar.display, #outer > .right_bar.display {
-		display:			block;
-		position:			absolute;
-		top:				0;
-		width:				10%;
-		height:				100%;
-		background-color:		#ddd;
-	}
-	#outer > .left_bar  { left:	0; }
-	#outer > .right_bar { right:	0; }
+  #outer > .left_bar.display, #outer > .right_bar.display {
+    display:      block;
+    position:     absolute;
+    top:        0;
+    width:        10%;
+    height:       100%;
+    background-color:   #ddd;
+  }
+  #outer > .left_bar  { left: 0; }
+  #outer > .right_bar { right:  0; }
 
-	@media all and ( max-width:640px ){
-		#outer > .left_bar.display, #outer > .right_bar.display { display: none; }
-	}
+  @media all and ( max-width:640px ){
+    #outer > .left_bar.display, #outer > .right_bar.display { display: none; }
+  }
 
 /* Navigation */
 
-	.navigation {
-		margin-top:			6em;
-		padding:			0 0 0.5em 0;
-		width:				100%;
-		text-align:			center;
-		list-style:			none;
-		background-color:		#1f3c5a;
-		z-index:			1000;
-	}
+  .navigation {
+    margin-top:     6em;
+    padding:      0 0 0.5em 0;
+    width:        100%;
+    text-align:     center;
+    list-style:     none;
+    background-color:   #1f3c5a;
+    z-index:      1000;
+  }
 
-	.navigation li {
-		display:			inline;
-		font-size:			1.2em;
-		padding:			0 0.3em;
-	}
+  .navigation li {
+    display:      inline;
+    font-size:      1.2em;
+    padding:      0 0.3em;
+  }
 
-	.navigation li a         { color: #fff; }
-	.navigation li a:hover   { color: #aaf; }
-	.navigation li a:visited { color: #aaf; }
-	.navigation li a:visited:hover { color: #fff; } 
+  .navigation li a         { color: #fff; }
+  .navigation li a:hover   { color: #aaf; }
+  .navigation li a:visited { color: #aaf; }
+  .navigation li a:visited:hover { color: #fff; } 
 
-	#outer > .navigation.fixed {
-		position:			fixed;
-		top:				0;
-		left:				0;
-	}
+  #outer > .navigation.fixed {
+    position:     fixed;
+    top:        0;
+    left:       0;
+  }
 
-	#outer > .navigation.spacer {
-		visibility:			hidden;
-	}
+  #outer > .navigation.spacer {
+    visibility:     hidden;
+  }
 
 /* Search Field */
-	.navigation li.search, .navigation form {
-		display:			block;
-		padding-top:			4px;
-	}
-	.navigation .search_field_container.roundit .search_field {
-		border:				0;
-		padding:			0;
-		margin:				0;
-	}
-	.navigation .search_field_container.roundit {
-		background-color:		#fff;
-		-moz-border-radius:		1em;
-		-webkit-border-radius:		1em;
-		padding:			0.1em 1em;
-		font-size:			1.2em;
-	}
-	.navigation .search_field_container {
-		cursor:				text;
-	}
+  .navigation li.search, .navigation form {
+    display:          inline;
+    padding-top:      4px;
+  }
+  .navigation .search_field_container.roundit .search_field {
+    border:       0;
+    padding:      0;
+    margin:       0;
+  }
+  .navigation .search_field_container.roundit {
+    background-color:   #fff;
+    -moz-border-radius:   1em;
+    -webkit-border-radius:    1em;
+    padding:      0.1em 1em;
+    font-size:      1.2em;
+  }
+  .navigation .search_field_container {
+    cursor:       text;
+  }
 
 /* Main content */
 
-	#inner {
-		z-index:			1000;
-		width:				80%;
-		min-width:			50%;
-		max-width:			65em;
-		padding:			0.71429em 0 1.42857em 0;
-		margin:				0 auto;
-		font-size:			1.4em; /* 14px */
-		line-height:			2;     /* 28px */
-		background-color:		#fff;
-	}
-	/* Remove side padding on thin windows (phones?) */
-		@media all and ( max-width:640px ){
-			#inner { width: auto; }
-		}
+  #inner {
+    z-index:      1000;
+    width:        80%;
+    min-width:      50%;
+    max-width:      65em;
+    padding:      0.71429em 0 1.42857em 0;
+    margin:       0 auto;
+    font-size:      1.4em; /* 14px */
+    line-height:      2;     /* 28px */
+    background-color:   #fff;
+  }
+  /* Remove side padding on thin windows (phones?) */
+    @media all and ( max-width:640px ){
+      #inner { width: auto; }
+    }
 
 /* Branding */
-	#branding {
-		display:			block;
-		visibility:			hidden;
-		width:				80%;
-		margin:				-1.42857em auto 1.42857em auto;
-		overflow:			hidden;
-		border:				0;
-		outline:			0;
-	}
+  #branding {
+    display:      block;
+    visibility:     hidden;
+    width:        80%;
+    margin:       -1.42857em auto 1.42857em auto;
+    overflow:     hidden;
+    border:       0;
+    outline:      0;
+  }
 
 /* Footer */
-	#footer {
-		position:			absolute;
-		bottom:				0;
-		left:				0;
-		height:				1.4em;  /* 14px */
-		width:				100%;
-		z-index:			1000;
-		line-height:			1.4;    /* 14px */
-		text-align:			center;
-		text-align:			center;
-	}
+  #footer {
+    position:     absolute;
+    bottom:       0;
+    left:       0;
+    height:       1.4em;  /* 14px */
+    width:        100%;
+    z-index:      1000;
+    line-height:      1.4;    /* 14px */
+    text-align:     center;
+    text-align:     center;
+  }
 
-	#footer, #footer a {
-		color:				#999;
-	}
+  #footer, #footer a {
+    color:        #999;
+  }
 
-	#footer:hover, #footer:hover a { color: #444; }
-	#footer a:hover { color: #000; }
+  #footer:hover, #footer:hover a { color: #444; }
+  #footer a:hover { color: #000; }
 
 /* Some docbook elements */
 
-	.docbook_filename, .docbook_emphasis, .docbook_function {
-		font-style:		     italic;
-	}
-	.docbook_option, .docbook_command {
-		font-weight:			bold;
-	}
-	.docbook_literal {
-		font-family:			monospace;
-	}
-	.docbook_literallayout {
-		background-color:		#e8e8d0;
-	}
-	.docbook_literallayout pre {
-		padding:			1em;
-		margin-bottom:			1em;
-	}
+  .docbook_filename, .docbook_emphasis, .docbook_function {
+    font-style:        italic;
+  }
+  .docbook_option, .docbook_command {
+    font-weight:      bold;
+  }
+  .docbook_literal {
+    font-family:      monospace;
+  }
+  .docbook_literallayout {
+    background-color:   #e8e8d0;
+  }
+  .docbook_literallayout pre {
+    padding:      1em;
+    margin-bottom:      1em;
+  }
