@@ -253,7 +253,7 @@ sub mkdirp {
 sub parse_arguments {
 
     my %opt = ( spec => [], filter => [], help => 0, web => 0, minify => 1 );
-    GetOptions( \%opt, 'help|h!', 'web!', 'spec=s{}', 'filter=s{}', 'latest=s', 'tmpl=s', 'docroot=s', 'minify!' )
+    GetOptions( \%opt, 'help|h!', 'web!', 'spec=s{1,}', 'filter=s{1,}', 'latest=s', 'tmpl=s', 'docroot=s', 'minify!' )
       || help( 1, 'Bad options' );
 
     ## --help
