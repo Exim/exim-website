@@ -6,6 +6,7 @@ use File::Copy;
 use File::Find;
 use File::Slurp;
 use File::Spec;
+use Getopt::Long;
 use JavaScript::Minifier::XS;
 use XML::LibXML;
 use XML::LibXSLT;
@@ -58,12 +59,12 @@ sub do_web {
                     if ( $path =~ /(.+)\.css$/ ) {
                         print "CSS to  : docroot:/$path\n";
                         my $content = read_file("$opt{tmpl}/web/$path");
-                        write_file( "$opt{docroot}/$path", CSS::Minifier::XS::minify($content) );
+                        write_file( "$opt{docroot}/$path", $opt{minify} ? CSS::Minifier::XS::minify($content) : $content );
                     }
                     elsif ( $path =~ /(.+)\.js$/ ) {
                         print "JS to  : docroot:/$path\n";
                         my $content = read_file("$opt{tmpl}/web/$path");
-                        write_file( "$opt{docroot}/$path", JavaScript::Minifier::XS::minify($content) );
+                        write_file( "$opt{docroot}/$path", $opt{minify} ? JavaScript::Minifier::XS::minify($content) : $content );
                     }
                     else {
                         ## Copy
@@ -250,67 +251,33 @@ sub mkdirp {
 
 ## Parse arguments
 sub parse_arguments {
-    my %opt = ();
+
+    my %opt = ( spec => [], filter => [], help => 0, web => 0, minify => 1 );
+    GetOptions( \%opt, 'help|h!', 'web!', 'spec=s{}', 'filter=s{}', 'latest=s', 'tmpl=s', 'docroot=s', 'minify!' )
+      || help( 1, 'Bad options' );
 
     ## --help
-    help(0) if int(@ARGV) == 0 || grep( /^--help|-h$/, @ARGV );
+    help(0) if ( $opt{help} );
 
-    my @collection = @ARGV;
-    while (@collection) {
-        my $key = shift @collection;
-
-        if ( $key eq '--web' ) {
-
-            ## --web
-            $opt{web} = 1;
-        }
-        elsif ( $key =~ /^--(spec|filter)$/ ) {
-
-            ## --spec and --filter
-            my $continue = 1;
-            while ( $continue && @collection ) {
-                my $value = shift @collection;
-
-                if ( $value =~ /^--/ ) {
-                    unshift @collection, $value;
-                    $continue = 0;
-                }
-                else {
-                    $value = File::Spec->rel2abs($value);
-                    help( 1, 'No such file: ' . $value ) unless -f $value;
-                    push @{ $opt{$1} }, $value unless grep( $_ eq $value, @{ $opt{$1} } );
-                }
-            }
-            help( 1, 'Missing value for ' . $key ) unless exists $opt{$1};
-        }
-        elsif ( $key eq '--latest' ) {
-
-            ## --latest
-            my $value = shift @collection;
-            help( 1, 'Missing value for ' . $key ) unless defined $value;
-            help( 1, 'Invalid value for ' . $key ) unless $value =~ /^\d+(?:\.\d+)*$/;
-            $opt{latest} = $value;
-        }
-        elsif ( $key =~ /^--(tmpl|docroot)$/ ) {
-
-            ## --tmpl and --docroot
-            my $value = shift @collection;
-            help( 1, 'Missing value for ' . $key ) unless defined $value;
-            $value = File::Spec->rel2abs($value);
-            help( 1, 'No such directory: ' . $value ) unless -d $value;
-            $opt{$1} = $value;
-            $opt{$1} =~ s#/+$##;
-        }
-        else {
-            help( 1, 'Bad argument: ' . $key );
-        }
+    ## --spec and --filter lists
+    foreach my $set (qw[spec filter]) {
+        $opt{$set} = [ map { my $f = File::Spec->rel2abs($_); help( 1, 'No such file: ' . $_ ) unless -f $f; $f } @{ $opt{$set} } ];
     }
+    ## --latest
+    help( 1, 'Missing value for latest' ) unless ( exists( $opt{latest} ) && defined( $opt{latest} ) );
+    help( 1, 'Invalid value for latest' ) unless $opt{latest} =~ /^\d+(?:\.\d+)*$/;
+
+    ## --tmpl and --docroot
+    foreach my $set (qw[tmpl docroot]) {
+        help( 1, 'Missing value for ' . $set ) unless ( exists( $opt{$set} ) && defined( $opt{$set} ) );
+        my $f = File::Spec->rel2abs( $opt{$set} );
+        help( 1, 'No such directory: ' . $opt{$set} ) unless -d $f;
+        $opt{$set} = $f;
+    }
+    help( 1, 'Excess arguments' ) if ( scalar(@ARGV) );
 
     help( 1, 'Must include at least one of --web, --spec or --filter' )
-      unless exists $opt{web} || exists $opt{spec} || exists $opt{filter};
-    foreach (qw( latest tmpl docroot )) {
-        help( 1, 'Missing argument: --' . $_ ) unless exists $opt{$_};
-    }
+      unless ( defined $opt{web} || scalar( @{ $opt{spec} } ) || scalar( @{ $opt{web} } ) );
 
     return %opt;
 }
