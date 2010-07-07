@@ -189,6 +189,8 @@ sub xref_fixup {
               { chapter_id => $chapter_counter, chapter_title => $chapter_title, section_id => $section_counter };
         }
     }
+    ## Build indexes as new chapters
+    build_indexes( $xml, $prepend_chapter, \%index );
 
     ## Replace all of the xrefs in the XML
     foreach my $xref ( $xml->findnodes('//xref') ) {
@@ -200,6 +202,79 @@ sub xref_fixup {
             $xref->setAttribute( 'url',
                 sprintf( '%sch%02d.html', $prepend_chapter, $index{$linkend}{'chapter_id'} )
                   . ( $index{$linkend}{'section_id'} ? '#' . $linkend : '' ) );
+        }
+    }
+}
+
+## Build indexes
+sub build_indexes {
+    my ( $xml, $prepend_chapter, $xref ) = @_;
+
+    my $index_hash = {};
+    my $current_id;
+    foreach my $node ( $xml->findnodes('//section | //chapter | //indexterm') ) {
+        if ( $node->nodeName eq 'indexterm' ) {
+            my $role      = $node->getAttribute('role') || 'concept';
+            my $primary   = $node->findvalue('child::primary');
+            my $first     = uc( substr( $primary, 0, 1 ) );               # first char
+            my $secondary = $node->findvalue('child::secondary') || '';
+            $index_hash->{$role}{$first}{$primary}{$secondary} ||= [];
+            push @{ $index_hash->{$role}{$first}{$primary}{$secondary} }, $current_id;
+        }
+        else {
+            $current_id = $node->getAttribute('id');
+        }
+    }
+
+    # now we build a set of new chapters with the index data in
+    my $book = ( $xml->findnodes('/book') )[0];
+    foreach my $role ( sort { $a cmp $b } keys %{$index_hash} ) {
+        my $chapter = XML::LibXML::Element->new('chapter');
+        $book->appendChild($chapter);
+        $chapter->setAttribute( 'id', 'index_' . $role );
+        $chapter->appendTextChild( 'title', ( ucfirst($role) . ' Index' ) );
+        foreach my $first ( sort { $a cmp $b } keys %{ $index_hash->{$role} } ) {
+            my $section = XML::LibXML::Element->new('section');
+            my $list    = XML::LibXML::Element->new('itemizedlist');
+            $chapter->appendChild($section);
+            $section->setAttribute( 'id', 'index_' . $role . '_' . $first );
+            $section->appendTextChild( 'title', $first );
+            $section->appendChild($list);
+            foreach my $primary ( sort { $a cmp $b } keys %{ $index_hash->{$role}{$first} } ) {
+                my $item = XML::LibXML::Element->new('listitem');
+                my $para = XML::LibXML::Element->new('para');
+                $list->appendChild($item);
+                $item->appendChild($para);
+                $para->appendText($primary);
+                my $slist;
+                foreach my $secondary ( sort { $a cmp $b } keys %{ $index_hash->{$role}{$first}{$primary} } ) {
+                    my $spara;
+                    my $sitem;
+                    if ( $secondary eq '' ) {
+                        $spara = $para;    # skip having extra layer of heirarchy
+                    }
+                    else {
+                        unless ($slist) {
+                            $slist = XML::LibXML::Element->new('itemizedlist');
+                            $item->appendChild($slist);
+                        }
+                        $sitem = XML::LibXML::Element->new('listitem');
+                        $spara = XML::LibXML::Element->new('para');
+                        $slist->appendChild($sitem);
+                        $slist->appendChild($spara);
+                        $spara->appendText($secondary);
+                    }
+                    $spara->appendText(': ');
+                    my $count = 0;
+                    foreach my $ref ( @{ $index_hash->{$role}{$first}{$primary}{$secondary} } ) {
+                        $spara->appendText(', ')
+                          if ( $count++ );
+                        my $xrefel = XML::LibXML::Element->new('xref');
+                        $xrefel->setAttribute( linkend => $ref );
+                        $spara->appendChild($xrefel);
+                    }
+                }
+            }
         }
     }
 }
