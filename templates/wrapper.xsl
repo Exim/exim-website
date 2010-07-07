@@ -141,10 +141,24 @@
          <a href="{@url}" title="{@chapter_id}. {@chapter_title}">
             <xsl:choose>
                <xsl:when test="@section_id">
-                  <xsl:value-of select="concat(@chapter_id,'.',@section_id)"/>
+                  <xsl:choose>
+                     <xsl:when test="@longref">
+                        <xsl:value-of select="concat(@chapter_id,'. ',@chapter_title,'[',@section_title,']')"/>
+                     </xsl:when>
+                     <xsl:otherwise>
+                        <xsl:value-of select="concat(@chapter_id,'.',@section_id)"/>
+                     </xsl:otherwise>
+                  </xsl:choose>
                </xsl:when>
                <xsl:otherwise>
-                  <xsl:value-of select="@chapter_id"/>
+                  <xsl:choose>
+                     <xsl:when test="@longref">
+                        <xsl:value-of select="concat(@chapter_id,'. ',@chapter_title)"/>
+                     </xsl:when>
+                     <xsl:otherwise>
+                        <xsl:value-of select="@chapter_id"/>
+                     </xsl:otherwise>
+                  </xsl:choose>
                </xsl:otherwise>
             </xsl:choose>
          </a>

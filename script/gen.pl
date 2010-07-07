@@ -185,8 +185,12 @@ sub xref_fixup {
             }
             my $section_title = $section->findvalue('title');
 
-            $index{$section_id} =
-              { chapter_id => $chapter_counter, chapter_title => $chapter_title, section_id => $section_counter };
+            $index{$section_id} = {
+                chapter_id    => $chapter_counter,
+                chapter_title => $chapter_title,
+                section_id    => $section_counter,
+                section_title => $section_title
+            };
         }
     }
     ## Build indexes as new chapters
@@ -198,7 +202,8 @@ sub xref_fixup {
         if ( exists $index{$linkend} ) {
             $xref->setAttribute( 'chapter_id',    $index{$linkend}{'chapter_id'} );
             $xref->setAttribute( 'chapter_title', $index{$linkend}{'chapter_title'} );
-            $xref->setAttribute( 'section_id',    $index{$linkend}{'section_id'} ) if $index{$linkend}{'section_id'};
+            $xref->setAttribute( 'section_id',    $index{$linkend}{'section_id'} ) if ( $index{$linkend}{'section_id'} );
+            $xref->setAttribute( 'section_title', $index{$linkend}{'section_title'} ) if ( $index{$linkend}{'section_title'} );
             $xref->setAttribute( 'url',
                 sprintf( '%sch%02d.html', $prepend_chapter, $index{$linkend}{'chapter_id'} )
                   . ( $index{$linkend}{'section_id'} ? '#' . $linkend : '' ) );
@@ -271,6 +276,7 @@ sub build_indexes {
                           if ( $count++ );
                         my $xrefel = XML::LibXML::Element->new('xref');
                         $xrefel->setAttribute( linkend => $ref );
+                        $xrefel->setAttribute( longref => 1 );
                         $spara->appendChild($xrefel);
                     }
                 }
