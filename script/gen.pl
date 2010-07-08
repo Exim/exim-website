@@ -221,8 +221,9 @@ sub build_indexes {
         if ( $node->nodeName eq 'indexterm' ) {
             my $role      = $node->getAttribute('role') || 'concept';
             my $primary   = $node->findvalue('child::primary');
-            my $first     = uc( substr( $primary, 0, 1 ) );               # first char
+            my $first     = ( $primary =~ /^[A-Za-z]/ ) ? uc( substr( $primary, 0, 1 ) ) : '';    # first letter or marker
             my $secondary = $node->findvalue('child::secondary') || '';
+            next unless ( $primary || $secondary );                                               # skip blank entries for now...
             $index_hash->{$role}{$first}{$primary}{$secondary} ||= [];
             push @{ $index_hash->{$role}{$first}{$primary}{$secondary} }, $current_id;
         }
@@ -240,44 +241,40 @@ sub build_indexes {
         $chapter->appendTextChild( 'title', ( ucfirst($role) . ' Index' ) );
         foreach my $first ( sort { $a cmp $b } keys %{ $index_hash->{$role} } ) {
             my $section = XML::LibXML::Element->new('section');
-            my $list    = XML::LibXML::Element->new('itemizedlist');
+            my $list    = XML::LibXML::Element->new('variablelist');
             $chapter->appendChild($section);
             $section->setAttribute( 'id', 'index_' . $role . '_' . $first );
-            $section->appendTextChild( 'title', $first );
+            $section->appendTextChild( 'title', $first ? $first : 'Symbols' );
             $section->appendChild($list);
             foreach my $primary ( sort { $a cmp $b } keys %{ $index_hash->{$role}{$first} } ) {
-                my $item = XML::LibXML::Element->new('listitem');
-                my $para = XML::LibXML::Element->new('para');
-                $list->appendChild($item);
-                $item->appendChild($para);
-                $para->appendText($primary);
+                my $entry = XML::LibXML::Element->new('varlistentry');
+                my $item  = XML::LibXML::Element->new('listitem');
+                $list->appendChild($entry)->appendTextChild( 'term', $primary );
+                $entry->appendChild($item);
                 my $slist;
                 foreach my $secondary ( sort { $a cmp $b } keys %{ $index_hash->{$role}{$first}{$primary} } ) {
-                    my $spara;
-                    my $sitem;
+                    my $para = XML::LibXML::Element->new('para');
                     if ( $secondary eq '' ) {
-                        $spara = $para;    # skip having extra layer of heirarchy
+                        $item->appendChild($para);    # skip having extra layer of heirarchy
                     }
                     else {
                         unless ($slist) {
-                            $slist = XML::LibXML::Element->new('itemizedlist');
+                            $slist = XML::LibXML::Element->new('variablelist');
                             $item->appendChild($slist);
                         }
-                        $sitem = XML::LibXML::Element->new('listitem');
-                        $spara = XML::LibXML::Element->new('para');
-                        $slist->appendChild($sitem);
-                        $slist->appendChild($spara);
-                        $spara->appendText($secondary);
+                        my $sentry = XML::LibXML::Element->new('varlistentry');
+                        my $sitem  = XML::LibXML::Element->new('listitem');
+                        $slist->appendChild($sentry)->appendTextChild( 'term', $secondary );
+                        $sentry->appendChild($sitem)->appendChild($para);
                     }
-                    $spara->appendText(': ');
                     my $count = 0;
                     foreach my $ref ( @{ $index_hash->{$role}{$first}{$primary}{$secondary} } ) {
-                        $spara->appendText(', ')
+                        $para->appendText(', ')
                           if ( $count++ );
                         my $xrefel = XML::LibXML::Element->new('xref');
                         $xrefel->setAttribute( linkend => $ref );
                         $xrefel->setAttribute( longref => 1 );
-                        $spara->appendChild($xrefel);
+                        $para->appendChild($xrefel);
                     }
                 }
             }

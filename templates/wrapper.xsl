@@ -168,10 +168,13 @@
       <xsl:template match="para"> <p> <xsl:apply-templates/> </p> </xsl:template>
 
    <!-- Lists -->
-      <xsl:template match="itemizedlist">          <ul> <xsl:apply-templates/> </ul> </xsl:template>
-      <xsl:template match="itemizedlist/listitem"> <li> <xsl:apply-templates/> </li> </xsl:template>
-      <xsl:template match="orderedlist">           <ol> <xsl:apply-templates/> </ol> </xsl:template>
-      <xsl:template match="orderedlist/listitem">  <li> <xsl:apply-templates/> </li> </xsl:template>
+      <xsl:template match="itemizedlist">                        <ul> <xsl:apply-templates/> </ul> </xsl:template>
+      <xsl:template match="itemizedlist/listitem">               <li> <xsl:apply-templates/> </li> </xsl:template>
+      <xsl:template match="orderedlist">                         <ol> <xsl:apply-templates/> </ol> </xsl:template>
+      <xsl:template match="orderedlist/listitem">                <li> <xsl:apply-templates/> </li> </xsl:template>
+      <xsl:template match="variablelist">                        <dl> <xsl:apply-templates/> </dl> </xsl:template>
+      <xsl:template match="variablelist/varlistentry/term">      <dt> <xsl:apply-templates/> </dt> </xsl:template>
+      <xsl:template match="variablelist/varlistentry/listitem">  <dd> <xsl:apply-templates/> </dd> </xsl:template>
 
    <!-- Table -->
       <xsl:template match="informaltable"> <table> <xsl:apply-templates/> </table> </xsl:template>
