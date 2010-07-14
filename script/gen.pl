@@ -237,13 +237,15 @@ sub build_indexes {
     foreach my $role ( sort { $a cmp $b } keys %{$index_hash} ) {
         my $chapter = XML::LibXML::Element->new('chapter');
         $book->appendChild($chapter);
-        $chapter->setAttribute( 'id', 'index_' . $role );
+        $chapter->setAttribute( 'id', join( '_', 'index', $role ) );
+        $chapter->setAttribute( 'class', 'index' );
         $chapter->appendTextChild( 'title', ( ucfirst($role) . ' Index' ) );
         foreach my $first ( sort { $a cmp $b } keys %{ $index_hash->{$role} } ) {
             my $section = XML::LibXML::Element->new('section');
             my $list    = XML::LibXML::Element->new('variablelist');
             $chapter->appendChild($section);
-            $section->setAttribute( 'id', 'index_' . $role . '_' . $first );
+            $section->setAttribute( 'id', join( '_', 'index', $role, $first ) );
+            $section->setAttribute( 'class', 'index' );
             $section->appendTextChild( 'title', $first ? $first : 'Symbols' );
             $section->appendChild($list);
             foreach my $primary ( sort { $a cmp $b } keys %{ $index_hash->{$role}{$first} } ) {

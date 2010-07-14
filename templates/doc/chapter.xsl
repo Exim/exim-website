@@ -44,12 +44,12 @@
            <a class="next_page"     href="{next_url}"><![CDATA[next->]]></a>
 
          <!-- Chapter Title -->
-            <h2>
+            <h2 id="{@id}" class="{@class}">
                <xsl:value-of select="concat('Chapter ',chapter_id,' - ',title)"/>
             </h2>
 
          <!-- Chapter Info -->
-            <div id="chapter">
+            <div id="chapter" class="chapter{@class}">
                <xsl:apply-templates select="*[name()!='section']"/>
                <xsl:apply-templates select="section"/>
             </div>
@@ -64,12 +64,14 @@
       <xsl:template match="/chapter/section">
 
          <!-- Section Title -->
-            <h3 id="{@id}">
+            <h3 id="{@id}" class="{@class}">
                <xsl:value-of select="concat(position(),'. ',title)"/>
             </h3>
 
          <!-- Section Paragraphs -->
+         <div class="section{@class}">
             <xsl:apply-templates select="*"/>
+         </div>
       </xsl:template>
 
    <!-- Section paragraph -->
