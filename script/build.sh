@@ -1,11 +1,13 @@
 #!/bin/sh
 
 TARGET=${1-/srv/www/vhosts/dev.exim.org}
+LATEST=`(cd docbook; ls -1d [0-9].[0-9]* | tail -1)`
 
+set -x
 script/gen.pl \
   --web \
   --spec docbook/*/spec.xml \
   --filter  docbook/*/filter.xml \
-  --latest 4.72 \
+  --latest ${LATEST} \
   --tmpl templates \
   --docroot ${TARGET}
