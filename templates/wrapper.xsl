@@ -143,7 +143,10 @@
                <xsl:when test="@section_id">
                   <xsl:choose>
                      <xsl:when test="@longref">
-                        <xsl:value-of select="concat(@chapter_title,'[',@section_title,']')"/>
+                        <xsl:value-of select="@chapter_title"/>
+                        <small>
+                           <xsl:value-of select="concat(' [',@section_title,']')"/>
+                        </small>
                      </xsl:when>
                      <xsl:otherwise>
                         <xsl:value-of select="concat(@chapter_id,'.',@section_id)"/>

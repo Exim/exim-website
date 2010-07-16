@@ -64,9 +64,18 @@
       <xsl:template match="/chapter/section">
 
          <!-- Section Title -->
-            <h3 id="{@id}" class="{@class}">
-               <xsl:value-of select="concat(position(),'. ',title)"/>
-            </h3>
+         <xsl:choose>
+            <xsl:when test="@class='index'">
+               <h3 id="{@id}" class="{@class}">
+                  <xsl:value-of select="title"/>
+               </h3>
+            </xsl:when>
+            <xsl:otherwise>
+               <h3 id="{@id}" class="{@class}">
+                  <xsl:value-of select="concat(position(),'. ',title)"/>
+               </h3>
+            </xsl:otherwise>
+         </xsl:choose>
 
          <!-- Section Paragraphs -->
          <div class="section{@class}">
