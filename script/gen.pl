@@ -1,6 +1,8 @@
 #!/usr/bin/perl
+#
 use strict;
 use warnings;
+
 use CSS::Minifier::XS;
 use File::Copy;
 use File::Find;
@@ -8,6 +10,7 @@ use File::Slurp;
 use File::Spec;
 use Getopt::Long;
 use JavaScript::Minifier::XS;
+use Pod::Usage;
 use XML::LibXML;
 use XML::LibXSLT;
 
@@ -332,12 +335,13 @@ sub mkdirp {
 ## Parse arguments
 sub parse_arguments {
 
-    my %opt = ( spec => [], filter => [], help => 0, web => 0, minify => 1 );
-    GetOptions( \%opt, 'help|h!', 'web!', 'spec=s{1,}', 'filter=s{1,}', 'latest=s', 'tmpl=s', 'docroot=s', 'minify!' )
-      || help( 1, 'Bad options' );
+    my %opt = ( spec => [], filter => [], help => 0, man => 0, web => 0, minify => 1 );
+    GetOptions( \%opt, 'help|h!', 'man!', 'web!', 'spec=s{1,}', 'filter=s{1,}', 'latest=s', 'tmpl=s', 'docroot=s', 'minify!' )
+      || pod2usage( -exitval => 1, -verbose => 0 );
 
     ## --help
-    help(0) if ( $opt{help} );
+    pod2usage(0) if ( $opt{help} );
+    pod2usage( -verbose => 2 ) if ( $opt{man} );
 
     ## --spec and --filter lists
     foreach my $set (qw[spec filter]) {
@@ -362,40 +366,109 @@ sub parse_arguments {
     return %opt;
 }
 
-## Help information
-sub help {
-    my ( $exit_code, $msg ) = @_;
+1;
 
-    print "$msg\n\n" if defined $msg;
+__END__
 
-    print << "END_HELP";
-Options:
-   --help or -h  : Print this help information and then exit
+=head1 NAME
 
-   --web         : Generate the general website pages
-   --spec PATH   : Generate the spec pages. PATH is the path to the spec.xml
-   --filter PATH : Generate the filter pages. PATH is the path to the filter.xml
+gen.pl - Generate exim html documentation and website
 
-   One or more of the above three options are required. --spec and --filter can
-   take multiple values to generate different sets of documentation for
-   different versions at the same time.
+=head1 SYNOPSIS
 
-   --latest VERSION : Required. Specify the latest stable version of Exim.
-   --tmpl PATH      : Required. Path to the templates directory
-   --docroot PATH   : Required. Path to the website document root
+gen.pl [options]
 
-   If CSS::Minifier::XS is installed, then CSS will be minified.
-   If JavaScript::Minifier::XS is installed, then JavaScript will be minified.
+ Options:
+   --help              display this help and exits
+   --man               displays man page
+   --spec file...      spec docbook/XML source files
+   --filter file...    filter docbook/XML source files
+   --web               Generate the general website pages
+   --latest VERSION    Required. Specify the latest stable version of Exim.
+   --tmpl PATH         Required. Path to the templates directory
+   --docroot PATH      Required. Path to the website document root
+   --[no-]minify       [Don't] minify CSS and Javascript    
 
-Example:
+=head1 OPTIONS
 
-   ./gen.pl --latest 4.72
-            --web
-            --spec spec.xml 4.71/spec.xml
-            --filter filter.xml 4.71/filter.xml
-            --tmpl ~/www/templates
-            --docroot ~/www/docroot
-END_HELP
+=over 4
 
-    exit($exit_code);
-}
+=item B<--help>
+
+Display help and exits
+
+=item B<--man>
+
+Display man page
+
+=item B<--spec> I<file...>
+
+List of files that make up the specification documentation
+docbook/XML source files.
+
+=item B<--filter> I<file...>
+
+List of files that make up the filter documentation docbook/XML
+source files.
+
+=item B<--web>
+
+Generate the website from the template files.
+
+=item B<--latest> I<version>
+
+Specify the current exim version. This is used to create links to
+the current documentation.
+
+This option is I<required>
+
+=item B<--tmpl> I<directory>
+
+Specify the directory that the templates are kept in.
+
+This option is I<required>
+
+=item B<--docroot> I<directory>
+
+Specify the directory that the output should be generated into.
+This is the website C<docroot> directory.
+
+This option is I<required>
+
+=item B<--minify>
+
+If this option is set then both the CSS and Javascript files
+processed are minified using L<CSS::Minifier::XS> and
+L<JavaScript::Minifier::XS> respectively.
+
+This option is set by default - to disable it specify C<--no-minify>
+
+=back
+
+=head1 DESCRIPTION
+
+Generates the exim website and HTML documentation.
+
+=head1 EXAMPLE
+
+    script/gen.pl \
+      --web \
+      --spec docbook/*/spec.xml \
+      --filter  docbook/*/filter.xml \
+      --latest 4.72 \
+      --tmpl templates \
+      --docroot /tmp/website
+
+=head1 AUTHOR
+
+Mike Cardwell
+
+Nigel Metheringham <nigel@exim.org> - mostly broke the framework
+Mike produced.
+
+=head1 COPYRIGHT
+
+Copyright 2010 Exim Maintainers. All rights reserved.
+
+=cut
+
