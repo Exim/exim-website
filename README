@@ -1,37 +1,67 @@
-File      : README      - This file
-Directory : doc         - Contains XSL for generating web pages from spec.xml and filter.xml
-Directory : web         - Contains all other web content
-File      : gen.pl      - Script which generates the web pages
-File      : wrapper.xsl - The HTML wrapper. The stuff that's common across all web pages
+File      : README          - This file
+Directory : docbook         - Contains docbook/XML source for many releases of documentation
+Directory : script          - Contains build scripts
+Directory : templates       - All the XSL templates and other required files
+Directory : templates/doc   - templates for generating HTML from docbook/xml documentation
+Directory : templates/web   - Contains all other web content
+Directory : templates/i     - required images
+Directory : templates/howto - Howto documentation source
+File      : templates/wrapper.xsl   - The HTML wrapper. The stuff that's common across all web pages
 
-gen.pl does all the magic. Run it with no arguments to get a list of options. It takes the stylesheets wrapper.xsl, and those inside the "web" and "doc" directories and creates a website from them. You also tell it where to find spec.xml and filter.xml and it will create the documentation pages from that. Here are some examples:
+script/gen.pl does all the magic. Run it with no arguments to get a
+list of options. It takes the stylesheets wrapper.xsl, and those
+inside the "web" and "doc" directories and creates a website from
+them. You also tell it where to find spec.xml and filter.xml and it
+will create the documentation pages from that. Here are some
+examples:
 
 ## Example 1:
 
-./gen.pl --latest 4.72 --web --tmpl ./ --docroot /var/www/
+  script/gen.pl --latest 4.72 --web --tmpl templates --docroot /var/www/
 
-This copies all of the files from the "templates/web" directory into "/var/www/". When it comes across .xsl files, it generates html from them instead. For non .xsl files, if the last-modified timestamp of the file is the same as the one already in /var/www/ it's ignored.
+This copies all of the files from the "templates/web" directory
+into "/var/www/". When it comes across .xsl files, it generates
+html from them instead. For non .xsl files, if the last-modified
+timestamp of the file is the same as the one already in /var/www/
+it's ignored.
 
 ## Example 2:
 
-  ./gen.pl --latest 4.72 --spec specs/*/spec.xml --tmpl ./ --docroot /var/www/
+  script/gen.pl --latest 4.72 --spec docbook/*/spec.xml \
+    --tmpl templates --docroot /var/www/
 
-If there are multiple spec.xml files in "specs/*/" for different versions of the documentation, this command will generate the appropriate webpages in /var/www-exim-html-$VERSION/. spec.xml contains the version number it's self, so it uses that in $VERSION
+If there are multiple spec.xml files in "specs/*/" for different
+versions of the documentation, this command will generate the
+appropriate webpages in /var/www-exim-html-$VERSION/. spec.xml
+contains the version number it's self, so it uses that in $VERSION
 
 ## Example 3:
 
-  ./gen.pl --latest 4.72 --filter filter/*/filter.xml --tmpl ./ --docroot /var/www/
+  script/build.sh /var/www/
 
-Pretty much the same as Example 2, except generates the filter documentation
+Generates everything into output directory /var/www
+Look at the script/build.sh for details - it is just a wrapper
+around build/gen.pl
 
-## Example 4:
 
- ./gen.pl --latest 4.72 --web --spec specs/*/spec.xml --filter filter/*/filter.xml --tmpl ./ --docroot /var/www/
+All of the above examples make sure the exim-html-current symlink
+is kept in place. When a new version of Exim is released, we need
+to generate the new spec and filter documentation, and update the
+main web pages to reflect the new version number. That would be as
+simple as running a command like that in Example 4, with the latest
+version number, and just for the latest spec.xml and filter.xml
+files.
 
-Combine all of the 3 examples above into a single command
+If you wanted to, for example, add a new link to the navigation bar
+on all pages, you would need to re-generate *all* web pages. This
+is a drawback of having a static website without frames. You would
+only need to edit one file though, specifically wrapper.xsl. Once
+that is done, you would run gen.pl with --web, --spec and --filter,
+providing the filter.xml and spec.xml files for every piece of
+online documentation.
 
-All of the above examples make sure the exim-html-current symlink is kept in place. When a new version of Exim is released, we need to generate the new spec and filter documentation, and update the main web pages to reflect the new version number. That would be as simple as running a command like that in Example 4, with the latest version number, and just for the latest spec.xml and filter.xml files.
-
-If you wanted to, for example, add a new link to the navigation bar on all pages, you would need to re-generate *all* web pages. This is a drawback of having a static website without frames. You would only need to edit one file though, specifically wrapper.xsl. Once that is done, you would run gen.pl with --web, --spec and --filter, providing the filter.xml and spec.xml files for every piece of online documentation.
-
---latest should always specify the current stable version of Exim. Even if you're generating documentation pages for an older version. The script needs to know what the current version of Exim is, as it is mentioned in several places on the website, and is also needed to create the correct symlink for exim-html-current.
+--latest should always specify the current stable version of Exim.
+Even if you're generating documentation pages for an older version.
+The script needs to know what the current version of Exim is, as it
+is mentioned in several places on the website, and is also needed
+to create the correct symlink for exim-html-current.
