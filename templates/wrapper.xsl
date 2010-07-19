@@ -31,6 +31,9 @@
                <meta name="keywords"    content="{$html.head.keywords}"/>
                <meta name="robots"      content="{$html.head.robots}"/>
 
+               <!-- Mobile Safari (iPhone) - Reduce viewport to physical size of device -->
+                  <meta name="viewport" content="width=device-width"/>
+
                <title>
                   <xsl:value-of select="$html.head.title"/>
                </title>
