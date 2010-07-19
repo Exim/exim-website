@@ -1,11 +1,31 @@
 // Fix the header and navigation at the top of the page
-(function () {
-    $('#header').addClass('fixed');
-    if ($('#header').css('position') === 'fixed') {
-        $('.navigation').before($('.navigation').clone().addClass('spacer')).addClass('fixed');
-        $('#outer > .right_bar, #outer > .left_bar').addClass('display');
-    }
-})();
+(function ($) {
+
+    var $nav_float = $('#nav_flow').clone().attr('id','nav_float').appendTo('#outer');
+
+    var floating = false;
+
+    $(window).bind('load resize scroll',function () {
+        var header_height = $('#header').height();
+        var top = $(this).scrollTop();
+
+        if( top > header_height ){
+            if( !floating ){
+                $nav_float.show();
+                $('#nav_flow').css('visibility','hidden');
+                floating = true;
+            }
+        } else {
+            if( floating ){
+                $nav_float.hide();
+                $('#nav_flow').css('visibility','visible');
+                floating = false;
+            }
+        }
+    });
+
+    $('#outer > .right_bar, #outer > .left_bar').addClass('display');
+})(jQuery);
 
 // Add branding for mirrors
 if (document.location.href.match(/^https?:\/\/([^\/]+\.)*exim\.org\//)) {
@@ -45,7 +65,7 @@ if (document.location.href.match(/^https?:\/\/([^\/]+\.)*exim\.org\//)) {
 (function () {
 
     // Add placeholder functionality to browsers which don't support it
-    if (!('placeholder' in document.createElement('input'))) $('.navigation li.search input.search_field').focus(function (e) {
+    if (!('placeholder' in document.createElement('input'))) $('.nav li.search input.search_field').focus(function (e) {
         if ($(this).val() === ' ' + $(this).attr('placeholder')) $(this).val('').css('color', '#000');
     }).blur(function (e) {
         if ($(this).val() === ' ' + $(this).attr('placeholder') || $(this).val() === '') $(this).css('color', '#666').val(' ' + $(this).attr('placeholder'));
@@ -58,8 +78,7 @@ if (document.location.href.match(/^https?:\/\/([^\/]+\.)*exim\.org\//)) {
 })();
 
 // Jump to the right location on the page. Fixed header can cause problems.
-if ($('#header').css('position') === 'fixed') {
-
+(function ($) {
     // Jump to the given ID
     var jump = function (id) {
         if ($('#' + id).length == 0) return false;
@@ -67,7 +86,7 @@ if ($('#header').css('position') === 'fixed') {
         document.location.href = document.location.href.replace(/#.+/, '') + '#' + id;
 
         $('html,body').animate({
-            scrollTop: $('#' + id).position()['top'] - $('#header').height() - $('.navigation.fixed').height() - 5
+            scrollTop: $('#' + id).position()['top'] - $('.nav').height() - 5
         }, 100);
 
         return true;
@@ -94,4 +113,4 @@ if ($('#header').css('position') === 'fixed') {
     $(window).bind('hashchange', function (e) {
         if (jump(document.location.href.replace(/^.*#(.+)$/, '$1'))) e.preventDefault();
     });
-}
+})(jQuery);

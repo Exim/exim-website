@@ -108,7 +108,7 @@ html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acron
     color:        #aaf;
   }
 
-  #header, .navigation {
+  #header, .nav {
     opacity:      0.925;
   }
 
@@ -148,7 +148,10 @@ html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acron
 
 /* Navigation */
 
-  .navigation {
+  .nav {
+    position:       relative;
+    top:            0;
+    left:           0;
     margin-top:     6em;
     padding:      0 0 0.5em 0;
     width:        100%;
@@ -158,45 +161,44 @@ html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acron
     z-index:      1000;
   }
 
-  .navigation li {
+  .nav li {
     display:      inline;
     font-size:      1.2em;
     padding:      0 0.3em;
   }
 
-  .navigation li a         { color: #fff; }
-  .navigation li a:hover   { color: #aaf; }
-  .navigation li a:visited { color: #aaf; }
-  .navigation li a:visited:hover { color: #fff; } 
+  .nav li a         { color: #fff; }
+  .nav li a:hover   { color: #aaf; }
+  .nav li a:visited { color: #aaf; }
+  .nav li a:visited:hover { color: #fff; } 
 
-  #outer > .navigation.fixed {
+  #outer > #nav_float {
     position:     fixed;
     top:        0;
     left:       0;
-  }
-
-  #outer > .navigation.spacer {
-    visibility:     hidden;
+    width:      100%;
+    display:    none;
+    margin-top: 0;
   }
 
 /* Search Field */
-  .navigation li.search, .navigation form {
+  .nav li.search, .nav form {
     display:          inline;
     padding-top:      4px;
   }
-  .navigation .search_field_container.roundit .search_field {
+  .nav .search_field_container.roundit .search_field {
     border:       0;
     padding:      0;
     margin:       0;
   }
-  .navigation .search_field_container.roundit {
+  .nav .search_field_container.roundit {
     background-color:   #fff;
     -moz-border-radius:   1em;
     -webkit-border-radius:    1em;
     padding:      0.1em 1em;
     font-size:      1.2em;
   }
-  .navigation .search_field_container {
+  .nav .search_field_container {
     cursor:       text;
   }
 
