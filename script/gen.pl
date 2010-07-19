@@ -332,6 +332,14 @@ sub mkdirp {
     }
 }
 
+## error_help
+sub error_help {
+    my $msg = shift;
+
+    warn $msg;
+    pod2usage( -exitval => 1, -verbose => 0 );
+}
+
 ## Parse arguments
 sub parse_arguments {
 
@@ -348,19 +356,19 @@ sub parse_arguments {
         $opt{$set} = [ map { my $f = File::Spec->rel2abs($_); help( 1, 'No such file: ' . $_ ) unless -f $f; $f } @{ $opt{$set} } ];
     }
     ## --latest
-    help( 1, 'Missing value for latest' ) unless ( exists( $opt{latest} ) && defined( $opt{latest} ) );
-    help( 1, 'Invalid value for latest' ) unless $opt{latest} =~ /^\d+(?:\.\d+)*$/;
+    error_help('Missing value for latest') unless ( exists( $opt{latest} ) && defined( $opt{latest} ) );
+    error_help('Invalid value for latest') unless $opt{latest} =~ /^\d+(?:\.\d+)*$/;
 
     ## --tmpl and --docroot
     foreach my $set (qw[tmpl docroot]) {
-        help( 1, 'Missing value for ' . $set ) unless ( exists( $opt{$set} ) && defined( $opt{$set} ) );
+        error_help( 'Missing value for ' . $set ) unless ( exists( $opt{$set} ) && defined( $opt{$set} ) );
         my $f = File::Spec->rel2abs( $opt{$set} );
-        help( 1, 'No such directory: ' . $opt{$set} ) unless -d $f;
+        error_help( 'No such directory: ' . $opt{$set} ) unless -d $f;
         $opt{$set} = $f;
     }
-    help( 1, 'Excess arguments' ) if ( scalar(@ARGV) );
+    error_help('Excess arguments') if ( scalar(@ARGV) );
 
-    help( 1, 'Must include at least one of --web, --spec or --filter' )
+    error_help('Must include at least one of --web, --spec or --filter')
       unless ( defined $opt{web} || scalar( @{ $opt{spec} } ) || scalar( @{ $opt{web} } ) );
 
     return %opt;
