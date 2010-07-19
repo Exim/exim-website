@@ -80,7 +80,9 @@
 
                       <!-- MAIN CONTENT. This is the div that wraps around the other stylesheets -->
                          <div id="inner">
-                            <xsl:call-template name="content"/>
+                            <div id="content">
+                              <xsl:call-template name="content"/>
+                           </div>
                          </div>
 
                       <!-- Branding -->
