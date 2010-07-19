@@ -2,6 +2,7 @@
 (function ($) {
 
     var click_func = function (e) {
+        e.stopPropagation();
         if ($('#toc').data('opened')) {
             $('#toc > *').animate({
                 left: '-=' + $('#toc > ul').width() + 'px'
@@ -14,6 +15,10 @@
             $('#toc').data('opened', 1);
         }
     };
+
+    $('body').click(function () {
+        if( $('#toc').data('opened') ) $('#toc > img').mousedown();
+    });
 
     var type = document.location.pathname.match(/\/doc\/html\/spec_html\/filter/) ? 'filter' : 'spec';
 
