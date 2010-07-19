@@ -62,7 +62,9 @@ sub do_web {
                     if ( $path =~ /(.+)\.css$/ ) {
                         print "CSS to  : docroot:/$path\n";
                         my $content = read_file("$opt{tmpl}/web/$path");
-                        write_file( "$opt{docroot}/$path", $opt{minify} ? CSS::Minifier::XS::minify($content) : $content );
+                        my $output = $opt{minify} ? CSS::Minifier::XS::minify($content) : $content;
+                        $output =~ s/and\(/and (/g;    # hack round minify bug
+                        write_file( "$opt{docroot}/$path", $output );
                     }
                     elsif ( $path =~ /(.+)\.js$/ ) {
                         print "JS to  : docroot:/$path\n";
