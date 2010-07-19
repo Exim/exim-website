@@ -17,7 +17,7 @@
 			<link rel="stylesheet" type="text/css" href="{$docroot}/index.css"/>
 
 	        <!-- Canonical -->
-                        <link rel="canonical" href="http://www.exim.org/credits.html"/>
+                        <link rel="canonical" href="http://www.exim.org/"/>
 
 	</xsl:variable>
  
