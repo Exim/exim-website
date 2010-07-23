@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use CSS::Minifier::XS;
+use CSS::Minifier::XS 0.07;
 use File::Copy;
 use File::Find;
 use File::Slurp;
@@ -62,9 +62,7 @@ sub do_web {
                     if ( $path =~ /(.+)\.css$/ ) {
                         print "CSS to  : docroot:/$path\n";
                         my $content = read_file("$opt{tmpl}/web/$path");
-                        my $output = $opt{minify} ? CSS::Minifier::XS::minify($content) : $content;
-                        $output =~ s/and\(/and (/g;    # hack round minify bug
-                        write_file( "$opt{docroot}/$path", $output );
+                        write_file( "$opt{docroot}/$path", $opt{minify} ? CSS::Minifier::XS::minify($content) : $content );
                     }
                     elsif ( $path =~ /(.+)\.js$/ ) {
                         print "JS to  : docroot:/$path\n";
