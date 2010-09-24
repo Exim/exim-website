@@ -50,7 +50,8 @@ dl dt
 
 dl dd
 {
-  margin-left: 230px;
+  margin-left: 4em;
+  padding-top: 1.2em
   line-height: 1.1;
   white-space: normal;
 }
