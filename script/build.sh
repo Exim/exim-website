@@ -1,6 +1,6 @@
 #!/bin/sh
 
-TARGET=${1-/srv/www/vhosts/dev.exim.org}
+TARGET=${1-/srv/www/vhosts/www.exim.org}
 LATEST=`(cd docbook; ls -1d [0-9].[0-9]* | tail -1)`
 
 set -x
