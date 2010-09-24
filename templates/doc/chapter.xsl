@@ -40,19 +40,21 @@
       <xsl:template match="/chapter">
 
          <!-- Navigation -->
-           <a class="previous_page" href="{prev_url}"><![CDATA[<-previous]]></a>
-           <a class="next_page"     href="{next_url}"><![CDATA[next->]]></a>
+         <a class="previous_page" href="{prev_url}"><![CDATA[<-previous]]></a>
+         <a class="next_page"     href="{next_url}"><![CDATA[next->]]></a>
 
-         <!-- Chapter Title -->
+         <!-- Chapter Wrapper -->
+         <div id="chapter" class="chapter{@class}">
+
+            <!-- Chapter Title -->
             <h2 id="{@id}" class="{@class}">
                <xsl:value-of select="concat('Chapter ',chapter_id,' - ',title)"/>
             </h2>
 
-         <!-- Chapter Info -->
-            <div id="chapter" class="chapter{@class}">
+            <!-- Chapter Info -->
                <xsl:apply-templates select="*[name()!='section']"/>
                <xsl:apply-templates select="section"/>
-            </div>
+         </div>
 
          <!-- Navigation -->
             <a class="previous_page" href="{prev_url}"><![CDATA[<-previous]]></a>
@@ -62,23 +64,24 @@
 
    <!-- Section -->
       <xsl:template match="/chapter/section">
-
-         <!-- Section Title -->
-         <xsl:choose>
-            <xsl:when test="@class='index'">
-               <h3 id="{@id}" class="{@class}">
-                  <xsl:value-of select="title"/>
-               </h3>
-            </xsl:when>
-            <xsl:otherwise>
-               <h3 id="{@id}" class="{@class}">
-                  <xsl:value-of select="concat(position(),'. ',title)"/>
-               </h3>
-            </xsl:otherwise>
-         </xsl:choose>
-
-         <!-- Section Paragraphs -->
+         <!-- Section Wrapper -->
          <div class="section{@class}">
+
+            <!-- Section Title -->
+            <xsl:choose>
+               <xsl:when test="@class='index'">
+                  <h3 id="{@id}" class="{@class}">
+                     <xsl:value-of select="title"/>
+                  </h3>
+               </xsl:when>
+               <xsl:otherwise>
+                  <h3 id="{@id}" class="{@class}">
+                     <xsl:value-of select="concat(position(),'. ',title)"/>
+                  </h3>
+               </xsl:otherwise>
+            </xsl:choose>
+
+            <!-- Section Paragraphs -->
             <xsl:apply-templates select="*"/>
          </div>
       </xsl:template>
