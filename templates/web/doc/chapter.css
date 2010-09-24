@@ -41,7 +41,6 @@ dl dt
 {
   clear: left;
   float: left;
-  width: 220px;
   margin: 0;
   font-weight: bold;
   padding-left: 2em;
@@ -51,7 +50,8 @@ dl dt
 dl dd
 {
   margin-left: 4em;
-  padding-top: 1.2em
+  padding-top: 0.2em;
+  clear: left;
   line-height: 1.1;
   white-space: normal;
 }
