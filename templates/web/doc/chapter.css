@@ -12,6 +12,10 @@
   clear:        right;
 }
 
+#chapter {
+  line-height: 1.5;
+}
+
 #chapter table {
   margin-top:       1em;
   margin-bottom:    1em;
