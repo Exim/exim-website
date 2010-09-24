@@ -313,7 +313,7 @@ sub transform {
     mkdirp( ( $out_path =~ /^(.+)\/.+$/ )[0] );
 
     ## Write out the document
-    open my $out, '>', $out_path or die $!;
+    open my $out, '>', $out_path or die "Unable to write $out_path - $!";
     print $out $stylesheet->output_as_bytes($doc);
     close $out;
 }
