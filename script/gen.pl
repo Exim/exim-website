@@ -369,7 +369,7 @@ sub parse_arguments {
     error_help('Excess arguments') if ( scalar(@ARGV) );
 
     error_help('Must include at least one of --web, --spec or --filter')
-      unless ( defined $opt{web} || scalar( @{ $opt{spec} } ) || scalar( @{ $opt{web} } ) );
+      unless ( $opt{web} || scalar( @{ $opt{spec} || [] } ) || scalar( @{ $opt{filter} || [] } ) );
 
     return %opt;
 }
