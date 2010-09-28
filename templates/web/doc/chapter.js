@@ -47,7 +47,7 @@
             $ul.removeClass('hidden').css('visibility', 'hidden').appendTo('#toc').css('left', '-' + $ul.width() + 'px').css('visibility', 'visible');
             $('#toc > img').mousedown(click_func);
             $('#toc > ul').click(click_func);
-            $('#toc a').click(function (e) {
+            $('#toc, #toc a').click(function (e) {
                 e.stopPropagation()
             });
         });
