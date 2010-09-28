@@ -29,7 +29,7 @@
                 <!-- Summary -->
 			<p id="summary">
 				<a href="http://www.exim.org/">
-					<img src="/i/exim-blue-ld-87x65.png" alt="Exim Logo" width="87" height="65"/>
+					<img src="i/exim-blue-ld-87x65.png" alt="Exim Logo" width="87" height="65"/>
 				</a>
 				<xsl:text>Exim is a message transfer agent (MTA) developed at the </xsl:text>
 				<a href="http://www.cam.ac.uk/" title="University of Cambridge Home page">University of Cambridge</a>
@@ -51,7 +51,7 @@
                    
 			<p id="book_info">
 				<a href="http://www.uit.co.uk/exim-book">
-					<img src="/i/exim-book.png" width="74" height="100"/>
+					<img src="i/exim-book.png" width="74" height="100"/>
 				</a>
 				<xsl:text>You may wish to purchase </xsl:text>
 				<a href="http://www.uit.co.uk/exim-book">The Exim SMTP Mail Server</a>
