@@ -26,7 +26,7 @@
                <link rel="stylesheet" type="text/css" href="{$docroot}/common.css"/>
 
                <meta name="author"      content="The Exim Project. &lt;http://www.exim.org/&gt;"/>
-               <meta name="copyright"   content="Copyright ©2010The Exim Project. All rights reserved"/>
+               <meta name="copyright"   content="Copyright ©2010 The Exim Project. All rights reserved"/>
                <meta name="description" content="{$html.head.description}"/>
                <meta name="keywords"    content="{$html.head.keywords}"/>
                <meta name="robots"      content="{$html.head.robots}"/>
