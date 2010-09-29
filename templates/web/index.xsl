@@ -42,10 +42,19 @@
 				<xsl:text>, although the configuration of Exim is quite different.</xsl:text>
 			</p>
 
-		<!-- Version Information -->
-			<p id="version_info">
-				<xsl:text>All versions of Exim previous to version 4.x are now obsolete and everyone is very strongly recommended to upgrade to a current release. The last 3.x release was 3.36. It is obsolete and should not be used. There may be beta versions available from the ftp sites in the Testing directory. Many people are using these without problems, but they are not recommended unless you are willing to work with beta software.</xsl:text>
-			</p>
+      <!-- Version Information -->
+         <p id="obsolete_version_info">
+            <xsl:text>All versions of Exim previous to version 4.x are now obsolete and everyone is very strongly recommended to upgrade to a current release. The last 3.x release was 3.36. It is obsolete and should not be used.</xsl:text>
+         </p>
+
+         <p id="version_info">
+            <xsl:text>The current version is </xsl:text>
+            <xsl:value-of select="/content/current_version"/>
+         </p>
+
+         <p id="beta_version_info">
+            <xsl:text>There may be beta versions available from the ftp sites in the Testing directory. Many people are using these without problems, but they are not recommended unless you are willing to work with beta software.</xsl:text>
+         </p>
 
                 <!-- Book Information -->
                    
