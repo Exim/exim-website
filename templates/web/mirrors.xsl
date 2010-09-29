@@ -33,17 +33,21 @@
 					<xsl:text>.</xsl:text>
 				</p>
 
-				<h3>Exim Mirror Sites</h3>
+            <h3>Exim Mirror Sites</h3>
 
-				<p>A list of mirror sites is maintained within mirmon - see the links below for lists of mirrors and their current status:-</p>
-				<ul>
-					<li>
-						<a href="http://www.exim.org/mirmon/ftp_mirrors.html">Download Mirrors</a>
-					</li>
-					<li>
-						<a href="http://www.exim.org/mirmon/www_mirrors.html">Website Mirrors</a>
-					</li>
-				</ul>
+            <p>A list of mirror sites is maintained within mirmon - see the links below for lists of mirrors and their current status:-</p>
+            <ul>
+               <li>
+                  <a href="http://www.exim.org/mirmon/ftp_mirrors.html">Download Mirrors</a>
+               </li>
+               <li>
+                  <a href="http://www.exim.org/mirmon/www_mirrors.html">Website Mirrors</a>
+               </li>
+            </ul>
+
+            <h3>Mirroring Exim</h3>
+
+            <p>If you are interested in running a mirror for exim, please look at <a href="howto/mirroring.html">Mirroring The Exim Website</a></p>
 
 		</xsl:template>
 
