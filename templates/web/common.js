@@ -114,3 +114,12 @@ if (document.location.href.match(/^https?:\/\/([^\/]+\.)*exim\.org\//)) {
         if (jump(document.location.href.replace(/^.*#(.+)$/, '$1'))) e.preventDefault();
     });
 })(jQuery);
+
+// Google Analytics
+(function($){
+    window._gaq = [
+        ['_setAccount', 'UA-18951566-1'],
+        ['_trackPageview']
+    ];
+    $.getScript((document.location.protocol === 'https:' ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js');
+})(jQuery);
