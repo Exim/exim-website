@@ -39,6 +39,7 @@
 					<a href="{$docroot}/exim-html-current/doc/html/spec_html/index.html">
 						<xsl:text>The Exim Specification - Version </xsl:text>
 						<xsl:value-of select="/content/current_version"/>
+						<xsl:text> (HTML)</xsl:text>
 					</a>
 					<xsl:text> </xsl:text>
 					<a href="{$docroot}/exim-pdf-current/doc/spec.pdf">(PDF)</a>
@@ -51,6 +52,7 @@
 					<a href="{$docroot}/exim-html-current/doc/html/spec_html/filter.html">
 						<xsl:text>The Exim Filter Specification - Version </xsl:text>
 						<xsl:value-of select="/content/current_version"/>
+						<xsl:text> (HTML)</xsl:text>
 					</a>
 					<xsl:text> </xsl:text>
 					<a href="{$docroot}/exim-pdf-current/doc/filter.pdf">(PDF)</a>
