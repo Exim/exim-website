@@ -26,7 +26,9 @@ do_web() if exists $opt{web};
 
 ## Add the exim-html-current symlink
 print "Symlinking exim-html-current to exim-html-$opt{latest}\n";
-symlink( "$opt{docroot}/exim-html-$opt{latest}", "$opt{docroot}/exim-html-current" );
+unlink("$opt{docroot}/exim-html-current") if ( -l "$opt{docroot}/exim-html-current" );
+symlink( "$opt{docroot}/exim-html-$opt{latest}", "$opt{docroot}/exim-html-current" )
+  || die "symlink to $opt{docroot}/exim-html-current failed";
 
 ## Generate the website files
 sub do_web {
