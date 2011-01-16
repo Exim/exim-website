@@ -174,7 +174,12 @@
       </xsl:template>
 
    <!-- Para -->
-      <xsl:template match="para"> <p> <xsl:apply-templates/> </p> </xsl:template>
+      <xsl:template match="para">
+         <p>
+            <xsl:if test="@revisionflag!=''"><xsl:attribute name="class">changed</xsl:attribute></xsl:if>
+            <xsl:apply-templates/>
+         </p>
+      </xsl:template>
 
    <!-- Lists -->
       <xsl:template match="itemizedlist">                        <ul> <xsl:apply-templates/> </ul> </xsl:template>
