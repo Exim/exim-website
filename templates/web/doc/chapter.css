@@ -117,3 +117,8 @@ dl dd dl
      display:    none;
    }
  }
+
+/* Changebars  -- experimental */
+.changed {
+  border-right: 5px solid #000;
+}
