@@ -93,7 +93,7 @@
 
                          <div id="footer">
                             <xsl:text>Website design by </xsl:text>
-                            <a href="https://secure.grepular.com/">Mike Cardwell</a>
+                            <a href="https://grepular.com/">Mike Cardwell</a>
                             <xsl:text>, of </xsl:text>
                             <a href="http://cardwellit.com/">Cardwell IT Ltd.</a>
                          </div>
