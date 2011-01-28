@@ -53,7 +53,7 @@ sub do_web {
 
                 ## Build HTML from XSL files and simply copy static files which have changed
                 if ( $path =~ /(.+)\.xsl$/ ) {
-                    print "Generating  : docroot:/$1.html\n";
+                    print "Generating  : docroot:/$1.html\n" if ($opt{verbose});
                     transform( undef, "$opt{tmpl}/web/$path", "$opt{docroot}/$1.html" );
                 }
                 elsif ( -f "$opt{tmpl}/web/$path" ) {
@@ -62,18 +62,18 @@ sub do_web {
                     return if -f "$opt{docroot}/$path" && ( stat("$opt{tmpl}/web/$path") )[9] == ( stat("$opt{docroot}/$path") )[9];
 
                     if ( $path =~ /(.+)\.css$/ ) {
-                        print "CSS to  : docroot:/$path\n";
+                        print "CSS to  : docroot:/$path\n" if ($opt{verbose});
                         my $content = read_file("$opt{tmpl}/web/$path");
                         write_file( "$opt{docroot}/$path", $opt{minify} ? CSS::Minifier::XS::minify($content) : $content );
                     }
                     elsif ( $path =~ /(.+)\.js$/ ) {
-                        print "JS to  : docroot:/$path\n";
+                        print "JS to  : docroot:/$path\n" if ($opt{verbose});
                         my $content = read_file("$opt{tmpl}/web/$path");
                         write_file( "$opt{docroot}/$path", $opt{minify} ? JavaScript::Minifier::XS::minify($content) : $content );
                     }
                     else {
                         ## Copy
-                        print "Copying to  : docroot:/$path\n";
+                        print "Copying to  : docroot:/$path\n" if ($opt{verbose});
                         copy( "$opt{tmpl}/web/$path", "$opt{docroot}/$path" ) or die "$path: $!";
                     }
                     ## Set mtime
@@ -118,7 +118,7 @@ sub do_doc {
     ## Generate a Table of Contents XML file
     {
         my $path = "exim-html-$version/doc/html/spec_html/" . ( $type eq 'filter' ? 'filter_toc' : 'index_toc' ) . ".xml";
-        print "Generating  : docroot:/$path\n";
+        print "Generating  : docroot:/$path\n" if ($opt{verbose});
         transform( $xml, "$opt{tmpl}/doc/toc.xsl", "$opt{docroot}/$path", );
     }
 
@@ -149,7 +149,7 @@ sub do_doc {
         ## Transform the chapter into html
         {
             my $path = sprintf( 'exim-html-%s/doc/html/spec_html/%sch%02d.html', $version, $prepend_chapter, $counter );
-            print "Generating  : docroot:/$path\n";
+            print "Generating  : docroot:/$path\n" if ($opt{verbose});
             transform( $doc, "$opt{tmpl}/doc/chapter.xsl", "$opt{docroot}/$path", );
         }
     }
@@ -345,8 +345,8 @@ sub error_help {
 ## Parse arguments
 sub parse_arguments {
 
-    my %opt = ( spec => [], filter => [], help => 0, man => 0, web => 0, minify => 1 );
-    GetOptions( \%opt, 'help|h!', 'man!', 'web!', 'spec=s{1,}', 'filter=s{1,}', 'latest=s', 'tmpl=s', 'docroot=s', 'minify!' )
+    my %opt = ( spec => [], filter => [], help => 0, man => 0, web => 0, minify => 1, verbose => 0 );
+    GetOptions( \%opt, 'help|h!', 'man!', 'web!', 'spec=s{1,}', 'filter=s{1,}', 'latest=s', 'tmpl=s', 'docroot=s', 'minify!', 'verbose!' )
       || pod2usage( -exitval => 1, -verbose => 0 );
 
     ## --help
