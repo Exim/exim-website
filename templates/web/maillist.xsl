@@ -46,12 +46,6 @@
 						<a href="{$docroot}/exim-html-4.40/doc/html/FAQ.html">FAQ</a>
 						<xsl:text> also covers many things that get asked regularly on the list</xsl:text>
                                         </li>
-                                        <li>
-                                                <a href="http://lists.exim.org/mailman/listinfo/exim-future">exim-future</a><br/>
-                                                <xsl:text>This list is intended for discussions of future development methodology and features aimed at Exim 5 onwards - i.e. anything that involves architectural changes. There are additionally some </xsl:text>
-						<a href="http://wiki.exim.org/Exim5">wiki pages</a>
-						<xsl:text> recording ideas as they get fleshed out (which may involve several alternatives).</xsl:text>
-                                        </li>
 				</ul>
 		</xsl:template>
 
