@@ -67,7 +67,7 @@
 				<xsl:text> book, written by the original author of Exim, </xsl:text>
 				<a href="http://en.wikipedia.org/wiki/Philip_Hazel">Philip Hazel</a>
 				<xsl:text>. The table of contents, and a sample chapter can be viewed </xsl:text>
-				<a href="http://www.uit.co.uk/content/table-contents-summary-0">here</a>
+				<a href="http://www.uit.co.uk/BK-EOGR4/TOC">here</a>
 				<xsl:text>.</xsl:text>
 			</p>
 
