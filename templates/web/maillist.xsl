@@ -27,21 +27,21 @@
 			<!-- Lists -->
 				<ul>
 					<li>
-						<a href="http://lists.exim.org/mailman/listinfo/exim-announce">exim-announce</a><br/>
+						<a href="https://lists.exim.org/mailman/listinfo/exim-announce">exim-announce</a><br/>
 						<xsl:text>A low volume moderated list consisting of announcements only of things of interest to Exim users (typically new releases). There is an </xsl:text>
-						<a href="http://lists.exim.org/lurker/list/exim-announce.html">archive</a>
+						<a href="https://lists.exim.org/lurker/list/exim-announce.html">archive</a>
 						<xsl:text> of messages since July 1999.</xsl:text>
 					</li>
 					<li>
-						<a href="http://lists.exim.org/mailman/listinfo/exim-dev">exim-dev</a><br/>
+						<a href="https://lists.exim.org/mailman/listinfo/exim-dev">exim-dev</a><br/>
 						<xsl:text>A list dedicated to the ongoing development process for Exim. It is not the grown-up version of the users list. There are searchable </xsl:text>
-						<a href="http://lists.exim.org/lurker/list/exim-dev.html">archives</a>
+						<a href="https://lists.exim.org/lurker/list/exim-dev.html">archives</a>
 						<xsl:text> covering postings back to 2004.</xsl:text>
                                         </li>
                                         <li>
-                                                <a href="http://lists.exim.org/mailman/listinfo/exim-users">exim-users</a><br/>
+                                                <a href="https://lists.exim.org/mailman/listinfo/exim-users">exim-users</a><br/>
                                                 <xsl:text>A discussion list about Exim covering use and development of the software. This also has a searchable </xsl:text>
-						<a href="http://lists.exim.org/lurker/list/exim-users.html">archive</a>
+						<a href="https://lists.exim.org/lurker/list/exim-users.html">archive</a>
 						<xsl:text> covering postings back to 1996. Please have the courtesy to check the list before posting basic queries, the </xsl:text>
 						<a href="{$docroot}/exim-html-4.40/doc/html/FAQ.html">FAQ</a>
 						<xsl:text> also covers many things that get asked regularly on the list</xsl:text>
