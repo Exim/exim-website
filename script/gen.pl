@@ -6,6 +6,7 @@ use warnings;
 use CSS::Minifier::XS 0.07;
 use File::Copy;
 use File::Find;
+use File::Path qw(make_path);
 use File::Slurp;
 use File::Spec;
 use Getopt::Long;
@@ -312,26 +313,12 @@ sub transform {
     my $doc = $stylesheet->transform($xml);
 
     ## Make the containing directory if it doesn't exist
-    mkdirp( ( $out_path =~ /^(.+)\/.+$/ )[0] );
+    make_path( ( $out_path =~ /^(.+)\/.+$/ )[0], { verbose => 1 } );
 
     ## Write out the document
     open my $out, '>', $out_path or die "Unable to write $out_path - $!";
     print $out $stylesheet->output_as_bytes($doc);
     close $out;
-}
-
-## "mkdir -p "
-sub mkdirp {
-    my $path = shift;
-
-    my @parts = ();
-    foreach ( split( /\//, $path ) ) {
-        push @parts, $_;
-        my $make = join( '/', @parts );
-        next unless length($make);
-        next if -d $make;
-        mkdir($make) or die "Unable to mkdir $make: $!\n";
-    }
 }
 
 ## error_help
