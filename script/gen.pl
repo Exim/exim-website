@@ -29,7 +29,7 @@ do_web() if exists $opt{web};
 print "Symlinking exim-html-current to exim-html-$opt{latest}\n";
 unlink("$opt{docroot}/exim-html-current") if ( -l "$opt{docroot}/exim-html-current" );
 symlink( "exim-html-$opt{latest}", "$opt{docroot}/exim-html-current" )
-  || die "symlink to $opt{docroot}/exim-html-current failed";
+    || die "symlink to $opt{docroot}/exim-html-current failed";
 
 ## Generate the website files
 sub do_web {
@@ -40,7 +40,8 @@ sub do_web {
     ## Scan the web templates
     find(
         sub {
-            my ($path) = substr( $File::Find::name, length("$opt{tmpl}/web"), length($File::Find::name) ) =~ m#^/*(.*)$#;
+            my ($path) =
+                substr( $File::Find::name, length("$opt{tmpl}/web"), length($File::Find::name) ) =~ m#^/*(.*)$#;
 
             if ( -d "$opt{tmpl}/web/$path" ) {
 
@@ -54,27 +55,31 @@ sub do_web {
 
                 ## Build HTML from XSL files and simply copy static files which have changed
                 if ( $path =~ /(.+)\.xsl$/ ) {
-                    print "Generating  : docroot:/$1.html\n" if ($opt{verbose});
+                    print "Generating  : docroot:/$1.html\n" if ( $opt{verbose} );
                     transform( undef, "$opt{tmpl}/web/$path", "$opt{docroot}/$1.html" );
                 }
                 elsif ( -f "$opt{tmpl}/web/$path" ) {
 
                     ## Skip if the file hasn't changed (mtime based)
-                    return if -f "$opt{docroot}/$path" && ( stat("$opt{tmpl}/web/$path") )[9] == ( stat("$opt{docroot}/$path") )[9];
+                    return
+                        if -f "$opt{docroot}/$path"
+                            && ( stat("$opt{tmpl}/web/$path") )[9] == ( stat("$opt{docroot}/$path") )[9];
 
                     if ( $path =~ /(.+)\.css$/ ) {
-                        print "CSS to  : docroot:/$path\n" if ($opt{verbose});
+                        print "CSS to  : docroot:/$path\n" if ( $opt{verbose} );
                         my $content = read_file("$opt{tmpl}/web/$path");
-                        write_file( "$opt{docroot}/$path", $opt{minify} ? CSS::Minifier::XS::minify($content) : $content );
+                        write_file( "$opt{docroot}/$path",
+                            $opt{minify} ? CSS::Minifier::XS::minify($content) : $content );
                     }
                     elsif ( $path =~ /(.+)\.js$/ ) {
-                        print "JS to  : docroot:/$path\n" if ($opt{verbose});
+                        print "JS to  : docroot:/$path\n" if ( $opt{verbose} );
                         my $content = read_file("$opt{tmpl}/web/$path");
-                        write_file( "$opt{docroot}/$path", $opt{minify} ? JavaScript::Minifier::XS::minify($content) : $content );
+                        write_file( "$opt{docroot}/$path",
+                            $opt{minify} ? JavaScript::Minifier::XS::minify($content) : $content );
                     }
                     else {
                         ## Copy
-                        print "Copying to  : docroot:/$path\n" if ($opt{verbose});
+                        print "Copying to  : docroot:/$path\n" if ( $opt{verbose} );
                         copy( "$opt{tmpl}/web/$path", "$opt{docroot}/$path" ) or die "$path: $!";
                     }
                     ## Set mtime
@@ -103,7 +108,7 @@ sub do_doc {
 
     ## Add the canonical url for this document
     $xml->documentElement()
-      ->appendTextChild( 'canonical_url',
+        ->appendTextChild( 'canonical_url',
         "${canonical_url}exim-html-current/doc/html/spec_html/" . ( $type eq 'spec' ? 'index' : 'filter' ) . ".html" );
 
     ## Fixup the XML
@@ -118,8 +123,9 @@ sub do_doc {
 
     ## Generate a Table of Contents XML file
     {
-        my $path = "exim-html-$version/doc/html/spec_html/" . ( $type eq 'filter' ? 'filter_toc' : 'index_toc' ) . ".xml";
-        print "Generating  : docroot:/$path\n" if ($opt{verbose});
+        my $path =
+            "exim-html-$version/doc/html/spec_html/" . ( $type eq 'filter' ? 'filter_toc' : 'index_toc' ) . ".xml";
+        print "Generating  : docroot:/$path\n" if ( $opt{verbose} );
         transform( $xml, "$opt{tmpl}/doc/toc.xsl", "$opt{docroot}/$path", );
     }
 
@@ -135,12 +141,17 @@ sub do_doc {
             $chapter->appendTextChild( 'prev_url',
                   $counter == 1
                 ? $type eq 'filter'
-                      ? 'filter.html'
-                      : 'index.html'
+                        ? 'filter.html'
+                        : 'index.html'
                 : sprintf( '%sch%02d.html', $prepend_chapter, $counter - 1 ) );
             $chapter->appendTextChild( 'next_url', sprintf( '%sch%02d.html', $prepend_chapter, $counter + 1 ) );
-            $chapter->appendTextChild( 'canonical_url',
-                sprintf( 'http://www.exim.org/exim-html-current/doc/html/spec_html/%sch%02d.html', $prepend_chapter, $counter ) );
+            $chapter->appendTextChild(
+                'canonical_url',
+                sprintf(
+                    'http://www.exim.org/exim-html-current/doc/html/spec_html/%sch%02d.html',
+                    $prepend_chapter, $counter
+                )
+            );
         }
 
         ## Create an XML document from the chapter
@@ -150,7 +161,7 @@ sub do_doc {
         ## Transform the chapter into html
         {
             my $path = sprintf( 'exim-html-%s/doc/html/spec_html/%sch%02d.html', $version, $prepend_chapter, $counter );
-            print "Generating  : docroot:/$path\n" if ($opt{verbose});
+            print "Generating  : docroot:/$path\n" if ( $opt{verbose} );
             transform( $doc, "$opt{tmpl}/doc/chapter.xsl", "$opt{docroot}/$path", );
         }
     }
@@ -208,11 +219,12 @@ sub xref_fixup {
         if ( exists $index{$linkend} ) {
             $xref->setAttribute( 'chapter_id',    $index{$linkend}{'chapter_id'} );
             $xref->setAttribute( 'chapter_title', $index{$linkend}{'chapter_title'} );
-            $xref->setAttribute( 'section_id',    $index{$linkend}{'section_id'} ) if ( $index{$linkend}{'section_id'} );
-            $xref->setAttribute( 'section_title', $index{$linkend}{'section_title'} ) if ( $index{$linkend}{'section_title'} );
+            $xref->setAttribute( 'section_id', $index{$linkend}{'section_id'} ) if ( $index{$linkend}{'section_id'} );
+            $xref->setAttribute( 'section_title', $index{$linkend}{'section_title'} )
+                if ( $index{$linkend}{'section_title'} );
             $xref->setAttribute( 'url',
                 sprintf( '%sch%02d.html', $prepend_chapter, $index{$linkend}{'chapter_id'} )
-                  . ( $index{$linkend}{'section_id'} ? '#' . $linkend : '' ) );
+                    . ( $index{$linkend}{'section_id'} ? '#' . $linkend : '' ) );
         }
     }
 }
@@ -227,9 +239,9 @@ sub build_indexes {
         if ( $node->nodeName eq 'indexterm' ) {
             my $role      = $node->getAttribute('role') || 'concept';
             my $primary   = $node->findvalue('child::primary');
-            my $first     = ( $primary =~ /^[A-Za-z]/ ) ? uc( substr( $primary, 0, 1 ) ) : '';    # first letter or marker
+            my $first     = ( $primary =~ /^[A-Za-z]/ ) ? uc( substr( $primary, 0, 1 ) ) : '';  # first letter or marker
             my $secondary = $node->findvalue('child::secondary') || '';
-            next unless ( $primary || $secondary );                                               # skip blank entries for now...
+            next unless ( $primary || $secondary );    # skip blank entries for now...
             $index_hash->{$role}{$first}{$primary}{$secondary} ||= [];
             push @{ $index_hash->{$role}{$first}{$primary}{$secondary} }, $current_id;
         }
@@ -278,7 +290,7 @@ sub build_indexes {
                     my $count = 0;
                     foreach my $ref ( @{ $index_hash->{$role}{$first}{$primary}{$secondary} } ) {
                         $para->appendText(', ')
-                          if ( $count++ );
+                            if ( $count++ );
                         my $xrefel = XML::LibXML::Element->new('xref');
                         $xrefel->setAttribute( linkend => $ref );
                         $xrefel->setAttribute( longref => 1 );
@@ -333,8 +345,10 @@ sub error_help {
 sub parse_arguments {
 
     my %opt = ( spec => [], filter => [], help => 0, man => 0, web => 0, minify => 1, verbose => 0 );
-    GetOptions( \%opt, 'help|h!', 'man!', 'web!', 'spec=s{1,}', 'filter=s{1,}', 'latest=s', 'tmpl=s', 'docroot=s', 'minify!', 'verbose!' )
-      || pod2usage( -exitval => 1, -verbose => 0 );
+    GetOptions(
+        \%opt,      'help|h!', 'man!',      'web!',    'spec=s{1,}', 'filter=s{1,}',
+        'latest=s', 'tmpl=s',  'docroot=s', 'minify!', 'verbose!'
+    ) || pod2usage( -exitval => 1, -verbose => 0 );
 
     ## --help
     pod2usage(0) if ( $opt{help} );
@@ -342,7 +356,9 @@ sub parse_arguments {
 
     ## --spec and --filter lists
     foreach my $set (qw[spec filter]) {
-        $opt{$set} = [ map { my $f = File::Spec->rel2abs($_); help( 1, 'No such file: ' . $_ ) unless -f $f; $f } @{ $opt{$set} } ];
+        $opt{$set} =
+            [ map { my $f = File::Spec->rel2abs($_); help( 1, 'No such file: ' . $_ ) unless -f $f; $f }
+                @{ $opt{$set} } ];
     }
     ## --latest
     error_help('Missing value for latest') unless ( exists( $opt{latest} ) && defined( $opt{latest} ) );
@@ -358,7 +374,7 @@ sub parse_arguments {
     error_help('Excess arguments') if ( scalar(@ARGV) );
 
     error_help('Must include at least one of --web, --spec or --filter')
-      unless ( $opt{web} || scalar( @{ $opt{spec} || [] } ) || scalar( @{ $opt{filter} || [] } ) );
+        unless ( $opt{web} || scalar( @{ $opt{spec} || [] } ) || scalar( @{ $opt{filter} || [] } ) );
 
     return %opt;
 }
@@ -468,4 +484,3 @@ Mike produced.
 Copyright 2010 Exim Maintainers. All rights reserved.
 
 =cut
-
