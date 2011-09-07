@@ -482,6 +482,6 @@ Mike produced.
 
 =head1 COPYRIGHT
 
-Copyright 2010 Exim Maintainers. All rights reserved.
+Copyright 2010-2011 Exim Maintainers. All rights reserved.
 
 =cut
