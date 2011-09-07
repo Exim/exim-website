@@ -21,6 +21,7 @@ my $canonical_url = 'http://www.exim.org/';
 my %opt = parse_arguments();
 
 ## Generate the pages
+my %cache; # General cache object
 do_doc( 'spec',   $_ ) foreach @{ $opt{spec}   || [] };
 do_doc( 'filter', $_ ) foreach @{ $opt{filter} || [] };
 do_web() if exists $opt{web};
@@ -332,6 +333,9 @@ sub transform {
     ## Add the current version of Exim to the XML
     $xml->documentElement()->appendTextChild( 'current_version', $opt{latest} );
 
+    ## Add the old versions of Exim to the XML
+    $xml->documentElement()->appendTextChild( 'old_versions', $_ ) foreach old_docs_versions();
+
     ## Parse the ".xsl" file as XML
     my $xsl = XML::LibXML->new()->parse_file($xsl_path) or die $!;
 
@@ -348,6 +352,18 @@ sub transform {
     open my $out, '>', $out_path or die "Unable to write $out_path - $!";
     print $out $stylesheet->output_as_bytes($doc);
     close $out;
+}
+
+## Look in the docroot for old versions of the documentation 
+sub old_docs_versions {
+   if( !exists $cache{old_docs_versions} ){
+      my @versions;
+      foreach( glob("$opt{docroot}/exim-html-*") ){
+         push @versions, $1 if /-(\d+(?:\.\d+)?)$/ && $1 < $opt{latest} && -d $_;
+      }
+      $cache{old_docs_versions} = [reverse sort {$a<=>$b} @versions];
+   }
+   return @{$cache{old_docs_versions}};
 }
 
 ## error_help

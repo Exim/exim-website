@@ -11,10 +11,20 @@
 	<!-- Title -->
 		<xsl:variable name="html.head.title" select="'Documentation for Exim'"/>
 
-        <!-- Canonical -->
-                <xsl:variable name="html.head.append">
-                        <link rel="canonical" href="http://www.exim.org/docs.html"/>
-                </xsl:variable>
+                
+	<xsl:variable name="html.head.append">
+
+		<!-- Canonical -->
+			<link rel="canonical" href="http://www.exim.org/docs.html"/>
+
+		<!-- CSS -->
+			<link rel="stylesheet" type="text/css" href="docs.css"/>
+	</xsl:variable>
+
+	<!-- JavaScript -->
+		<xsl:variable name="html.body.append">
+			<script type="text/javascript" src="docs.js"/>
+		</xsl:variable>
 
 	<!-- CONTENT -->
 		<xsl:template name="content">
@@ -46,6 +56,12 @@
 
 					<xsl:text> - The master documentation for Exim containing all required detail to install, configure and use Exim. </xsl:text>
 					<span class="changed">Changes to the documentation (normally reflecting changes to the functionality of Exim) are shown on a green background like this segment.</span>
+					<br/><select name="spec_old_version">
+						<option value="">View Older Versions</option>
+						<xsl:for-each select="/content/old_versions">
+							<option value="{text()}"><xsl:value-of select="text()"/></option>
+						</xsl:for-each>
+					</select>
 				</p>
 
 				<p class="manual_info">
@@ -57,6 +73,12 @@
 					<xsl:text> </xsl:text>
 					<a href="{$docroot}/exim-pdf-current/doc/filter.pdf">(PDF)</a>
 					<xsl:text> - Additional information on the Exim filter language.</xsl:text>
+					<br/><select name="filter_old_version">
+						<option value="">View Older Versions</option>
+						<xsl:for-each select="/content/old_versions">
+							<option value="{text()}"><xsl:value-of select="text()"/></option>
+						</xsl:for-each>
+					</select>
 				</p>
 
 			<!-- HOWTOs -->
