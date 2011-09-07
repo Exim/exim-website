@@ -41,7 +41,9 @@
 
          <!-- Navigation -->
          <a class="previous_page" href="{prev_url}"><![CDATA[<-previous]]></a>
-         <a class="next_page"     href="{next_url}"><![CDATA[next->]]></a>
+	 <xsl:if test="next_url">
+            <a class="next_page" href="{next_url}"><![CDATA[next->]]></a>
+         </xsl:if>
 
          <!-- Chapter Wrapper -->
          <div id="chapter" class="chapter{@class}">
