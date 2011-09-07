@@ -1,3 +1,38 @@
+#old_version_warning {
+  text-align:  center;
+  padding:     0.1em;
+  margin:      0;
+  font-size:   1.4em;
+}
+
+body.with-js #old_version_warning {
+  display:          none;
+  text-align:       left;
+  position:         fixed;
+  top:              20%;
+  left:	            30%;
+  width:            40%;
+  background-color: #fff;
+  border:           1px solid #000;
+  padding:          1em;
+  z-index:          10000;
+}
+
+#old_version_warning span.closebar {
+  float:            right;
+  position:         relative;
+  right:            -0.5em;
+  top:              -0.5em;
+}
+
+#old_version_warning span.closebar a {
+  text-decoration:  none;
+}
+
+body.no-js #old_version_warning span.closebar {
+  display: none;
+}
+
 .previous_page, .next_page {
   font-size:      1.2em;
 }

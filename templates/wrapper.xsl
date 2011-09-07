@@ -40,7 +40,10 @@
             
                <xsl:copy-of select="$html.head.append"/>
             </head>
-            <body>
+	    <body class="no-js">
+                <!-- Changed body classname from "no-js" to "with-js" for styling purposes -->
+
+                   <script type="text/javascript"><![CDATA[document.body.className=(' '+document.body.className+' ').replace('no-js','with-js');]]></script>
 
                 <!-- Header -->
 

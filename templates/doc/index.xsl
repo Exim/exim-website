@@ -30,13 +30,21 @@
 
    <!-- CONTENT -->
       <xsl:template match="/book">
+         <xsl:if test="current_url">
+            <p id="old_version_warning">
+               <strong>WARNING:</strong>
+	       <xsl:text> This documentation is for an old version of Exim (</xsl:text>
+	       <a href="{current_url}">latest</a>
+               <xsl:text>)</xsl:text>
+            </p>
+         </xsl:if>
          <div id="info">
             <xsl:apply-templates select="bookinfo"/>
          </div>
          <div id="options" class="hidden">
             <img src="{$docroot}/doc/plus-12x12.png"  width="12" height="12" class="expand"/>
             <img src="{$docroot}/doc/minus-12x12.png" width="12" height="12" class="collapse"/>
-            <xsl:text>Expand/Collapse all Chapters</xsl:text>
+	    <xsl:text>Expand/Collapse all Chapters</xsl:text>
          </div>
          <div id="index">
             <ul id="chapters">

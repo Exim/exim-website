@@ -48,6 +48,16 @@
          <!-- Chapter Wrapper -->
          <div id="chapter" class="chapter{@class}">
 
+            <xsl:if test="current_url">
+               <p id="old_version_warning">
+                  <span class="closebar"><a href="#" title="Close">X</a></span>
+                  <strong>WARNING:</strong>
+                  <xsl:text> This documentation is for an old version of Exim (</xsl:text>
+                  <a href="{current_url}">latest</a>
+                  <xsl:text>)</xsl:text>
+               </p>
+            </xsl:if>
+
             <!-- Chapter Title -->
             <h2 id="{@id}" class="{@class}">
                <xsl:value-of select="concat('Chapter ',chapter_id,' - ',title)"/>
@@ -97,6 +107,6 @@
       </xsl:template>
 
    <!-- Ignore -->
-      <xsl:template match="chapter_id|prev_url|next_url|canonical_url"/>
+      <xsl:template match="chapter_id|prev_url|next_url|canonical_url|current_url"/>
 
 </xsl:stylesheet>

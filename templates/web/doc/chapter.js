@@ -1,3 +1,17 @@
+// Warnings about reading old version of documentation
+(function ($) {
+    if( $.grep( document.cookie.split(/\s*;\s*/), function(a){return a === 'old_version_warning_removed=true' ? true : false }).length === 0 ){
+        $('#old_version_warning')
+	    .show()
+	    .find('span.closebar a')
+	        .click(function(e){
+                    $('#old_version_warning').remove();
+                    document.cookie="old_version_warning_removed=true";
+                    e.preventDefault();
+                });
+    }
+})(jQuery);
+
 // Sidebar table of contents
 (function ($) {
 

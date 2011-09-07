@@ -111,6 +111,13 @@ sub do_doc {
         ->appendTextChild( 'canonical_url',
         "${canonical_url}exim-html-current/doc/html/spec_html/" . ( $type eq 'spec' ? 'index' : 'filter' ) . ".html" );
 
+    ## Add a url for the latest version of this document
+    if( $version ne $opt{latest} ){
+       $xml->documentElement()
+           ->appendTextChild( 'current_url',
+	   "../../../../exim-html-current/doc/html/spec_html/" . ( $type eq 'spec' ? 'index' : 'filter' ) . ".html" );
+    }
+
     ## Fixup the XML
     xref_fixup( $xml, $prepend_chapter );
 
@@ -153,6 +160,15 @@ sub do_doc {
                     $prepend_chapter, $counter
                 )
             );
+            if( $version ne $opt{latest} ){
+               $chapter->appendTextChild(
+                  'current_url',
+                  sprintf(
+                     '../../../../exim-html-current/doc/html/spec_html/%sch%02d.html',
+                     $prepend_chapter, $counter
+                  )
+               );
+           }
         }
 
         ## Create an XML document from the chapter
