@@ -131,7 +131,8 @@ sub do_doc {
 
     ## Generate the chapters
     my $counter = 0;
-    foreach my $chapter ( map { $_->cloneNode(1) } $xml->findnodes('/book/chapter') ) {
+    my @chapters = map { $_->cloneNode(1) } $xml->findnodes('/book/chapter');
+    foreach my $chapter ( @chapters ) {
 
         ## Add a <chapter_id>N</chapter_id> node for the stylesheet to use
         $chapter->appendTextChild( 'chapter_id', ++$counter );
@@ -144,7 +145,7 @@ sub do_doc {
                         ? 'filter.html'
                         : 'index.html'
                 : sprintf( '%sch%02d.html', $prepend_chapter, $counter - 1 ) );
-            $chapter->appendTextChild( 'next_url', sprintf( '%sch%02d.html', $prepend_chapter, $counter + 1 ) );
+            $chapter->appendTextChild( 'next_url', sprintf( '%sch%02d.html', $prepend_chapter, $counter + 1 ) ) unless int(@chapters) == $counter;
             $chapter->appendTextChild(
                 'canonical_url',
                 sprintf(
