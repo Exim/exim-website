@@ -107,6 +107,6 @@
       </xsl:template>
 
    <!-- Ignore -->
-      <xsl:template match="chapter_id|prev_url|next_url|canonical_url|current_url"/>
+      <xsl:template match="chapter_id|prev_url|next_url|canonical_url|current_url|old_versions"/>
 
 </xsl:stylesheet>
