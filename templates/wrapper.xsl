@@ -69,7 +69,7 @@
                             <!-- Search Field -->
 
                                <li class="search">
-                                  <form action="http://www.google.com/search" method="get">
+                                  <form action="https://encrypted.google.com/search" method="get">
                                      <span class="search_field_container">
                                         <input type="search" name="q" placeholder="Search Docs" class="search_field"/>
                                      </span>
