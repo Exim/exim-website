@@ -109,8 +109,8 @@
                          <xsl:copy-of select="$html.body.outer.append"/>
                    </div>
 
-                <!-- Load latest version of jQuery 1.4 from the Google CDN -->
-                   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+                <!-- Load latest version of jQuery 1.6 from the Google CDN -->
+                   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
 
                 <!-- Local JavaScript -->
                    <script type="text/javascript" src="{$docroot}/common.js"></script>
