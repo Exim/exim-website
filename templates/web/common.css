@@ -172,6 +172,8 @@ html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acron
   .nav li a:visited { color: #aaf; }
   .nav li a:visited:hover { color: #fff; } 
 
+  .nav li.img { padding-top: 0.1em; position:relative;top:0.3em;}
+
   #outer > #nav_float {
     position:     fixed;
     top:        0;
