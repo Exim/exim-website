@@ -66,10 +66,16 @@
                             <li> <a href="http://www.exim.org/bugzilla/">Bugs</a> </li>
                             <li> <a href="{$docroot}/credits.html">Credits</a> </li>
 
+                            <li class="img">
+                               <a href="https://plus.google.com/101257968735428844827/?prsrc=3" title="Google+">
+				       <img src="{$docroot}/i/gplus-32.png" width="16" height="16" alt="G+"/>
+                               </a>
+                            </li>
+
                             <!-- Search Field -->
 
                                <li class="search">
-                                  <form action="http://www.google.com/search" method="get">
+                                  <form action="https://encrypted.google.com/search" method="get">
                                      <span class="search_field_container">
                                         <input type="search" name="q" placeholder="Search Docs" class="search_field"/>
                                      </span>
@@ -109,8 +115,8 @@
                          <xsl:copy-of select="$html.body.outer.append"/>
                    </div>
 
-                <!-- Load latest version of jQuery 1.4 from the Google CDN -->
-                   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+                <!-- Load latest version of jQuery 1.6 from the Google CDN -->
+                   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
 
                 <!-- Local JavaScript -->
                    <script type="text/javascript" src="{$docroot}/common.js"></script>
