@@ -33,7 +33,7 @@ body.no-js #old_version_warning span.closebar {
   display: none;
 }
 
-.previous_page, .next_page {
+.previous_page, .next_page, .toc_page {
   font-size:      1.2em;
 }
 
@@ -45,6 +45,13 @@ body.no-js #old_version_warning span.closebar {
 .next_page {
   float:        right;
   clear:        right;
+}
+
+.toc_page {
+  position:     absolute;
+  right:        13em;
+  left:         13em;
+  text-align:   center;
 }
 
 #chapter {

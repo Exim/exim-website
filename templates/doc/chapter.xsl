@@ -41,8 +41,8 @@
 
          <!-- Navigation -->
          <a class="previous_page" href="{prev_url}"><![CDATA[<-previous]]></a>
-	 <xsl:if test="next_url">
-            <a class="next_page" href="{next_url}"><![CDATA[next->]]></a>
+         <xsl:if test="next_url">
+            <a class="next_page"  href="{next_url}"><![CDATA[next->]]></a>
          </xsl:if>
 
          <!-- Chapter Wrapper -->
@@ -60,7 +60,9 @@
 
             <!-- Chapter Title -->
             <h2 id="{@id}" class="{@class}">
-               <xsl:value-of select="concat('Chapter ',chapter_id,' - ',title)"/>
+               <a href="{toc_url}">
+                  <xsl:value-of select="concat('Chapter ',chapter_id,' - ',title)"/>
+               </a>
             </h2>
 
             <!-- Chapter Info -->
@@ -70,7 +72,10 @@
 
          <!-- Navigation -->
             <a class="previous_page" href="{prev_url}"><![CDATA[<-previous]]></a>
-            <a class="next_page"     href="{next_url}"><![CDATA[next->]]></a>
+            <a class="toc_page"      href="{prev_url}"><![CDATA[Table of Contents]]></a>
+            <xsl:if test="next_url">
+               <a class="next_page"  href="{next_url}"><![CDATA[next->]]></a>
+            </xsl:if>
 
       </xsl:template>
 
@@ -107,6 +112,6 @@
       </xsl:template>
 
    <!-- Ignore -->
-      <xsl:template match="chapter_id|prev_url|next_url|canonical_url|current_url|old_versions"/>
+      <xsl:template match="chapter_id|prev_url|next_url|toc_url|canonical_url|current_url|old_versions"/>
 
 </xsl:stylesheet>
