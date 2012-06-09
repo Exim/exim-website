@@ -21,7 +21,7 @@ my $canonical_url = 'http://www.exim.org/';
 my %opt = parse_arguments();
 
 ## Generate the pages
-my %cache; # General cache object
+my %cache;    # General cache object
 do_doc( 'spec',   $_ ) foreach @{ $opt{spec}   || [] };
 do_doc( 'filter', $_ ) foreach @{ $opt{filter} || [] };
 do_web() if exists $opt{web};
@@ -113,10 +113,10 @@ sub do_doc {
         "${canonical_url}exim-html-current/doc/html/spec_html/" . ( $type eq 'spec' ? 'index' : 'filter' ) . ".html" );
 
     ## Add a url for the latest version of this document
-    if( $version ne $opt{latest} ){
-       $xml->documentElement()
-           ->appendTextChild( 'current_url',
-	   "../../../../exim-html-current/doc/html/spec_html/" . ( $type eq 'spec' ? 'index' : 'filter' ) . ".html" );
+    if ( $version ne $opt{latest} ) {
+        $xml->documentElement()
+            ->appendTextChild( 'current_url',
+            "../../../../exim-html-current/doc/html/spec_html/" . ( $type eq 'spec' ? 'index' : 'filter' ) . ".html" );
     }
 
     ## Fixup the XML
@@ -140,7 +140,7 @@ sub do_doc {
     ## Generate the chapters
     my $counter = 0;
     my @chapters = map { $_->cloneNode(1) } $xml->findnodes('/book/chapter');
-    foreach my $chapter ( @chapters ) {
+    foreach my $chapter (@chapters) {
 
         ## Add a <chapter_id>N</chapter_id> node for the stylesheet to use
         $chapter->appendTextChild( 'chapter_id', ++$counter );
@@ -153,7 +153,8 @@ sub do_doc {
                         ? 'filter.html'
                         : 'index.html'
                 : sprintf( '%sch%02d.html', $prepend_chapter, $counter - 1 ) );
-            $chapter->appendTextChild( 'next_url', sprintf( '%sch%02d.html', $prepend_chapter, $counter + 1 ) ) unless int(@chapters) == $counter;
+            $chapter->appendTextChild( 'next_url', sprintf( '%sch%02d.html', $prepend_chapter, $counter + 1 ) )
+                unless int(@chapters) == $counter;
             $chapter->appendTextChild(
                 'canonical_url',
                 sprintf(
@@ -161,15 +162,15 @@ sub do_doc {
                     $prepend_chapter, $counter
                 )
             );
-            if( $version ne $opt{latest} ){
-               $chapter->appendTextChild(
-                  'current_url',
-                  sprintf(
-                     '../../../../exim-html-current/doc/html/spec_html/%sch%02d.html',
-                     $prepend_chapter, $counter
-                  )
-               );
-           }
+            if ( $version ne $opt{latest} ) {
+                $chapter->appendTextChild(
+                    'current_url',
+                    sprintf(
+                        '../../../../exim-html-current/doc/html/spec_html/%sch%02d.html',
+                        $prepend_chapter, $counter
+                    )
+                );
+            }
         }
 
         ## Create an XML document from the chapter
@@ -354,16 +355,16 @@ sub transform {
     close $out;
 }
 
-## Look in the docroot for old versions of the documentation 
+## Look in the docroot for old versions of the documentation
 sub old_docs_versions {
-   if( !exists $cache{old_docs_versions} ){
-      my @versions;
-      foreach( glob("$opt{docroot}/exim-html-*") ){
-         push @versions, $1 if /-(\d+(?:\.\d+)?)$/ && $1 < $opt{latest} && -d $_;
-      }
-      $cache{old_docs_versions} = [reverse sort {$a<=>$b} @versions];
-   }
-   return @{$cache{old_docs_versions}};
+    if ( !exists $cache{old_docs_versions} ) {
+        my @versions;
+        foreach ( glob("$opt{docroot}/exim-html-*") ) {
+            push @versions, $1 if /-(\d+(?:\.\d+)?)$/ && $1 < $opt{latest} && -d $_;
+        }
+        $cache{old_docs_versions} = [ reverse sort { $a <=> $b } @versions ];
+    }
+    return @{ $cache{old_docs_versions} };
 }
 
 ## error_help
