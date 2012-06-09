@@ -155,6 +155,7 @@ sub do_doc {
                 : sprintf( '%sch%02d.html', $prepend_chapter, $counter - 1 ) );
             $chapter->appendTextChild( 'next_url', sprintf( '%sch%02d.html', $prepend_chapter, $counter + 1 ) )
                 unless int(@chapters) == $counter;
+            $chapter->appendTextChild( 'toc_url', ( $type eq 'filter' ? 'filter' : 'index' ) . '.html' );
             $chapter->appendTextChild(
                 'canonical_url',
                 sprintf(
