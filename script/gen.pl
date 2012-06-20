@@ -24,10 +24,10 @@ my %opt = parse_arguments();
 my %cache;    # General cache object
 do_doc( 'spec',   $_ ) foreach @{ $opt{spec}   || [] };
 do_doc( 'filter', $_ ) foreach @{ $opt{filter} || [] };
-do_web() if exists $opt{web};
+do_web() if ( $opt{web} );
 
 ## Add the exim-html-current symlink
-print "Symlinking exim-html-current to exim-html-$opt{latest}\n";
+print "Symlinking exim-html-current to exim-html-$opt{latest}\n" if ( $opt{verbose} );
 unlink("$opt{docroot}/exim-html-current") if ( -l "$opt{docroot}/exim-html-current" );
 symlink( "exim-html-$opt{latest}", "$opt{docroot}/exim-html-current" )
     || die "symlink to $opt{docroot}/exim-html-current failed";
@@ -125,7 +125,7 @@ sub do_doc {
     ## Generate the front page
     {
         my $path = "exim-html-$version/doc/html/spec_html/" . ( $type eq 'filter' ? $type : 'index' ) . ".html";
-        print "Generating  : docroot:/$path\n";
+        print "Generating  : docroot:/$path\n" if ( $opt{verbose} );
         transform( $xml, "$opt{tmpl}/doc/index.xsl", "$opt{docroot}/$path", );
     }
 
@@ -348,7 +348,7 @@ sub transform {
     my $doc = $stylesheet->transform($xml);
 
     ## Make the containing directory if it doesn't exist
-    make_path( ( $out_path =~ /^(.+)\/.+$/ )[0], { verbose => 1 } );
+    make_path( ( $out_path =~ /^(.+)\/.+$/ )[0], { verbose => $opt{verbose} } );
 
     ## Write out the document
     open my $out, '>', $out_path or die "Unable to write $out_path - $!";
