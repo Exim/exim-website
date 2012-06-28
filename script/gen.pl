@@ -20,11 +20,16 @@ my $canonical_url = 'http://www.exim.org/';
 ## Parse arguments
 my %opt = parse_arguments();
 
+## setup static root location
+## TODO: for doc generation only this should be within the docs dir
+$opt{staticroot} = File::Spec->catdir( $opt{docroot}, 'static' );
+
 ## Generate the pages
 my %cache;    # General cache object
 do_doc( 'spec',   $_ ) foreach @{ $opt{spec}   || [] };
 do_doc( 'filter', $_ ) foreach @{ $opt{filter} || [] };
 do_web() if ( $opt{web} );
+do_static();    # need this for all other pages generated
 
 ## Add the exim-html-current symlink
 print "Symlinking exim-html-current to exim-html-$opt{latest}\n" if ( $opt{verbose} );
@@ -32,67 +37,90 @@ unlink("$opt{docroot}/exim-html-current") if ( -l "$opt{docroot}/exim-html-curre
 symlink( "exim-html-$opt{latest}", "$opt{docroot}/exim-html-current" )
     || die "symlink to $opt{docroot}/exim-html-current failed";
 
+# ------------------------------------------------------------------
 ## Generate the website files
 sub do_web {
 
+    ## copy these templates to docroot...
+    copy_transform_files( "$opt{tmpl}/web", $opt{docroot}, 0 );
+}
+
+# ------------------------------------------------------------------
+## Generate the static file set
+sub do_static {
+
+    ## make sure I have a directory
+    mkdir( $opt{staticroot} ) or die "Unable to make staticroot: $!\n" unless ( -d $opt{staticroot} );
+
+    ## copy these templates to docroot...
+    copy_transform_files( "$opt{tmpl}/static", $opt{staticroot}, 1 );
+}
+
+# ------------------------------------------------------------------
+## Generate the website files
+sub copy_transform_files {
+    my $source = shift;
+    my $target = shift;
+    my $static = shift;
+
     ## Make sure the template web directory exists
-    die "No such directory: $opt{tmpl}/web\n" unless -d "$opt{tmpl}/web";
+    die "No such directory: $source\n" unless ( -d $source );
 
     ## Scan the web templates
     find(
         sub {
-            my ($path) =
-                substr( $File::Find::name, length("$opt{tmpl}/web"), length($File::Find::name) ) =~ m#^/*(.*)$#;
+            my ($path) = substr( $File::Find::name, length("$source"), length($File::Find::name) ) =~ m#^/*(.*)$#;
 
-            if ( -d "$opt{tmpl}/web/$path" ) {
+            if ( -d "$source/$path" ) {
 
-                ## Create the directory in the doc root if it doesn't exist
-                if ( !-d "$opt{docroot}/$path" ) {
-                    mkdir("$opt{docroot}/$path") or die "Unable to make $opt{docroot}/$path: $!\n";
+                ## Create the directory in the target if it doesn't exist
+                if ( !-d "$target/$path" ) {
+                    mkdir("$target/$path") or die "Unable to make $target/$path: $!\n";
                 }
 
             }
             else {
 
                 ## Build HTML from XSL files and simply copy static files which have changed
-                if ( $path =~ /(.+)\.xsl$/ ) {
-                    print "Generating  : docroot:/$1.html\n" if ( $opt{verbose} );
-                    transform( undef, "$opt{tmpl}/web/$path", "$opt{docroot}/$1.html" );
+                if ( ( !$static ) and ( $path =~ /(.+)\.xsl$/ ) ) {
+                    print "Generating  : /$1.html\n" if ( $opt{verbose} );
+                    transform( undef, "$source/$path", "$target/$1.html" );
                 }
-                elsif ( -f "$opt{tmpl}/web/$path" ) {
+                elsif ( -f "$source/$path" ) {
 
-                    ## Skip if the file hasn't changed (mtime based)
+                    ## Skip if the file hasn't changed (mtime/size based)
                     return
-                        if -f "$opt{docroot}/$path"
-                            && ( stat("$opt{tmpl}/web/$path") )[9] == ( stat("$opt{docroot}/$path") )[9];
+                        if (( -f "$target/$path" )
+                        and ( ( stat("$source/$path") )[9] == ( stat("$target/$path") )[9] )
+                        and ( ( stat("$source/$path") )[7] == ( stat("$target/$path") )[7] ) );
 
                     if ( $path =~ /(.+)\.css$/ ) {
-                        print "CSS to  : docroot:/$path\n" if ( $opt{verbose} );
-                        my $content = read_file("$opt{tmpl}/web/$path");
-                        write_file( "$opt{docroot}/$path",
-                            $opt{minify} ? CSS::Minifier::XS::minify($content) : $content );
+                        print "CSS to  : /$path\n" if ( $opt{verbose} );
+                        my $content = read_file("$source/$path");
+                        write_file( "$target/$path", $opt{minify} ? CSS::Minifier::XS::minify($content) : $content );
                     }
                     elsif ( $path =~ /(.+)\.js$/ ) {
-                        print "JS to  : docroot:/$path\n" if ( $opt{verbose} );
-                        my $content = read_file("$opt{tmpl}/web/$path");
-                        write_file( "$opt{docroot}/$path",
+                        print "JS to  : /$path\n" if ( $opt{verbose} );
+                        my $content = read_file("$source/$path");
+                        write_file( "$target/$path",
                             $opt{minify} ? JavaScript::Minifier::XS::minify($content) : $content );
                     }
                     else {
                         ## Copy
-                        print "Copying to  : docroot:/$path\n" if ( $opt{verbose} );
-                        copy( "$opt{tmpl}/web/$path", "$opt{docroot}/$path" ) or die "$path: $!";
+                        print "Copying to  : /$path\n" if ( $opt{verbose} );
+                        copy( "$source/$path", "$target/$path" ) or die "$path: $!";
                     }
                     ## Set mtime
-                    utime( time, ( stat("$opt{tmpl}/web/$path") )[9], "$opt{docroot}/$path" );
+                    utime( time, ( stat("$source/$path") )[9], "$target/$path" );
                 }
             }
 
         },
-        "$opt{tmpl}/web"
+        "$source"
     );
 }
 
+# ------------------------------------------------------------------
 ## Generate index/chapter files for a doc
 sub do_doc {
     my ( $type, $xml_path ) = @_;
@@ -187,6 +215,7 @@ sub do_doc {
     }
 }
 
+# ------------------------------------------------------------------
 ## Fixup xref tags
 sub xref_fixup {
     my ( $xml, $prepend_chapter ) = @_;
@@ -249,6 +278,7 @@ sub xref_fixup {
     }
 }
 
+# ------------------------------------------------------------------
 ## Build indexes
 sub build_indexes {
     my ( $xml, $prepend_chapter, $xref ) = @_;
@@ -322,6 +352,7 @@ sub build_indexes {
     }
 }
 
+# ------------------------------------------------------------------
 ## Handle the transformation
 sub transform {
     my ( $xml, $xsl_path, $out_path ) = @_;
@@ -344,8 +375,12 @@ sub transform {
     ## Generate a stylesheet from the ".xsl" XML.
     my $stylesheet = XML::LibXSLT->new()->parse_stylesheet($xsl);
 
+    ## work out the static root relative to the target
+    my $target_dir = ( File::Spec->splitpath($out_path) )[1];
+    my $staticroot = File::Spec->abs2rel( $opt{staticroot}, $target_dir );
+
     ## Generate a doc from the XML transformed with the XSL
-    my $doc = $stylesheet->transform($xml);
+    my $doc = $stylesheet->transform( $xml, staticroot => sprintf( "'%s'", $staticroot ) );
 
     ## Make the containing directory if it doesn't exist
     make_path( ( $out_path =~ /^(.+)\/.+$/ )[0], { verbose => $opt{verbose} } );
@@ -356,6 +391,7 @@ sub transform {
     close $out;
 }
 
+# ------------------------------------------------------------------
 ## Look in the docroot for old versions of the documentation
 sub old_docs_versions {
     if ( !exists $cache{old_docs_versions} ) {
@@ -368,6 +404,7 @@ sub old_docs_versions {
     return @{ $cache{old_docs_versions} };
 }
 
+# ------------------------------------------------------------------
 ## error_help
 sub error_help {
     my $msg = shift;
@@ -376,6 +413,7 @@ sub error_help {
     pod2usage( -exitval => 1, -verbose => 0 );
 }
 
+# ------------------------------------------------------------------
 ## Parse arguments
 sub parse_arguments {
 
@@ -414,6 +452,7 @@ sub parse_arguments {
     return %opt;
 }
 
+# ------------------------------------------------------------------
 1;
 
 __END__
@@ -516,6 +555,6 @@ Mike produced.
 
 =head1 COPYRIGHT
 
-Copyright 2010-2011 Exim Maintainers. All rights reserved.
+Copyright 2010-2012 Exim Maintainers. All rights reserved.
 
 =cut

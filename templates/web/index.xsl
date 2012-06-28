@@ -14,7 +14,7 @@
 	<xsl:variable name="html.head.append">
 
 		<!-- CSS -->
-			<link rel="stylesheet" type="text/css" href="{$docroot}/index.css"/>
+			<link rel="stylesheet" type="text/css" href="{$staticroot}/css/index.css"/>
 
 	        <!-- Canonical -->
                         <link rel="canonical" href="http://www.exim.org/"/>

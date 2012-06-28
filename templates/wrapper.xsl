@@ -23,10 +23,10 @@
       <xsl:template match="/">
          <html lang="en-GB">
             <head>
-               <link rel="stylesheet" type="text/css" href="{$docroot}/common.css"/>
+               <link rel="stylesheet" type="text/css" href="{$staticroot}/css/common.css"/>
 
                <meta name="author"      content="The Exim Project. &lt;http://www.exim.org/&gt;"/>
-               <meta name="copyright"   content="Copyright ©1995-2011 The Exim Project. All rights reserved"/>
+               <meta name="copyright"   content="Copyright ©1995-2012 The Exim Project. All rights reserved"/>
                <meta name="description" content="{$html.head.description}"/>
                <meta name="keywords"    content="{$html.head.keywords}"/>
                <meta name="robots"      content="{$html.head.robots}"/>
@@ -119,7 +119,7 @@
                    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
 
                 <!-- Local JavaScript -->
-                   <script type="text/javascript" src="{$docroot}/common.js"></script>
+                   <script type="text/javascript" src="{$staticroot}/js/common.js"></script>
                    
                    <xsl:copy-of select="$html.body.append"/>
 

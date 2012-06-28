@@ -16,7 +16,7 @@
    <xsl:variable name="html.head.append">
 
       <!-- CSS -->
-         <link rel="stylesheet" type="text/css" href="{$docroot}/doc/chapter.css"/>
+         <link rel="stylesheet" type="text/css" href="{$staticroot}/doc/chapter.css"/>
 
       <!-- Canonical -->
          <link rel="canonical" href="{/chapter/canonical_url}"/>
@@ -25,7 +25,7 @@
  
    <!-- JavaScript -->
       <xsl:variable name="html.body.append">
-         <script type="text/javascript" src="{$docroot}/doc/chapter.js"/>
+         <script type="text/javascript" src="{$staticroot}/doc/chapter.js"/>
       </xsl:variable>
 
    <!-- Table of Contents -->

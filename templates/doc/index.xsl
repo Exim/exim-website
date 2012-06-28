@@ -16,7 +16,7 @@
    <xsl:variable name="html.head.append">
 
       <!-- CSS -->
-         <link rel="stylesheet" type="text/css" href="{$docroot}/doc/index.css"/>
+         <link rel="stylesheet" type="text/css" href="{$staticroot}/doc/index.css"/>
 
       <!-- Canonical -->
          <link rel="canonical" href="{/book/canonical_url}"/>
@@ -25,7 +25,7 @@
  
    <!-- JavaScript -->
       <xsl:variable name="html.body.append">
-         <script type="text/javascript" src="{$docroot}/doc/index.js"/>
+         <script type="text/javascript" src="{$staticroot}/doc/index.js"/>
       </xsl:variable>
 
    <!-- CONTENT -->
