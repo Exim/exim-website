@@ -29,7 +29,7 @@ my %cache;    # General cache object
 do_doc( 'spec',   $_ ) foreach @{ $opt{spec}   || [] };
 do_doc( 'filter', $_ ) foreach @{ $opt{filter} || [] };
 do_web() if ( $opt{web} );
-do_static();    # need this for all other pages generated
+do_static() if ( $opt{web} or !$opt{localstatic} );    # need this for all other pages generated
 
 ## Add the exim-html-current symlink
 print "Symlinking exim-html-current to exim-html-$opt{latest}\n" if ( $opt{verbose} );
@@ -48,12 +48,13 @@ sub do_web {
 # ------------------------------------------------------------------
 ## Generate the static file set
 sub do_static {
+    my $staticroot = shift || $opt{staticroot};
 
     ## make sure I have a directory
-    mkdir( $opt{staticroot} ) or die "Unable to make staticroot: $!\n" unless ( -d $opt{staticroot} );
+    mkdir($staticroot) or die "Unable to make staticroot: $!\n" unless ( -d $staticroot );
 
     ## copy these templates to docroot...
-    copy_transform_files( "$opt{tmpl}/static", $opt{staticroot}, 1 );
+    copy_transform_files( "$opt{tmpl}/static", $staticroot, 1 );
 }
 
 # ------------------------------------------------------------------
@@ -150,11 +151,21 @@ sub do_doc {
     ## Fixup the XML
     xref_fixup( $xml, $prepend_chapter );
 
+    ## set the staticroot
+    my $staticroot =
+        $opt{localstatic}
+        ? File::Spec->catdir( $opt{docroot}, "exim-html-$version", 'doc', 'html', 'static' )
+        : $opt{staticroot};
+    unless ( -d $staticroot ) {
+        make_path( $staticroot, { verbose => $opt{verbose} } );
+        do_static($staticroot);
+    }
+
     ## Generate the front page
     {
         my $path = "exim-html-$version/doc/html/spec_html/" . ( $type eq 'filter' ? $type : 'index' ) . ".html";
         print "Generating  : docroot:/$path\n" if ( $opt{verbose} );
-        transform( $xml, "$opt{tmpl}/doc/index.xsl", "$opt{docroot}/$path", );
+        transform( $xml, "$opt{tmpl}/doc/index.xsl", "$opt{docroot}/$path", $staticroot );
     }
 
     ## Generate a Table of Contents XML file
@@ -162,7 +173,7 @@ sub do_doc {
         my $path =
             "exim-html-$version/doc/html/spec_html/" . ( $type eq 'filter' ? 'filter_toc' : 'index_toc' ) . ".xml";
         print "Generating  : docroot:/$path\n" if ( $opt{verbose} );
-        transform( $xml, "$opt{tmpl}/doc/toc.xsl", "$opt{docroot}/$path", );
+        transform( $xml, "$opt{tmpl}/doc/toc.xsl", "$opt{docroot}/$path", $staticroot );
     }
 
     ## Generate the chapters
@@ -210,7 +221,7 @@ sub do_doc {
         {
             my $path = sprintf( 'exim-html-%s/doc/html/spec_html/%sch%02d.html', $version, $prepend_chapter, $counter );
             print "Generating  : docroot:/$path\n" if ( $opt{verbose} );
-            transform( $doc, "$opt{tmpl}/doc/chapter.xsl", "$opt{docroot}/$path", );
+            transform( $doc, "$opt{tmpl}/doc/chapter.xsl", "$opt{docroot}/$path", $staticroot );
         }
     }
 }
@@ -355,7 +366,10 @@ sub build_indexes {
 # ------------------------------------------------------------------
 ## Handle the transformation
 sub transform {
-    my ( $xml, $xsl_path, $out_path ) = @_;
+    my ( $xml, $xsl_path, $out_path, $staticroot_abs ) = @_;
+
+    ## make sure $staticroot is set
+    $staticroot_abs ||= $opt{staticroot};
 
     ## Build an empty XML structure if an undefined $xml was passed
     unless ( defined $xml ) {
@@ -377,7 +391,7 @@ sub transform {
 
     ## work out the static root relative to the target
     my $target_dir = ( File::Spec->splitpath($out_path) )[1];
-    my $staticroot = File::Spec->abs2rel( $opt{staticroot}, $target_dir );
+    my $staticroot = File::Spec->abs2rel( $staticroot_abs, $target_dir );
 
     ## Generate a doc from the XML transformed with the XSL
     my $doc = $stylesheet->transform( $xml, staticroot => sprintf( "'%s'", $staticroot ) );
@@ -417,10 +431,10 @@ sub error_help {
 ## Parse arguments
 sub parse_arguments {
 
-    my %opt = ( spec => [], filter => [], help => 0, man => 0, web => 0, minify => 1, verbose => 0 );
+    my %opt = ( spec => [], filter => [], help => 0, man => 0, web => 0, minify => 1, verbose => 0, localstatic => 0 );
     GetOptions(
         \%opt,      'help|h!', 'man!',      'web!',    'spec=s{1,}', 'filter=s{1,}',
-        'latest=s', 'tmpl=s',  'docroot=s', 'minify!', 'verbose!'
+        'latest=s', 'tmpl=s',  'docroot=s', 'minify!', 'verbose!',   'localstatic!'
     ) || pod2usage( -exitval => 1, -verbose => 0 );
 
     ## --help
@@ -430,7 +444,7 @@ sub parse_arguments {
     ## --spec and --filter lists
     foreach my $set (qw[spec filter]) {
         $opt{$set} =
-            [ map { my $f = File::Spec->rel2abs($_); help( 1, 'No such file: ' . $_ ) unless -f $f; $f }
+            [ map { my $f = File::Spec->rel2abs($_); error_help( 1, 'No such file: ' . $_ ) unless -f $f; $f }
                 @{ $opt{$set} } ];
     }
     ## --latest
@@ -474,7 +488,8 @@ gen.pl [options]
    --latest VERSION    Required. Specify the latest stable version of Exim.
    --tmpl PATH         Required. Path to the templates directory
    --docroot PATH      Required. Path to the website document root
-   --[no-]minify       [Don't] minify CSS and Javascript    
+   --[no-]minify       [Don't] minify CSS and Javascript
+   --localstatic       Makes the static files local to each doc ver 
 
 =head1 OPTIONS
 
@@ -529,6 +544,12 @@ processed are minified using L<CSS::Minifier::XS> and
 L<JavaScript::Minifier::XS> respectively.
 
 This option is set by default - to disable it specify C<--no-minify>
+
+=item B<--localstatic>
+
+Makes the static files (CSS, images etc), local for each version of
+the documentation. This is more suitable for packaged HTML
+documentation.
 
 =back
 
