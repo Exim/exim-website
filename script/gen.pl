@@ -413,7 +413,7 @@ sub old_docs_versions {
         foreach ( glob("$opt{docroot}/exim-html-*") ) {
             push @versions, $1 if /-(\d+(?:\.\d+)?)$/ && $1 < $opt{latest} && -d $_;
         }
-        $cache{old_docs_versions} = [ reverse sort { $a <=> $b } @versions ];
+        $cache{old_docs_versions} = [ reverse sort { $a cmp $b } @versions ];
     }
     return @{ $cache{old_docs_versions} };
 }
