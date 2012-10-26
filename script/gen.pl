@@ -505,13 +505,12 @@ Display man page
 
 =item B<--spec> I<file...>
 
-List of files that make up the specification documentation
-docbook/XML source files.
+List of files that make up the specification documentation docbook/XML source
+files.
 
 =item B<--filter> I<file...>
 
-List of files that make up the filter documentation docbook/XML
-source files.
+List of files that make up the filter documentation docbook/XML source files.
 
 =item B<--web>
 
@@ -519,8 +518,8 @@ Generate the website from the template files.
 
 =item B<--latest> I<version>
 
-Specify the current exim version. This is used to create links to
-the current documentation.
+Specify the current exim version. This is used to create links to the current
+documentation.
 
 This option is I<required>
 
@@ -532,24 +531,23 @@ This option is I<required>
 
 =item B<--docroot> I<directory>
 
-Specify the directory that the output should be generated into.
-This is the website C<docroot> directory.
+Specify the directory that the output should be generated into. This is the
+website C<docroot> directory.
 
 This option is I<required>
 
 =item B<--minify>
 
-If this option is set then both the CSS and Javascript files
-processed are minified using L<CSS::Minifier::XS> and
-L<JavaScript::Minifier::XS> respectively.
+If this option is set then both the CSS and Javascript files processed are
+minified using L<CSS::Minifier::XS> and L<JavaScript::Minifier::XS>
+respectively.
 
 This option is set by default - to disable it specify C<--no-minify>
 
 =item B<--localstatic>
 
-Makes the static files (CSS, images etc), local for each version of
-the documentation. This is more suitable for packaged HTML
-documentation.
+Makes the static files (CSS, images etc), local for each version of the
+documentation. This is more suitable for packaged HTML documentation.
 
 =back
 
@@ -571,8 +569,7 @@ Generates the exim website and HTML documentation.
 
 Mike Cardwell
 
-Nigel Metheringham <nigel@exim.org> - mostly broke the framework
-Mike produced.
+Nigel Metheringham <nigel@exim.org> - mostly broke the framework Mike produced.
 
 =head1 COPYRIGHT
 
