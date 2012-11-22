@@ -17,7 +17,7 @@
 <author><firstname>Philip</firstname><surname>Hazel</surname></author>
 <authorinitials>PH</authorinitials>
 <revhistory><revision>
-  <revnumber>4.80</revnumber>
+  <revnumber>4.80.1</revnumber>
   <date>17 May 2012</date>
   <authorinitials>PH</authorinitials>
 </revision></revhistory>
@@ -28,7 +28,7 @@
 <para>
 This document describes the user interfaces to Exim&#x2019;s in-built mail filtering
 facilities, and is copyright &copy; University of Cambridge 2007. It
-corresponds to Exim version 4.80.
+corresponds to Exim version 4.80.1.
 </para>
 <section id="SEC00">
 <title>Introduction</title>
