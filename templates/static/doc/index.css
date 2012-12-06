@@ -48,7 +48,7 @@
 
 #chapters.expandable li.chapter .button {
 	display:			block;
-	background-image:		url('../../../../doc/plus-12x12.png');
+	background-image:		url('../../../../static/doc/plus-12x12.png');
 }
 
 #chapters.expandable li.chapter span.chapter_title.nosub {
@@ -60,7 +60,7 @@
 }
 
 #chapters.expandable li.chapter.open .button {
-	background-image:		url('../../../../doc/minus-12x12.png');
+	background-image:		url('../../../../static/doc/minus-12x12.png');
 }
 
 #chapters.expandable li.chapter.open ul.sections {

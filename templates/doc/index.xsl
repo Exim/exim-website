@@ -42,8 +42,8 @@
             <xsl:apply-templates select="bookinfo"/>
          </div>
          <div id="options" class="hidden">
-            <img src="{$docroot}/doc/plus-12x12.png"  width="12" height="12" class="expand"/>
-            <img src="{$docroot}/doc/minus-12x12.png" width="12" height="12" class="collapse"/>
+            <img src="{$staticroot}/doc/plus-12x12.png"  width="12" height="12" class="expand"/>
+            <img src="{$staticroot}/doc/minus-12x12.png" width="12" height="12" class="collapse"/>
 	    <xsl:text>Expand/Collapse all Chapters</xsl:text>
          </div>
          <div id="index">
