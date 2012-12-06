@@ -60,7 +60,7 @@
 
             <!-- Chapter Title -->
             <h2 id="{@id}" class="{@class}">
-               <a href="{toc_url}">
+               <a href="{this_url}">
                   <xsl:value-of select="concat('Chapter ',chapter_id,' - ',title)"/>
                </a>
             </h2>
@@ -72,7 +72,7 @@
 
          <!-- Navigation -->
             <a class="previous_page" href="{prev_url}"><![CDATA[<-previous]]></a>
-            <a class="toc_page"      href="{prev_url}"><![CDATA[Table of Contents]]></a>
+            <a class="toc_page"      href="{toc_url}"><![CDATA[Table of Contents]]></a>
             <xsl:if test="next_url">
                <a class="next_page"  href="{next_url}"><![CDATA[next->]]></a>
             </xsl:if>

@@ -1,3 +1,19 @@
+// Rewrite chapter urls using the canonical name. e.g ch01.html becomes introduction.html
+(function ($) {
+    if (document.location.pathname.match(/\/ch\d+\.html$/)) {
+        var url = document.location.href;
+        var canonical = $('link[rel="canonical"]').attr('href');
+        if (canonical) {
+            canonical = canonical.replace(/^[^#]+(\/[^\/#]+).*/,'$1');
+            url = url.replace(/\/ch\d+\.html/, canonical);
+            if ("history" in window && "replaceState" in window.history)
+                window.history.replaceState("", document.title, url);
+            else
+                document.location.href = url;
+        }
+    }
+})(jQuery);
+
 // Warnings about reading old version of documentation
 (function ($) {
     if( $.grep( document.cookie.split(/\s*;\s*/), function(a){return a === 'old_version_warning_removed=true' ? true : false }).length === 0 ){
