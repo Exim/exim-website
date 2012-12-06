@@ -32,7 +32,7 @@
       <xsl:variable name="html.body.outer.append">
          <div id="toc">
             <ul class="hidden"/>
-            <img src="${staticroot}/doc/contents.png" width="16" height="155"/>
+            <img src="{$staticroot}/doc/contents.png" width="16" height="155"/>
          </div>
       </xsl:variable>
 
