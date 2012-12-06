@@ -49,9 +49,8 @@ body.no-js #old_version_warning span.closebar {
 
 .toc_page {
   position:     absolute;
-  right:        13em;
-  left:         13em;
-  text-align:   center;
+  width:	10em;
+  left:         45%;
 }
 
 #chapter {

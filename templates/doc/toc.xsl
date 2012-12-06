@@ -20,14 +20,7 @@
 
          <!-- Calculate the URL to the chapter. Store in $chapter_url -->
             <xsl:variable name="chapter_url">
-               <xsl:choose>
-                  <xsl:when test="position()&lt;10">
-                     <xsl:value-of select="concat(/book/prepend_chapter,'ch',0,position(),'.html')"/>
-                  </xsl:when>
-                  <xsl:otherwise>
-                     <xsl:value-of select="concat(/book/prepend_chapter,'ch',position(),'.html')"/>
-                  </xsl:otherwise>
-               </xsl:choose>
+               <xsl:value-of select="concat(/book/prepend_chapter,'ch-',title_uri,'.html')"/>
             </xsl:variable>
 
          <!-- Chapter info -->
