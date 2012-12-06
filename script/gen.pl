@@ -179,10 +179,16 @@ sub do_doc {
     ## Generate the chapters
     my $counter = 0;
     my @chapters = map { $_->cloneNode(1) } $xml->findnodes('/book/chapter');
+    my( $chapter_title, $chapter_title_prev, $chapter_title_next );
     foreach my $chapter (@chapters) {
 
         ## Add a <chapter_id>N</chapter_id> node for the stylesheet to use
         $chapter->appendTextChild( 'chapter_id', ++$counter );
+
+        ## Get the current and surrounding chapter titles
+        $chapter_title_prev = $chapter_title;
+        $chapter_title      = $chapter_title_next || $chapter->findvalue('title_uri');
+        $chapter_title_next = $chapters[$counter]->findvalue('title_uri') if $counter < int(@chapters);
 
         ## Add previous/next/canonical urls for nav
         {
@@ -191,23 +197,24 @@ sub do_doc {
                 ? $type eq 'filter'
                         ? 'filter.html'
                         : 'index.html'
-                : sprintf( '%sch%02d.html', $prepend_chapter, $counter - 1 ) );
-            $chapter->appendTextChild( 'next_url', sprintf( '%sch%02d.html', $prepend_chapter, $counter + 1 ) )
+                : sprintf( '%sch-%s.html', $prepend_chapter, $chapter_title_prev ) );
+            $chapter->appendTextChild( 'this_url', sprintf( '%sch-%s.html', $prepend_chapter, $chapter_title ) );
+            $chapter->appendTextChild( 'next_url', sprintf( '%sch-%s.html', $prepend_chapter, $chapter_title_next ) )
                 unless int(@chapters) == $counter;
             $chapter->appendTextChild( 'toc_url', ( $type eq 'filter' ? 'filter' : 'index' ) . '.html' );
             $chapter->appendTextChild(
                 'canonical_url',
                 sprintf(
-                    'http://www.exim.org/exim-html-current/doc/html/spec_html/%sch%02d.html',
-                    $prepend_chapter, $counter
+                    'http://www.exim.org/exim-html-current/doc/html/spec_html/%sch-%s.html',
+                    $prepend_chapter, $chapter_title
                 )
             );
             if ( $version ne $opt{latest} ) {
                 $chapter->appendTextChild(
                     'current_url',
                     sprintf(
-                        '../../../../exim-html-current/doc/html/spec_html/%sch%02d.html',
-                        $prepend_chapter, $counter
+                        '../../../../exim-html-current/doc/html/spec_html/%sch-%s.html',
+                        $prepend_chapter, $chapter_title
                     )
                 );
             }
@@ -219,9 +226,15 @@ sub do_doc {
 
         ## Transform the chapter into html
         {
-            my $path = sprintf( 'exim-html-%s/doc/html/spec_html/%sch%02d.html', $version, $prepend_chapter, $counter );
-            print "Generating  : docroot:/$path\n" if ( $opt{verbose} );
-            transform( $doc, "$opt{tmpl}/doc/chapter.xsl", "$opt{docroot}/$path", $staticroot );
+            my $real_path = sprintf( 'exim-html-%s/doc/html/spec_html/%sch-%s.html', $version, $prepend_chapter, $chapter_title );
+            my $link_path = sprintf( 'exim-html-%s/doc/html/spec_html/%sch%02d.html',  $version, $prepend_chapter, $counter );
+            print "Generating  : docroot:/$real_path\n" if ( $opt{verbose} );
+            transform( $doc, "$opt{tmpl}/doc/chapter.xsl", "$opt{docroot}/$real_path", $staticroot );
+            print "Symlinking  : docroot:/$link_path to docroot:$real_path\n" if ( $opt{verbose} );
+            if ( -f "$opt{docroot}/$link_path" ) {
+               unlink("$opt{docroot}/$link_path") or die "failed removing $opt{docroot}/$link_path: $!";
+            }
+            symlink( "$opt{docroot}/$real_path", "$opt{docroot}/$link_path" ) || die "symlink to $opt{docroot}/$link_path failed: $!";
         }
     }
 }
@@ -247,6 +260,9 @@ sub xref_fixup {
             $chapter->setAttribute( 'id', $chapter_id );
         }
         my $chapter_title = $chapter->findvalue('title');
+
+        ## Set title_uri so we can use eg ch-introduction.html instead of ch01.html
+        $chapter->appendTextChild( 'title_uri', title_to_uri($chapter_title) );
 
         $index{$chapter_id} = { chapter_id => $chapter_counter, chapter_title => $chapter_title };
 
@@ -283,7 +299,7 @@ sub xref_fixup {
             $xref->setAttribute( 'section_title', $index{$linkend}{'section_title'} )
                 if ( $index{$linkend}{'section_title'} );
             $xref->setAttribute( 'url',
-                sprintf( '%sch%02d.html', $prepend_chapter, $index{$linkend}{'chapter_id'} )
+                sprintf( '%sch-%s.html', $prepend_chapter, title_to_uri($index{$linkend}{'chapter_title'}) )
                     . ( $index{$linkend}{'section_id'} ? '#' . $linkend : '' ) );
         }
     }
@@ -319,6 +335,8 @@ sub build_indexes {
         $chapter->setAttribute( 'id', join( '_', 'index', $role ) );
         $chapter->setAttribute( 'class', 'index' );
         $chapter->appendTextChild( 'title', ( ucfirst($role) . ' Index' ) );
+        $chapter->appendTextChild( 'title_uri', title_to_uri(ucfirst($role) . ' Index') );
+
         foreach my $first ( sort { $a cmp $b } keys %{ $index_hash->{$role} } ) {
             my $section = XML::LibXML::Element->new('section');
             my $list    = XML::LibXML::Element->new('variablelist');
@@ -403,6 +421,15 @@ sub transform {
     open my $out, '>', $out_path or die "Unable to write $out_path - $!";
     print $out $stylesheet->output_as_bytes($doc);
     close $out;
+}
+
+# ------------------------------------------------------------------
+## Takes a chapter title and fixes it up so it is suitable for use in a URI
+sub title_to_uri {
+    my $title = lc(shift);
+    $title =~ s/[^a-z0-9\s]+//gi; # Only allow spaces, numbers and letters
+    $title =~ s/\s+/_/g;          # Replace spaces with underscores so URLs are easier to copy about
+    return $title;
 }
 
 # ------------------------------------------------------------------
