@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use CSS::Minifier::XS 0.07;
+use File::Basename;
 use File::Copy;
 use File::Find;
 use File::Path qw(make_path);
@@ -230,11 +231,14 @@ sub do_doc {
             my $link_path = sprintf( 'exim-html-%s/doc/html/spec_html/%sch%02d.html',  $version, $prepend_chapter, $counter );
             print "Generating  : docroot:/$real_path\n" if ( $opt{verbose} );
             transform( $doc, "$opt{tmpl}/doc/chapter.xsl", "$opt{docroot}/$real_path", $staticroot );
-            print "Symlinking  : docroot:/$link_path to docroot:$real_path\n" if ( $opt{verbose} );
+            # Making a relative symlink to a file in the same directory.
+            # Extract just the filename portion of $real_path.
+            my $real_file = basename($real_path);
+            print "Symlinking  : docroot:/$link_path to $real_file\n" if ( $opt{verbose} );
             if ( -f "$opt{docroot}/$link_path" ) {
                unlink("$opt{docroot}/$link_path") or die "failed removing $opt{docroot}/$link_path: $!";
             }
-            symlink( "$opt{docroot}/$real_path", "$opt{docroot}/$link_path" ) || die "symlink to $opt{docroot}/$link_path failed: $!";
+            symlink( "$real_file", "$opt{docroot}/$link_path" ) || die "symlink to $opt{docroot}/$link_path failed: $!";
         }
     }
 }
