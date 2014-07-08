@@ -475,7 +475,7 @@ sub parse_arguments {
     ## --spec and --filter lists
     foreach my $set (qw[spec filter]) {
         $opt{$set} =
-            [ map { my $f = File::Spec->rel2abs($_); error_help( 1, 'No such file: ' . $_ ) unless -f $f; $f }
+            [ map { my $f = File::Spec->rel2abs($_); error_help( 'No such file: ' . $_ ) unless -f $f; $f }
                 @{ $opt{$set} } ];
     }
     ## --latest
