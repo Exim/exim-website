@@ -37,8 +37,6 @@
 			<!-- General Doc Info -->
 				<p>Exim has a set of documentation released with it. A text file of the main documentation is released as part of the Exim tar archive. Additionally, postscript and texinfo forms of the documentation are available in separate tar archives on the ftp sites. There is also a <a href="http://www.uit.co.uk/exim-book/">book</a>.</p>
 
-				<p>New user documentation can be found at the <a href="http://www.exim-new-users.co.uk/">Exim New Users site</a></p>
-
 				<p>User supported documentation, FAQs and hints can be found in the <a href="http://wiki.exim.org/">wiki</a>.</p>
 
 				<p>There are 3 main sets of documentation for Exim, all of which are also available below in html form.</p>
