@@ -36,7 +36,7 @@ do_static() if ( $opt{web} or !$opt{localstatic} );    # need this for all other
 print "Symlinking exim-html-current to exim-html-$opt{latest}\n" if ( $opt{verbose} );
 unlink("$opt{docroot}/exim-html-current") if ( -l "$opt{docroot}/exim-html-current" );
 symlink( "exim-html-$opt{latest}", "$opt{docroot}/exim-html-current" )
-    || die "symlink to $opt{docroot}/exim-html-current failed";
+    || warn "symlink to $opt{docroot}/exim-html-current failed";
 
 # ------------------------------------------------------------------
 ## Generate the website files
