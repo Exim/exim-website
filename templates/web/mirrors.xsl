@@ -49,6 +49,16 @@
 
             <p>If you are interested in running a mirror for exim, please look at <a href="howto/mirroring.html">Mirroring The Exim Website</a></p>
 
-		</xsl:template>
+
+	    <h3>Exim Git Repositories</h3>
+
+	    <p>If you prefer tracking our commits to the source tree directly via Git:
+	    <ul>
+		<li> Main Git Repository: <code>git://git.exim.org/exim.git</code></li>
+		<li> Mirror at GitHub <a href="https://github.com/Exim/exim.git">https://github.com/Exim/exim.git</a></li>
+	    </ul>
+	    </p>
+
+	    </xsl:template>
 
 </xsl:stylesheet>
