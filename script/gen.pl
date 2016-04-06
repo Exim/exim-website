@@ -33,10 +33,12 @@ do_web() if ( $opt{web} );
 do_static() if ( $opt{web} or !$opt{localstatic} );    # need this for all other pages generated
 
 ## Add the exim-html-current symlink
-print "Symlinking exim-html-current to exim-html-$opt{latest}\n" if ( $opt{verbose} );
-unlink("$opt{docroot}/exim-html-current") if ( -l "$opt{docroot}/exim-html-current" );
-symlink( "exim-html-$opt{latest}", "$opt{docroot}/exim-html-current" )
-    || warn "symlink to $opt{docroot}/exim-html-current failed";
+foreach my $type (qw(html pdf)) {
+    print "Symlinking exim-$type-current to exim-$type-$opt{latest}\n" if ( $opt{verbose} );
+    unlink("$opt{docroot}/exim-$type-current");
+    symlink( "exim-$type-$opt{latest}", "$opt{docroot}/exim-$type-current" )
+        || warn "symlink to $opt{docroot}/exim-$type-current failed";
+}
 
 # ------------------------------------------------------------------
 ## Generate the website files
@@ -520,7 +522,7 @@ gen.pl [options]
    --tmpl PATH         Required. Path to the templates directory
    --docroot PATH      Required. Path to the website document root
    --[no-]minify       [Don't] minify CSS and Javascript
-   --localstatic       Makes the static files local to each doc ver 
+   --localstatic       Makes the static files local to each doc ver
 
 =head1 OPTIONS
 
