@@ -51,8 +51,6 @@
          <p id="version_info">
             <xsl:text>The current version is </xsl:text>
             <xsl:value-of select="/content/current_version"/>
-	    This is a <b>security update</b>.  Please read <a href="static/doc/CVE-2016-1531.txt">CVE-2016-1531</a>
-	    for more information.
          </p>
 
          <p id="beta_version_info">
