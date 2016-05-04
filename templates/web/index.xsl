@@ -64,7 +64,7 @@
 					<img src="i/exim-book.png" width="74" height="100"/>
 				</a>
 				<xsl:text>You may wish to purchase </xsl:text>
-				<a href="http://www.uit.co.uk/exim-book">The Exim SMTP Mail Server</a>
+				<a href="https://www.uit.co.uk/the-exim-smtp-mail-server">The Exim SMTP Mail Server</a>
 				<xsl:text> book, written by the original author of Exim, </xsl:text>
 				<a href="http://en.wikipedia.org/wiki/Philip_Hazel">Philip Hazel</a>
 				<xsl:text>.</xsl:text>
