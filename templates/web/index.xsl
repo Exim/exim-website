@@ -53,6 +53,10 @@
             <xsl:value-of select="/content/current_version"/>
          </p>
 
+	 <p> We fixed <a href="static/doc/CVE-2016-9963.txt">CVE-2016-9963</a> right now, you are
+	 urged to upgrade to 4.88 or to 4.87.1, available from the known download sites.
+	 </p>
+
          <p id="beta_version_info">
             <xsl:text>There may be beta versions available from the ftp sites in the Testing directory. Many people are using these without problems, but they are not recommended unless you are willing to work with beta software.</xsl:text>
          </p>
