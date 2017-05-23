@@ -55,6 +55,8 @@
                      <li>Alan Williams</li>
                      <li>David Woodhouse</li>
                      <li>Graeme Fowler</li>
+                     <li>Heiko Schlittermann</li>
+                     <li>Jeremy Harris</li>
                      <li>John Jetmore</li>
                      <li>Marc Haber</li>
                      <li>Mike Cardwell</li>
@@ -62,6 +64,7 @@
                      <li>Peter Bowyer</li>
                      <li>Phil Pennock</li>
                      <li>Tom Kistner</li>
+                     <li>Tony Finch</li>
                      <li>Tony Sheen</li>
                   </ul>
                </li>
