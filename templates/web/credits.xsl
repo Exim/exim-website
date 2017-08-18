@@ -55,8 +55,8 @@
                      <li>Alan Williams</li>
                      <li>David Woodhouse</li>
                      <li>Graeme Fowler</li>
-                     <li>Heiko Schlittermann</li>
-                     <li>Jeremy Harris</li>
+                     <li><strong>Heiko Schlittermann</strong></li>
+                     <li><strong>Jeremy Harris</strong></li>
                      <li>John Jetmore</li>
                      <li>Marc Haber</li>
                      <li>Mike Cardwell</li>
