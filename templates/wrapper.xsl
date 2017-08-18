@@ -102,9 +102,8 @@
 
                          <div id="footer">
                             <xsl:text>Website design by </xsl:text>
-                            <a href="https://grepular.com/">Mike Cardwell</a>
-                            <xsl:text>, of </xsl:text>
-                            <a href="https://cardwellit.com/">Cardwell IT Ltd.</a>
+                            <a href="https://www.grepular.com/">Mike Cardwell</a>
+                            <xsl:text>.</xsl:text>
                          </div>
 
                       <!-- Side Bars -->

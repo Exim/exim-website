@@ -32,7 +32,7 @@
                   <p>Built/maintains the website.</p>
                </li>
                <li>
-                  <a href="https://grepular.com/">Mike Cardwell</a>, of <a href="https://cardwellit.com/">Cardwell IT Ltd.</a>
+                  <a href="https://www.grepular.com/">Mike Cardwell</a>
                   <p>Redesigned and built the current layout/style of the website, in 2010.</p>
                </li>
                <li>
