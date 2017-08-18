@@ -17,7 +17,7 @@
 			<link rel="stylesheet" type="text/css" href="{$staticroot}/css/index.css"/>
 
 	        <!-- Canonical -->
-                        <link rel="canonical" href="http://www.exim.org/"/>
+                        <link rel="canonical" href="https://www.exim.org/"/>
 
 	</xsl:variable>
  
@@ -28,17 +28,17 @@
 
                 <!-- Summary -->
 			<p id="summary">
-				<a href="http://www.exim.org/">
+				<a href="https://www.exim.org/">
 					<img src="i/exim-blue-ld-87x65.png" alt="Exim Logo" width="87" height="65"/>
 				</a>
 				<xsl:text>Exim is a message transfer agent (MTA) developed at the </xsl:text>
-				<a href="http://www.cam.ac.uk/" title="University of Cambridge Home page">University of Cambridge</a>
+				<a href="https://www.cam.ac.uk/" title="University of Cambridge Home page">University of Cambridge</a>
 				<xsl:text> for use on Unix systems connected to the Internet. It is freely available under the terms of the </xsl:text>
-				<a href="http://www.gnu.org/licenses/gpl.html" title="GPL Information">GNU General Public Licence</a>
+				<a href="https://www.gnu.org/licenses/gpl.html" title="GPL Information">GNU General Public Licence</a>
 				<xsl:text>. In style it is similar to </xsl:text>
-				<a href="http://freshmeat.net/projects/smail/" rel="nofollow">Smail 3</a>
+				<a href="http://freecode.com/projects/smail/" rel="nofollow">Smail 3</a>
 				<xsl:text>, but its facilities are more general. There is a great deal of flexibility in the way mail can be routed, and there are extensive facilities for checking incoming mail. Exim can be installed in place of </xsl:text>
-				<a href="http://www.sendmail.org/" title="Sendmail home page" rel="nofollow">Sendmail</a>
+				<a href="https://www.proofpoint.com/us/sendmail-open-source" title="Sendmail home page" rel="nofollow">Sendmail</a>
 				<xsl:text>, although the configuration of Exim is quite different.</xsl:text>
 			</p>
 
@@ -70,7 +70,7 @@
 				<xsl:text>You may wish to purchase </xsl:text>
 				<a href="https://www.uit.co.uk/the-exim-smtp-mail-server">The Exim SMTP Mail Server</a>
 				<xsl:text> book, written by the original author of Exim, </xsl:text>
-				<a href="http://en.wikipedia.org/wiki/Philip_Hazel">Philip Hazel</a>
+				<a href="https://en.wikipedia.org/wiki/Philip_Hazel">Philip Hazel</a>
 				<xsl:text>.</xsl:text>
 			</p>
 

@@ -13,7 +13,7 @@
 
 	<!-- Canonical -->
 		<xsl:variable name="html.head.append">
-			<link rel="canonical" href="http://www.exim.org/credits.html"/>
+			<link rel="canonical" href="https://www.exim.org/credits.html"/>
 		</xsl:variable>
 
 	<!-- CONTENT -->
@@ -32,11 +32,11 @@
                   <p>Built/maintains the website.</p>
                </li>
                <li>
-                  <a href="https://grepular.com/">Mike Cardwell</a>, of <a href="http://cardwellit.com/">Cardwell IT Ltd.</a>
+                  <a href="https://grepular.com/">Mike Cardwell</a>, of <a href="https://cardwellit.com/">Cardwell IT Ltd.</a>
                   <p>Redesigned and built the current layout/style of the website, in 2010.</p>
                </li>
                <li>
-                  <xsl:text>Jennifer Greenley, of </xsl:text><a href="http://www.sharpblue.com/">Sharpblue</a>
+                  <xsl:text>Jennifer Greenley, of </xsl:text><a href="https://sharpblue.com/">Sharpblue</a>
                   <p>Designed the new Exim logo, in 2002.</p>
                </li>
             </ul>

@@ -25,7 +25,7 @@
             <head>
                <link rel="stylesheet" type="text/css" href="{$staticroot}/css/common.css"/>
 
-               <meta name="author"      content="The Exim Project. &lt;http://www.exim.org/&gt;"/>
+               <meta name="author"      content="The Exim Project. &lt;https://www.exim.org/&gt;"/>
                <meta name="copyright"   content="Copyright ©1995-2012 The Exim Project. All rights reserved"/>
                <meta name="description" content="{$html.head.description}"/>
                <meta name="keywords"    content="{$html.head.keywords}"/>
@@ -63,7 +63,7 @@
                             <li> <a href="{$docroot}/docs.html">Documentation</a> </li>
                             <li> <a href="{$docroot}/maillist.html">Mailing Lists</a> </li>
                             <li> <a href="http://wiki.exim.org/">Wiki</a> </li>
-                            <li> <a href="http://www.exim.org/bugzilla/">Bugs</a> </li>
+                            <li> <a href="https://bugs.exim.org/">Bugs</a> </li>
                             <li> <a href="{$docroot}/credits.html">Credits</a> </li>
 
                             <li class="img">
@@ -104,7 +104,7 @@
                             <xsl:text>Website design by </xsl:text>
                             <a href="https://grepular.com/">Mike Cardwell</a>
                             <xsl:text>, of </xsl:text>
-                            <a href="http://cardwellit.com/">Cardwell IT Ltd.</a>
+                            <a href="https://cardwellit.com/">Cardwell IT Ltd.</a>
                          </div>
 
                       <!-- Side Bars -->

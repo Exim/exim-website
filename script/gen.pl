@@ -16,7 +16,7 @@ use Pod::Usage;
 use XML::LibXML;
 use XML::LibXSLT;
 
-my $canonical_url = 'http://www.exim.org/';
+my $canonical_url = 'https://www.exim.org/';
 
 ## Parse arguments
 my %opt = parse_arguments();
@@ -208,7 +208,7 @@ sub do_doc {
             $chapter->appendTextChild(
                 'canonical_url',
                 sprintf(
-                    'http://www.exim.org/exim-html-current/doc/html/spec_html/%sch-%s.html',
+                    'https://www.exim.org/exim-html-current/doc/html/spec_html/%sch-%s.html',
                     $prepend_chapter, $chapter_title
                 )
             );

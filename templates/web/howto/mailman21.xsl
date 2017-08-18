@@ -17,7 +17,7 @@
          <link rel="stylesheet" type="text/css" href="mailman21.css"/>
 
       <!-- Canonical -->
-         <link rel="canonical" href="http://www.exim.org/howto/mailman21.html"/>
+         <link rel="canonical" href="https://www.exim.org/howto/mailman21.html"/>
 
    </xsl:variable>
  
@@ -246,9 +246,9 @@ SMTP_MAX_SESSIONS_PER_CONNECTION = 30</pre>
 
          <h4><a href="#index" id="verpmm">VERP within Mailman</a></h4>
 
-         <p><a href="http://cr.yp.to/proto/verp.txt">VERP</a> (Variable Envelope Return Paths) encodes the (original) receipient address in the sender address.  The reason for doing this is that it means bounces are sent to an address which has the original recipient address encoded in it - meaning you know which recipient address caused the bounce.  This makes automatic bounce handling very effective - the normal method of parsing the bouncing address out of the bounce message is very prone to failure, especially in the case of foreign MTAs which use different addressing standards, or where mail forwarding is involved.</p>
+         <p><a href="https://cr.yp.to/proto/verp.txt">VERP</a> (Variable Envelope Return Paths) encodes the (original) receipient address in the sender address.  The reason for doing this is that it means bounces are sent to an address which has the original recipient address encoded in it - meaning you know which recipient address caused the bounce.  This makes automatic bounce handling very effective - the normal method of parsing the bouncing address out of the bounce message is very prone to failure, especially in the case of foreign MTAs which use different addressing standards, or where mail forwarding is involved.</p>
 
-         <p>VERP will send one email, with a separate envelope sender (return path), for each of your subscribers - this means that it will generate more traffic since you cannot bundle up deliveries together.  An <a href="http://wiki.list.org/display/DOC/So+what+is+this+VERP+stuff">analysis of the costs of VERP</a> can be found in the <a href="http://wiki.list.org/">Mailman WIKI</a>.</p>
+         <p>VERP will send one email, with a separate envelope sender (return path), for each of your subscribers - this means that it will generate more traffic since you cannot bundle up deliveries together.  An <a href="https://wiki.list.org/display/DOC/So+what+is+this+VERP+stuff">analysis of the costs of VERP</a> can be found in the <a href="https://wiki.list.org/">Mailman WIKI</a>.</p>
 
          <p>VERP settings within Mailman are done on a per-installation basis - ie they affect all the lists within the installation. To configure VERP within Mailman read the information in ~mailman/Mailman/Default.py for the options that start with VERP.  In a nutshell, all you need to do to enable VERP with Exim is to add these lines to ~mailman/Mailman/mm_cfg.py:</p>
 
@@ -350,7 +350,7 @@ VERP_DELIVERY_INTERVAL       = 0</pre>
 
          <p>I would recommend that mailing lists now scan for both spam and viruses on incoming mail - this is due to the potential for a compromised windows machine belonging to a subscriber managing to distribute unwanted content via the list.  This causes problems not only to the list reputation, but also to the list manager who will get many many bounces from subscribers who do content scanning on their own incoming mail.</p>
 
-         <p>The best way to do this is using the <a href="http://duncanthrax.net/exiscan-acl/">exiscan</a> extension along with a virus scanner such as <a href="http://duncanthrax.net/exiscan-acl/">clam-av</a> and a spam content scanner such as <a href="http://www.spamassassin.org/">SpamAssassin</a>. Configuring these is beyond the scope of this document, however Tim Jackson has a very good set of <a href="http://www.timj.co.uk/linux/Exim-SpamAndVirusScanning.pdf">PDF documentation</a> on integrating these.</p>
+         <p>The best way to do this is using the <a href="https://duncanthrax.net/exiscan-acl/">exiscan</a> extension along with a virus scanner such as <a href="https://duncanthrax.net/exiscan-acl/">clam-av</a> and a spam content scanner such as <a href="https://spamassassin.apache.org/">SpamAssassin</a>. Configuring these is beyond the scope of this document, however Tim Jackson has a very good set of <a href="http://www.timj.co.uk/linux/Exim-SpamAndVirusScanning.pdf">PDF documentation</a> on integrating these.</p>
 
          <p>One thing to note is that if you add full SpamAssassin headers onto list messages this bulks up the messages significantly. These headers are also available to list subscribers, which might make it easier for someone malicious to work out how to evade your spam scanning strategy.  I would suggest that Spam headers are not added for Mailman incoming mail, or minimal (short) headers added, or that they are stripped somewhere.  However having minimal headers on means that you can, for example, moderate all messages which have a given spam rating (as well as bouncing messages with a very high rating).</p>
 

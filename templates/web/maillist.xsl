@@ -13,7 +13,7 @@
 
         <!-- Canonical -->
                 <xsl:variable name="html.head.append">
-                        <link rel="canonical" href="http://www.exim.org/maillist.html"/>
+                        <link rel="canonical" href="https://www.exim.org/maillist.html"/>
                 </xsl:variable>
 
 	<!-- CONTENT -->

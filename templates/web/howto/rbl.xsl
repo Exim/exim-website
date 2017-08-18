@@ -13,7 +13,7 @@
 
 	<!-- Canonical -->
 		<xsl:variable name="html.head.append">
-                        <link rel="canonical" href="http://www.exim.org/howto/rbl.html"/>
+                        <link rel="canonical" href="https://www.exim.org/howto/rbl.html"/>
 		</xsl:variable>
  
 	<!-- CONTENT -->
@@ -23,7 +23,7 @@
 				<xsl:value-of select="$html.head.title"/>
 			</h2>
 
-			<p>The MAPS (Mail Abuse Protection System) RBL (Realtime Blackhole List) was the first application of a way of using a DNS list as a means of identifying hosts that have been associated with the sending of spam mail. A full description of the service and the technology and ethics behind it can be found at <a href="http://www.mail-abuse.org/rbl/">http://www.mail-abuse.org/rbl/</a> along with more general mail policy information at <a href="http://www.mail-abuse.org/">http://www.mail-abuse.org/</a>.</p>
+			<p>The MAPS (Mail Abuse Protection System) RBL (Realtime Blackhole List) was the first application of a way of using a DNS list as a means of identifying hosts that have been associated with the sending of spam mail. A full description of the service and the technology and ethics behind it could once be found at <a href="http://www.mail-abuse.org/rbl/">http://www.mail-abuse.org/rbl/</a> along with more general mail policy information at <a href="http://www.mail-abuse.org/">http://www.mail-abuse.org/</a>.</p>
 
 			<p>In the few years since MAPS started operating, other similar services although with different aims, procedures and reliabilities have been introduced - MAPS itself has a number of these (ie MAPS/DUL which maintains lists of dial up modems). At this point in time there are many 10s of services with varying charters - lists of these can be found at <a href="http://relays.osirusoft.com/">http://relays.osirusoft.com/</a> and <a href="http://spamblock.outblaze.com/spamchk.html">http://spamblock.outblaze.com/spamchk.html</a>. The services are now normally referred to as a DNS Block List (DNSBL), rather than RBLs, however you will find that earlier Exim documentation (ie for version 3.x) will use the older term.</p>
 

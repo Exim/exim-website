@@ -13,7 +13,7 @@
 
    <!-- Canonical -->
    <xsl:variable name="html.head.append">
-      <link rel="canonical" href="http://www.exim.org/howto/mirroring.html"/>
+      <link rel="canonical" href="https://www.exim.org/howto/mirroring.html"/>
    </xsl:variable>
  
    <!-- CONTENT -->
@@ -59,10 +59,10 @@
 
       <h3>Tell people about it</h3>
 
-      <p><a href="http://bugs.exim.org/enter_bug.cgi?product=Infrastructure&amp;component=Mirrors&amp;bug_severity=wishlist">Register
+      <p><a href="https://bugs.exim.org/enter_bug.cgi?product=Infrastructure&amp;component=Mirrors&amp;bug_severity=wishlist">Register
       a bug</a> in the Exim Bugzilla under
       Infrastructure/Mirrors so that the mirmon information can be
-      updated.  Join the <a href="http://www.exim.org/mailman/listinfo/exim-mirrors">exim-mirrors</a>
+      updated.  Join the <a href="https://www.exim.org/mailman/listinfo/exim-mirrors">exim-mirrors</a>
       list so we can tell you of any changes to mirroring practice.</p>
 
    </xsl:template>
