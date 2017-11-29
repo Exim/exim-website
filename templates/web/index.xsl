@@ -45,7 +45,8 @@
       <!-- Version Information -->
          <p id="obsolete_version_info">
 
-            <xsl:text>All versions of Exim previous to version </xsl:text><xsl:value-of select="/content/current_version"/><xsl:text> are now obsolete and everyone is very strongly recommended to upgrade to a current release. The last 3.x release was 3.36. It is obsolete and should not be used.</xsl:text>
+            <xsl:text>All versions of Exim previous to version </xsl:text><xsl:value-of select="/content/current_version"/><xsl:text> are now obsolete. elease. The last 3.x release was 3.36. It is obsolete and should not be used.</xsl:text>
+
          </p>
 
          <p id="version_info">
@@ -53,8 +54,9 @@
             <xsl:value-of select="/content/current_version"/>
          </p>
 
-	 <p> We fixed <a href="static/doc/CVE-2016-9963.txt">CVE-2016-9963</a> right now, you are
-	 urged to upgrade to 4.88 or to 4.87.1, available from the known download sites.
+	 <p> We fixed CVE-2017-16943 and CVE-2017-16944 with this release.
+	 To address these two CVEs, please update to 4.89.1 or simply disable
+	 the SMTP CHUNKING extension by using <code>chunking_advertise_hosts = </code> in the main configuration section.
 	 </p>
 
          <p id="beta_version_info">
