@@ -45,7 +45,7 @@
       <!-- Version Information -->
          <p id="obsolete_version_info">
 
-            <xsl:text>All versions of Exim previous to version </xsl:text><xsl:value-of select="/content/current_version"/><xsl:text> are now obsolete. elease. The last 3.x release was 3.36. It is obsolete and should not be used.</xsl:text>
+            <xsl:text>All versions of Exim previous to version </xsl:text><xsl:value-of select="/content/current_version"/><xsl:text> are now obsolete. The last 3.x release was 3.36. It is obsolete and should not be used.</xsl:text>
 
          </p>
 
