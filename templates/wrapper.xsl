@@ -64,6 +64,7 @@
                             <li> <a href="{$docroot}/maillist.html">Mailing Lists</a> </li>
                             <li> <a href="http://wiki.exim.org/">Wiki</a> </li>
                             <li> <a href="https://bugs.exim.org/">Bugs</a> </li>
+                            <li> <a href="{$docroot}/static/doc/security">Security</a> </li>
                             <li> <a href="{$docroot}/credits.html">Credits</a> </li>
 
                             <li class="img">
