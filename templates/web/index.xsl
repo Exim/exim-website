@@ -54,10 +54,7 @@
             <xsl:value-of select="/content/current_version"/>
          </p>
 
-	 <p> We fixed CVE-2017-16943 and CVE-2017-16944 with this release.
-	 To address these two CVEs, please update to 4.89.1 or simply disable
-	 the SMTP CHUNKING extension by using <code>chunking_advertise_hosts = </code> in the main configuration section.
-	 </p>
+	 <p>We fixed CVE-2018-6789</p>
 
          <p id="beta_version_info">
             <xsl:text>There may be beta versions available from the ftp sites in the Testing directory. Many people are using these without problems, but they are not recommended unless you are willing to work with beta software.</xsl:text>
