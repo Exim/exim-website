@@ -8,7 +8,7 @@ Directory : templates/i     - required images
 Directory : templates/howto - Howto documentation source
 File      : templates/wrapper.xsl   - The HTML wrapper. The stuff that's common across all web pages
 
-script/gen.pl does all the magic. Run it with no arguments to get a
+script/gen does all the magic. Run it with no arguments to get a
 list of options. It takes the stylesheets wrapper.xsl, and those
 inside the "web" and "doc" directories and creates a website from
 them. You also tell it where to find spec.xml and filter.xml and it
@@ -17,7 +17,7 @@ examples:
 
 ## Example 1:
 
-  script/gen.pl --latest 4.72 --web --tmpl templates --docroot /var/www/
+  script/gen --latest 4.72 --web --tmpl templates --docroot /var/www/
 
 This copies all of the files from the "templates/web" directory
 into "/var/www/". When it comes across .xsl files, it generates
@@ -27,7 +27,7 @@ it's ignored.
 
 ## Example 2:
 
-  script/gen.pl --latest 4.72 --spec docbook/*/spec.xml \
+  script/gen --latest 4.72 --spec docbook/*/spec.xml \
     --tmpl templates --docroot /var/www/
 
 If there are multiple spec.xml files in "specs/*/" for different
@@ -37,11 +37,11 @@ contains the version number it's self, so it uses that in $VERSION
 
 ## Example 3:
 
-  script/build.sh /var/www/
+  script/build /var/www/
 
 Generates everything into output directory /var/www
-Look at the script/build.sh for details - it is just a wrapper
-around build/gen.pl
+Look at the script/build for details - it is just a wrapper
+around script/gen
 
 
 All of the above examples make sure the exim-html-current symlink
@@ -56,7 +56,7 @@ If you wanted to, for example, add a new link to the navigation bar
 on all pages, you would need to re-generate *all* web pages. This
 is a drawback of having a static website without frames. You would
 only need to edit one file though, specifically wrapper.xsl. Once
-that is done, you would run gen.pl with --web, --spec and --filter,
+that is done, you would run gen with --web, --spec and --filter,
 providing the filter.xml and spec.xml files for every piece of
 online documentation.
 
