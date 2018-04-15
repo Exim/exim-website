@@ -1,0 +1,2013 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+
+<?sdop
+  foot_right_recto="&chaptertitle;"
+  foot_right_verso="&chaptertitle;"
+  table_warn_overflow="overprint"
+  toc_chapter_blanks="yes,yes"
+  toc_title="Exim's interfaces to mail filtering"
+?>
+<book>
+<bookinfo>
+<title>Exim's interfaces to mail filtering</title>
+<titleabbrev>Exim filtering</titleabbrev>
+<date>
+15 Apr 2018
+</date>
+<author><firstname>Philip</firstname><surname>Hazel</surname></author>
+<authorinitials>PH</authorinitials>
+<revhistory><revision>
+<revnumber>4.91</revnumber>
+<date>15 Apr 2018</date>
+  <authorinitials>PH</authorinitials>
+</revision></revhistory>
+<copyright><year>
+2014
+           </year><holder>University of Cambridge</holder></copyright>
+</bookinfo>
+<chapter id="CHAPforandfilt">
+<title>Forwarding and filtering in Exim</title>
+<para>
+This document describes the user interfaces to Exim&#x2019;s in-built mail filtering
+facilities, and is copyright &copy; University of Cambridge 2014. It
+corresponds to Exim version 4.91.
+</para>
+<section id="SEC00">
+<title>Introduction</title>
+<para>
+Most Unix mail transfer agents (programs that deliver mail) permit individual
+users to specify automatic forwarding of their mail, usually by placing a list
+of forwarding addresses in a file called <filename>.forward</filename> in their home
+directories. Exim extends this facility by allowing the forwarding instructions
+to be a set of rules rather than just a list of addresses, in effect providing
+<quote><filename>.forward</filename> with conditions</quote>. Operating the set of rules is called
+<emphasis>filtering</emphasis>, and the file that contains them is called a <emphasis>filter file</emphasis>.
+</para>
+<para>
+Exim supports two different kinds of filter file. An <emphasis>Exim filter</emphasis> contains
+instructions in a format that is unique to Exim. A <emphasis>Sieve filter</emphasis> contains
+instructions in the Sieve format that is defined by RFC 3028. As this is a
+standard format, Sieve filter files may already be familiar to some users.
+Sieve files should also be portable between different environments. However,
+the Exim filtering facility contains more features (such as variable
+expansion), and better integration with the host environment (such as the use
+of external processes and pipes).
+</para>
+<para>
+The choice of which kind of filter to use can be left to the end-user, provided
+that the system administrator has configured Exim appropriately for both kinds
+of filter. However, if interoperability is important, Sieve is the only
+choice.
+</para>
+<para>
+The ability to use filtering or traditional forwarding has to be enabled by the
+system administrator, and some of the individual facilities can be separately
+enabled or disabled. A local document should be provided to describe exactly
+what has been enabled. In the absence of this, consult your system
+administrator.
+</para>
+<para>
+This document describes how to use a filter file and the format of its
+contents. It is intended for use by end-users. Both Sieve filters and Exim
+filters are covered. However, for Sieve filters, only issues that relate to the
+Exim implementation are discussed, since Sieve itself is described elsewhere.
+</para>
+<para>
+The contents of traditional <filename>.forward</filename> files are not described here. They
+normally contain just a list of addresses, file names, or pipe commands,
+separated by commas or newlines, but other types of item are also available.
+The full details can be found in the chapter on the <command>redirect</command> router in the
+Exim specification, which also describes how the system administrator can set
+up and control the use of filtering.
+</para>
+</section>
+<section id="SEC01">
+<title>Filter operation</title>
+<para>
+It is important to realize that, in Exim, no deliveries are actually made while
+a filter or traditional <filename>.forward</filename> file is being processed. Running a filter
+or processing a traditional <filename>.forward</filename> file sets up future delivery
+operations, but does not carry them out.
+</para>
+<para>
+The result of filter or <filename>.forward</filename> file processing is a list of destinations
+to which a message should be delivered. The deliveries themselves take place
+later, along with all other deliveries for the message. This means that it is
+not possible to test for successful deliveries while filtering. It also means
+that any duplicate addresses that are generated are dropped, because Exim never
+delivers the same message to the same address more than once.
+</para>
+</section>
+<section id="SECTtesting">
+<title>Testing a new filter file</title>
+<para>
+Filter files, especially the more complicated ones, should always be tested, as
+it is easy to make mistakes. Exim provides a facility for preliminary testing
+of a filter file before installing it. This tests the syntax of the file and
+its basic operation, and can also be used with traditional <filename>.forward</filename> files.
+</para>
+<para>
+Because a filter can do tests on the content of messages, a test message is
+required. Suppose you have a new filter file called <filename>myfilter</filename> and a test
+message in a file called <filename>test-message</filename>. Assuming that Exim is installed with
+the conventional path name <filename>/usr/sbin/sendmail</filename> (some operating systems use
+<filename>/usr/lib/sendmail</filename>), the following command can be used:
+</para>
+<literallayout class="monospaced">
+/usr/sbin/sendmail -bf myfilter &lt;test-message
+</literallayout>
+<para>
+The <option>-bf</option> option tells Exim that the following item on the command line is
+the name of a filter file that is to be tested. There is also a <option>-bF</option> option,
+which is similar, but which is used for testing system filter files, as opposed
+to user filter files, and which is therefore of use only to the system
+administrator.
+</para>
+<para>
+The test message is supplied on the standard input. If there are no
+message-dependent tests in the filter, an empty file (<filename>/dev/null</filename>) can be
+used. A supplied message must start with header lines or the <quote>From&nbsp;</quote> message
+separator line that is found in many multi-message folder files. Note that
+blank lines at the start terminate the header lines. A warning is given if no
+header lines are read.
+</para>
+<para>
+The result of running this command, provided no errors are detected in the
+filter file, is a list of the actions that Exim would try to take if presented
+with the message for real. For example, for an Exim filter, the output
+</para>
+<literallayout class="monospaced">
+Deliver message to: gulliver@lilliput.fict.example
+Save message to: /home/lemuel/mail/archive
+</literallayout>
+<para>
+means that one copy of the message would be sent to
+<emphasis>gulliver@lilliput.fict.example</emphasis>, and another would be added to the file
+<filename>/home/lemuel/mail/archive</filename>, if all went well.
+</para>
+<para>
+The actions themselves are not attempted while testing a filter file in this
+way; there is no check, for example, that any forwarding addresses are valid.
+For an Exim filter, if you want to know why a particular action is being taken,
+add the <option>-v</option> option to the command. This causes Exim to output the results of
+any conditional tests and to indent its output according to the depth of
+nesting of <command>if</command> commands. Further additional output from a filter test can be
+generated by the <command>testprint</command> command, which is described below.
+</para>
+<para>
+When Exim is outputting a list of the actions it would take, if any text
+strings are included in the output, non-printing characters therein are
+converted to escape sequences. In particular, if any text string contains a
+newline character, this is shown as <quote>\n</quote> in the testing output.
+</para>
+<para>
+When testing a filter in this way, Exim makes up an <quote>envelope</quote> for the
+message. The recipient is by default the user running the command, and so is
+the sender, but the command can be run with the <option>-f</option> option to supply a
+different sender. For example,
+</para>
+<literallayout class="monospaced">
+/usr/sbin/sendmail -bf myfilter \
+   -f islington@never.where &lt;test-message
+</literallayout>
+<para>
+Alternatively, if the <option>-f</option> option is not used, but the first line of the
+supplied message is a <quote>From&nbsp;</quote> separator from a message folder file (not the
+same thing as a <emphasis>From:</emphasis> header line), the sender is taken from there. If
+<option>-f</option> is present, the contents of any <quote>From&nbsp;</quote> line are ignored.
+</para>
+<para>
+The <quote>return path</quote> is the same as the envelope sender, unless the message
+contains a <emphasis>Return-path:</emphasis> header, in which case it is taken from there. You
+need not worry about any of this unless you want to test out features of a
+filter file that rely on the sender address or the return path.
+</para>
+<para>
+It is possible to change the envelope recipient by specifying further options.
+The <option>-bfd</option> option changes the domain of the recipient address, while the
+<option>-bfl</option> option changes the <quote>local part</quote>, that is, the part before the @
+sign. An adviser could make use of these to test someone else&#x2019;s filter file.
+</para>
+<para>
+The <option>-bfp</option> and <option>-bfs</option> options specify the prefix or suffix for the local
+part. These are relevant only when support for multiple personal mailboxes is
+implemented; see the description in section <xref linkend="SECTmbox"/> below.
+</para>
+</section>
+<section id="SEC02">
+<title>Installing a filter file</title>
+<para>
+A filter file is normally installed under the name <filename>.forward</filename> in your home
+directory &ndash; it is distinguished from a conventional <filename>.forward</filename> file by its
+first line (described below). However, the file name is configurable, and some
+system administrators may choose to use some different name or location for
+filter files.
+</para>
+</section>
+<section id="SEC03">
+<title>Testing an installed filter file</title>
+<para>
+Testing a filter file before installation cannot find every potential problem;
+for example, it does not actually run commands to which messages are piped.
+Some <quote>live</quote> tests should therefore also be done once a filter is installed.
+</para>
+<para>
+If at all possible, test your filter file by sending messages from some other
+account. If you send a message to yourself from the filtered account, and
+delivery fails, the error message will be sent back to the same account, which
+may cause another delivery failure. It won&#x2019;t cause an infinite sequence of such
+messages, because delivery failure messages do not themselves generate further
+messages. However, it does mean that the failure won&#x2019;t be returned to you, and
+also that the postmaster will have to investigate the stuck message.
+</para>
+<para>
+If you have to test an Exim filter from the same account, a sensible precaution
+is to include the line
+</para>
+<literallayout class="monospaced">
+if error_message then finish endif
+</literallayout>
+<para>
+as the first filter command, at least while testing. This causes filtering to
+be abandoned for a delivery failure message, and since no destinations are
+generated, the message goes on to be delivered to the original address. Unless
+there is a good reason for not doing so, it is recommended that the above test
+be left in all Exim filter files. (This does not apply to Sieve files.)
+</para>
+</section>
+<section id="SEC04">
+<title>Details of filtering commands</title>
+<para>
+The filtering commands for Sieve and Exim filters are completely different in
+syntax and semantics. The Sieve mechanism is defined in RFC 3028; in the next
+chapter we describe how it is integrated into Exim. The subsequent chapter
+covers Exim filtering commands in detail.
+</para>
+</section>
+</chapter>
+
+<chapter id="CHAPsievefilter">
+<title>Sieve filter files</title>
+<para>
+The code for Sieve filtering in Exim was contributed by Michael Haardt, and
+most of the content of this chapter is taken from the notes he provided. Since
+Sieve is an extensible language, it is important to understand <quote>Sieve</quote> in
+this context as <quote>the specific implementation of Sieve for Exim</quote>.
+</para>
+<para>
+This chapter does not contain a description of Sieve, since that can be found
+in RFC 3028, which should be read in conjunction with these notes.
+</para>
+<para>
+The Exim Sieve implementation offers the core as defined by RFC 3028,
+comparison tests, the subaddress parameter, the <emphasis role="bold">copy</emphasis>, <emphasis role="bold">envelope</emphasis>,
+<emphasis role="bold">fileinto</emphasis>, <emphasis role="bold">notify</emphasis>, and <emphasis role="bold">vacation</emphasis> extensions, but not the <emphasis role="bold">reject</emphasis>
+extension. Exim does not support message delivery notifications (MDNs), so
+adding it just to the Sieve filter (as required for <emphasis role="bold">reject</emphasis>) makes little
+sense.
+</para>
+<para>
+In order for Sieve to work properly in Exim, the system administrator needs to
+make some adjustments to the Exim configuration. These are described in the
+chapter on the <command>redirect</command> router in the full Exim specification.
+</para>
+<section id="SEC05">
+<title>Recognition of Sieve filters</title>
+<para>
+A filter file is interpreted as a Sieve filter if its first line is
+</para>
+<literallayout class="monospaced">
+# Sieve filter
+</literallayout>
+<para>
+This is what distinguishes it from a conventional <filename>.forward</filename> file or an Exim
+filter file.
+</para>
+</section>
+<section id="SEC06">
+<title>Saving to specified folders</title>
+<para>
+If the system administrator has set things up as suggested in the Exim
+specification, and you use <command>keep</command> or <command>fileinto</command> to save a mail into a
+folder, absolute files are stored where specified, relative files are stored
+relative to <varname>$home</varname>, and <filename>inbox</filename> goes to the standard mailbox location.
+</para>
+</section>
+<section id="SEC07">
+<title>Strings containing header names</title>
+<para>
+RFC 3028 does not specify what happens if a string denoting a header field does
+not contain a valid header name, for example, it contains a colon. This
+implementation generates an error instead of ignoring the header field in order
+to ease script debugging, which fits in with the common picture of Sieve.
+</para>
+</section>
+<section id="SEC08">
+<title>Exists test with empty list of headers</title>
+<para>
+The <emphasis role="bold">exists</emphasis> test succeeds only if all the specified headers exist. RFC 3028
+does not explicitly specify what happens on an empty list of headers. This
+implementation evaluates that condition as true, interpreting the RFC in a
+strict sense.
+</para>
+</section>
+<section id="SEC09">
+<title>Header test with invalid MIME encoding in header</title>
+<para>
+Some MUAs process invalid base64 encoded data, generating junk. Others ignore
+junk after seeing an equal sign in base64 encoded data. RFC 2047 does not
+specify how to react in this case, other than stating that a client must not
+forbid to process a message for that reason. RFC 2045 specifies that invalid
+data should be ignored (apparently looking at end of line characters). It also
+specifies that invalid data may lead to rejecting messages containing them (and
+there it appears to talk about true encoding violations), which is a clear
+contradiction to ignoring them.
+</para>
+<para>
+RFC 3028 does not specify how to process incorrect MIME words. This
+implementation treats them literally, as it does if the word is correct but its
+character set cannot be converted to UTF-8.
+</para>
+</section>
+<section id="SEC10">
+<title>Address test for multiple addresses per header</title>
+<para>
+A header may contain multiple addresses. RFC 3028 does not explicitly specify
+how to deal with them, but since the address test checks if anything matches
+anything else, matching one address suffices to satisfy the condition. That
+makes it impossible to test if a header contains a certain set of addresses and
+no more, but it is more logical than letting the test fail if the header
+contains an additional address besides the one the test checks for.
+</para>
+</section>
+<section id="SEC11">
+<title>Semantics of keep</title>
+<para>
+The <command>keep</command> command is equivalent to
+</para>
+<literallayout class="monospaced">
+fileinto "inbox";
+</literallayout>
+<para>
+It saves the message and resets the implicit keep flag. It does not set the
+implicit keep flag; there is no command to set it once it has been reset.
+</para>
+</section>
+<section id="SEC12">
+<title>Semantics of fileinto</title>
+<para>
+RFC 3028 does not specify whether <command>fileinto</command> should try to create a mail
+folder if it does not exist. This implementation allows the sysadmin to
+configure that aspect using the <command>appendfile</command> transport options
+<option>create_directory</option>, <option>create_file</option>, and <option>file_must_exist</option>. See the
+<command>appendfile</command> transport in the Exim specification for details.
+</para>
+</section>
+<section id="SEC13">
+<title>Semantics of redirect</title>
+<para>
+Sieve scripts are supposed to be interoperable between servers, so this
+implementation does not allow mail to be redirected to unqualified addresses,
+because the domain would depend on the system being used. On systems with
+virtual mail domains, the default domain is probably not what the user expects
+it to be.
+</para>
+</section>
+<section id="SEC14">
+<title>String arguments</title>
+<para>
+There has been confusion if the string arguments to <command>require</command> are to be
+matched case-sensitively or not. This implementation matches them with the
+match type <command>:is</command> (default, see section 2.7.1 of the RFC) and the comparator
+<command>i;ascii-casemap</command> (default, see section 2.7.3 of the RFC). The RFC defines
+the command defaults clearly, so any different implementations violate RFC
+3028. The same is valid for comparator names, also specified as strings.
+</para>
+</section>
+<section id="SEC15">
+<title>Number units</title>
+<para>
+There is a mistake in RFC 3028: the suffix G denotes gibi-, not tebibyte.
+The mistake is obvious, because RFC 3028 specifies G to denote 2^30
+(which is gibi, not tebi), and that is what this implementation uses as
+the scaling factor for the suffix G.
+</para>
+</section>
+<section id="SEC16">
+<title>RFC compliance</title>
+<para>
+Exim requires the first line of a Sieve filter to be
+</para>
+<literallayout class="monospaced">
+# Sieve filter
+</literallayout>
+<para>
+Of course the RFC does not specify that line. Do not expect examples to work
+without adding it, though.
+</para>
+<para>
+RFC 3028 requires the use of CRLF to terminate a line. The rationale was that
+CRLF is universally used in network protocols to mark the end of the line. This
+implementation does not embed Sieve in a network protocol, but uses Sieve
+scripts as part of the Exim MTA. Since all parts of Exim use LF as the newline
+character, this implementation does, too, by default, though the system
+administrator may choose (at Exim compile time) to use CRLF instead.
+</para>
+<para>
+Exim violates RFC 2822, section 3.6.8, by accepting 8-bit header names, so this
+implementation repeats this violation to stay consistent with Exim. This is in
+preparation for UTF-8 data.
+</para>
+<para>
+Sieve scripts cannot contain NUL characters in strings, but mail headers could
+contain MIME encoded NUL characters, which could never be matched by Sieve
+scripts using exact comparisons. For that reason, this implementation extends
+the Sieve quoted string syntax with \0 to describe a NUL character, violating
+\0 being the same as 0 in RFC 3028. Even without using \0, the following tests
+are all true in this implementation. Implementations that use C-style strings
+will only evaluate the first test as true.
+</para>
+<literallayout class="monospaced">
+Subject: =?iso-8859-1?q?abc=00def
+
+header :contains "Subject" ["abc"]
+header :contains "Subject" ["def"]
+header :matches "Subject" ["abc?def"]
+</literallayout>
+<para>
+Note that by considering Sieve to be an MUA, RFC 2047 can be interpreted in a
+way that NUL characters truncating strings is allowed for Sieve
+implementations, although not recommended. It is further allowed to use encoded
+NUL characters in headers, but that&#x2019;s not recommended either. The above example
+shows why.
+</para>
+<para>
+RFC 3028 states that if an implementation fails to convert a character set to
+UTF-8, two strings cannot be equal if one contains octets greater than 127.
+Assuming that all unknown character sets are one-byte character sets with the
+lower 128 octets being US-ASCII is not sound, so this implementation violates
+RFC 3028 and treats such MIME words literally. That way at least something
+could be matched.
+</para>
+<para>
+The folder specified by <command>fileinto</command> must not contain the character sequence
+<quote>..</quote> to avoid security problems. RFC 3028 does not specify the syntax of
+folders apart from <command>keep</command> being equivalent to
+</para>
+<literallayout class="monospaced">
+fileinto "INBOX";
+</literallayout>
+<para>
+This implementation uses <filename>inbox</filename> instead.
+</para>
+<para>
+Sieve script errors currently cause messages to be silently filed into
+<filename>inbox</filename>.  RFC 3028 requires that the user is notified of that condition.
+This may be implemented in the future by adding a header line to mails that
+are filed into <filename>inbox</filename> due to an error in the filter.
+</para>
+</section>
+</chapter>
+
+<chapter id="CHAPeximfilter">
+<title>Exim filter files</title>
+<para>
+This chapter contains a full description of the contents of Exim filter files.
+</para>
+<section id="SEC17">
+<title>Format of Exim filter files</title>
+<para>
+Apart from leading white space, the first text in an Exim filter file must be
+</para>
+<literallayout class="monospaced">
+# Exim filter
+</literallayout>
+<para>
+This is what distinguishes it from a conventional <filename>.forward</filename> file or a Sieve
+filter file. If the file does not have this initial line (or the equivalent for
+a Sieve filter), it is treated as a conventional <filename>.forward</filename> file, both when
+delivering mail and when using the <option>-bf</option> testing mechanism. The white space
+in the line is optional, and any capitalization may be used. Further text on
+the same line is treated as a comment. For example, you could have
+</para>
+<literallayout class="monospaced">
+#   Exim filter   &lt;&lt;== do not edit or remove this line!
+</literallayout>
+<para>
+The remainder of the file is a sequence of filtering commands, which consist of
+keywords and data values. For example, in the command
+</para>
+<literallayout class="monospaced">
+deliver gulliver@lilliput.fict.example
+</literallayout>
+<para>
+the keyword is <literal>deliver</literal> and the data value is
+<literal>gulliver@lilliput.fict.example</literal>. White space or line breaks separate the
+components of a command, except in the case of conditions for the <command>if</command>
+command, where round brackets (parentheses) also act as separators. Complete
+commands are separated from each other by white space or line breaks; there are
+no special terminators. Thus, several commands may appear on one line, or one
+command may be spread over a number of lines.
+</para>
+<para>
+If the character # follows a separator anywhere in a command, everything from
+# up to the next newline is ignored. This provides a way of including comments
+in a filter file.
+</para>
+</section>
+<section id="SEC18">
+<title>Data values in filter commands</title>
+<para>
+There are two ways in which a data value can be input:
+</para>
+<itemizedlist>
+<listitem>
+<para>
+If the text contains no white space, it can be typed verbatim. However, if it
+is part of a condition, it must also be free of round brackets (parentheses),
+as these are used for grouping in conditions.
+</para>
+</listitem>
+<listitem>
+<para>
+Otherwise, text must be enclosed in double quotation marks. In this case, the
+character \ (backslash) is treated as an <quote>escape character</quote> within the
+string, causing the following character or characters to be treated specially:
+</para>
+<literallayout>
+<literal>\n</literal>   is replaced by a newline
+<literal>\r</literal>   is replaced by a carriage return
+<literal>\t</literal>   is replaced by a tab
+</literallayout>
+</listitem>
+</itemizedlist>
+<para>
+Backslash followed by up to three octal digits is replaced by the character
+specified by those digits, and <literal>\x</literal> followed by up to two hexadecimal digits
+is treated similarly. Backslash followed by any other character is replaced by
+the second character, so that in particular, <literal>\"</literal> becomes <literal>"</literal> and <literal>\\</literal>
+becomes <literal>\</literal>. A data item enclosed in double quotes can be continued onto the
+next line by ending the first line with a backslash. Any leading white space at
+the start of the continuation line is ignored.
+</para>
+<para>
+In addition to the escape character processing that occurs when strings are
+enclosed in quotes, most data values are also subject to <emphasis>string expansion</emphasis>
+(as described in the next section), in which case the characters <literal>$</literal> and
+<literal>\</literal> are also significant. This means that if a single backslash is actually
+required in such a string, and the string is also quoted, <literal>\\\\</literal> has to be
+entered.
+</para>
+<para>
+The maximum permitted length of a data string, before expansion, is 1024
+characters.
+</para>
+</section>
+<section id="SECTfilterstringexpansion">
+<title>String expansion</title>
+<para>
+Most data values are expanded before use. Expansion consists of replacing
+substrings beginning with <literal>$</literal> with other text. The full expansion facilities
+available in Exim are extensive. If you want to know everything that Exim can
+do with strings, you should consult the chapter on string expansion in the Exim
+documentation.
+</para>
+<para>
+In filter files, by far the most common use of string expansion is the
+substitution of the contents of a variable. For example, the substring
+</para>
+<literallayout class="monospaced">
+$reply_address
+</literallayout>
+<para>
+is replaced by the address to which replies to the message should be sent. If
+such a variable name is followed by a letter or digit or underscore, it must be
+enclosed in curly brackets (braces), for example,
+</para>
+<literallayout class="monospaced">
+${reply_address}
+</literallayout>
+<para>
+If a <literal>$</literal> character is actually required in an expanded string, it must be
+escaped with a backslash, and because backslash is also an escape character in
+quoted input strings, it must be doubled in that case. The following two
+examples illustrate two different ways of testing for a <literal>$</literal> character in a
+message:
+</para>
+<literallayout class="monospaced">
+if $message_body contains \$ then ...
+if $message_body contains "\\$" then ...
+</literallayout>
+<para>
+You can prevent part of a string from being expanded by enclosing it between
+two occurrences of <literal>\N</literal>. For example,
+</para>
+<literallayout class="monospaced">
+if $message_body contains \N$$$$\N then ...
+</literallayout>
+<para>
+tests for a run of four dollar characters.
+</para>
+</section>
+<section id="SEC19">
+<title>Some useful general variables</title>
+<para>
+A complete list of the available variables is given in the Exim documentation.
+This shortened list contains the ones that are most likely to be useful in
+personal filter files:
+</para>
+<para>
+<varname>$body_linecount</varname>: The number of lines in the body of the message.
+</para>
+<para>
+<varname>$body_zerocount</varname>: The number of binary zero characters in the body of the
+message.
+</para>
+<para>
+<varname>$home</varname>: In conventional configurations, this variable normally contains the
+user&#x2019;s home directory. The system administrator can, however, change this.
+</para>
+<para>
+<varname>$local_part</varname>: The part of the email address that precedes the @ sign &ndash;
+normally the user&#x2019;s login name. If support for multiple personal mailboxes is
+enabled (see section <xref linkend="SECTmbox"/> below) and a prefix or suffix for the local
+part was recognized, it is removed from the string in this variable.
+</para>
+<para>
+<varname>$local_part_prefix</varname>: If support for multiple personal mailboxes is enabled
+(see section <xref linkend="SECTmbox"/> below), and a local part prefix was recognized,
+this variable contains the prefix. Otherwise it contains an empty string.
+</para>
+<para>
+<varname>$local_part_suffix</varname>: If support for multiple personal mailboxes is enabled
+(see section <xref linkend="SECTmbox"/> below), and a local part suffix was recognized,
+this variable contains the suffix. Otherwise it contains an empty string.
+</para>
+<para>
+<varname>$message_body</varname>: The initial portion of the body of the message. By default,
+up to 500 characters are read into this variable, but the system administrator
+can configure this to some other value. Newlines in the body are converted into
+single spaces.
+</para>
+<para>
+<varname>$message_body_end</varname>: The final portion of the body of the message, formatted
+and limited in the same way as <varname>$message_body</varname>.
+</para>
+<para>
+<varname>$message_body_size</varname>: The size of the body of the message, in bytes.
+</para>
+<para>
+<varname>$message_exim_id</varname>: The message&#x2019;s local identification string, which is unique
+for each message handled by a single host.
+</para>
+<para>
+<varname>$message_headers</varname>: The header lines of the message, concatenated into a
+single string, with newline characters between them.
+</para>
+<para>
+<varname>$message_size</varname>: The size of the entire message, in bytes.
+</para>
+<para>
+<varname>$original_local_part</varname>: When an address that arrived with the message is
+being processed, this contains the same value as the variable <varname>$local_part</varname>.
+However, if an address generated by an alias, forward, or filter file is being
+processed, this variable contains the local part of the original address.
+</para>
+<para>
+<varname>$reply_address</varname>: The contents of the <emphasis>Reply-to:</emphasis> header, if the message
+has one; otherwise the contents of the <emphasis>From:</emphasis> header. It is the address to
+which normal replies to the message should be sent.
+</para>
+<para>
+<varname>$return_path</varname>: The return path &ndash; that is, the sender field that will be
+transmitted as part of the message&#x2019;s envelope if the message is sent to another
+host. This is the address to which delivery errors are sent. In many cases,
+this variable has the same value as <varname>$sender_address</varname>, but if, for example,
+an incoming message to a mailing list has been expanded, <varname>$return_path</varname> may
+have been changed to contain the address of the list maintainer.
+</para>
+<para>
+<varname>$sender_address</varname>: The sender address that was received in the envelope of
+the message. This is not necessarily the same as the contents of the <emphasis>From:</emphasis>
+or <emphasis>Sender:</emphasis> header lines. For delivery error messages (<quote>bounce messages</quote>)
+there is no sender address, and this variable is empty.
+</para>
+<para>
+<varname>$tod_full</varname>: A full version of the time and date, for example: Wed, 18 Oct
+1995 09:51:40 +0100. The timezone is always given as a numerical offset from
+GMT.
+</para>
+<para>
+<varname>$tod_log</varname>: The time and date in the format used for writing Exim&#x2019;s log files,
+without the timezone, for example: 1995-10-12 15:32:29.
+</para>
+<para>
+<varname>$tod_zone</varname>: The local timezone offset, for example: +0100.
+</para>
+</section>
+<section id="SECTheadervariables">
+<title>Header variables</title>
+<para>
+There is a special set of expansion variables containing the header lines of
+the message being processed. These variables have names beginning with
+<varname>$header_</varname> followed by the name of the header line, terminated by a colon.
+For example,
+</para>
+<literallayout class="monospaced">
+$header_from:
+$header_subject:
+</literallayout>
+<para>
+The whole item, including the terminating colon, is replaced by the contents of
+the message header line. If there is more than one header line with the same
+name, their contents are concatenated. For header lines whose data consists of
+a list of addresses (for example, <emphasis>From:</emphasis> and <emphasis>To:</emphasis>), a comma and newline
+is inserted between each set of data. For all other header lines, just a
+newline is used.
+</para>
+<para>
+Leading and trailing white space is removed from header line data, and if there
+are any MIME <quote>words</quote> that are encoded as defined by RFC 2047 (because they
+contain non-ASCII characters), they are decoded and translated, if possible, to
+a local character set. Translation is attempted only on operating systems that
+have the <function>iconv()</function> function. This makes the header line look the same as it
+would when displayed by an MUA. The default character set is ISO-8859-1, but
+this can be changed by means of the <command>headers</command> command (see below).
+</para>
+<para>
+If you want to see the actual characters that make up a header line, you can
+specify <varname>$rheader_</varname> instead of <varname>$header_</varname>. This inserts the <quote>raw</quote>
+header line, unmodified.
+</para>
+<para>
+There is also an intermediate form, requested by <varname>$bheader_</varname>, which removes
+leading and trailing space and decodes MIME <quote>words</quote>, but does not do any
+character translation. If an attempt to decode what looks superficially like a
+MIME <quote>word</quote> fails, the raw string is returned. If decoding produces a binary
+zero character, it is replaced by a question mark.
+</para>
+<para>
+The capitalization of the name following <varname>$header_</varname> is not significant.
+Because any printing character except colon may appear in the name of a
+message&#x2019;s header (this is a requirement of RFC 2822, the document that
+describes the format of a mail message) curly brackets must <emphasis>not</emphasis> be used in
+this case, as they will be taken as part of the header name. Two shortcuts are
+allowed in naming header variables:
+</para>
+<itemizedlist>
+<listitem>
+<para>
+The initiating <varname>$header_</varname>, <varname>$rheader_</varname>, or <varname>$bheader_</varname> can be
+abbreviated to <varname>$h_</varname>, <varname>$rh_</varname>, or <varname>$bh_</varname>, respectively.
+</para>
+</listitem>
+<listitem>
+<para>
+The terminating colon can be omitted if the next character is white space. The
+white space character is retained in the expanded string. However, this is not
+recommended, because it makes it easy to forget the colon when it really is
+needed.
+</para>
+</listitem>
+</itemizedlist>
+<para>
+If the message does not contain a header of the given name, an empty string is
+substituted. Thus it is important to spell the names of headers correctly. Do
+not use <varname>$header_Reply_to</varname> when you really mean <varname>$header_Reply-to</varname>.
+</para>
+</section>
+<section id="SEC20">
+<title>User variables</title>
+<para>
+There are ten user variables with names <varname>$n0</varname> &ndash; <varname>$n9</varname> that can be
+incremented by the <command>add</command> command (see section <xref linkend="SECTadd"/>). These can be
+used for <quote>scoring</quote> messages in various ways. If Exim is configured to run a
+<quote>system filter</quote> on every message, the values left in these variables are
+copied into the variables <varname>$sn0</varname> &ndash; <varname>$sn9</varname> at the end of the system filter,
+thus making them available to users&#x2019; filter files. How these values are used is
+entirely up to the individual installation.
+</para>
+</section>
+<section id="SEC21">
+<title>Current directory</title>
+<para>
+The contents of your filter file should not make any assumptions about the
+current directory. It is best to use absolute paths for file names; you can
+normally make use of the <varname>$home</varname> variable to refer to your home directory. The
+<command>save</command> command automatically inserts <varname>$home</varname> at the start of non-absolute
+paths.
+</para>
+</section>
+<section id="SECTsigdel">
+<title>Significant deliveries</title>
+<para>
+When in the course of delivery a message is processed by a filter file, what
+happens next, that is, after the filter file has been processed, depends on
+whether or not the filter sets up any <emphasis>significant deliveries</emphasis>. If at least
+one significant delivery is set up, the filter is considered to have handled
+the entire delivery arrangements for the current address, and no further
+processing of the address takes place. If, however, no significant deliveries
+are set up, Exim continues processing the current address as if there were no
+filter file, and typically sets up a delivery of a copy of the message into a
+local mailbox. In particular, this happens in the special case of a filter file
+containing only comments.
+</para>
+<para>
+The delivery commands <command>deliver</command>, <command>save</command>, and <command>pipe</command> are by default
+significant. However, if such a command is preceded by the word <quote>unseen</quote>, its
+delivery is not considered to be significant. In contrast, other commands such
+as <command>mail</command> and <command>vacation</command> do not set up significant deliveries unless
+preceded by the word <quote>seen</quote>. The following example commands set up
+significant deliveries:
+</para>
+<literallayout class="monospaced">
+deliver jack@beanstalk.example
+pipe $home/bin/mymailscript
+seen mail subject "message discarded"
+seen finish
+</literallayout>
+<para>
+The following example commands do not set up significant deliveries:
+</para>
+<literallayout class="monospaced">
+unseen deliver jack@beanstalk.example
+unseen pipe $home/bin/mymailscript
+mail subject "message discarded"
+finish
+</literallayout>
+</section>
+<section id="SEC222">
+<title>Filter commands</title>
+<para>
+The filter commands that are described in subsequent sections are listed
+below, with the section in which they are described in brackets:
+</para>
+<informaltable frame="none">
+<tgroup cols="2" colsep="0" rowsep="0">
+<colspec colwidth="100pt" align="left"/>
+<colspec colwidth="300pt" align="left"/>
+<tbody>
+<row>
+<entry><command>add</command></entry>
+<entry>&nbsp;&nbsp;increment a user variable (section <xref linkend="SECTadd"/>)</entry>
+</row>
+<row>
+<entry><command>deliver</command></entry>
+<entry>&nbsp;&nbsp;deliver to an email address (section <xref linkend="SECTdeliver"/>)</entry>
+</row>
+<row>
+<entry><command>fail</command></entry>
+<entry>&nbsp;&nbsp;force delivery failure (sysadmin use) (section <xref linkend="SECTfail"/>)</entry>
+</row>
+<row>
+<entry><command>finish</command></entry>
+<entry>&nbsp;&nbsp;end processing (section <xref linkend="SECTfinish"/>)</entry>
+</row>
+<row>
+<entry><command>freeze</command></entry>
+<entry>&nbsp;&nbsp;freeze message (sysadmin use) (section <xref linkend="SECTfreeze"/>)</entry>
+</row>
+<row>
+<entry><command>headers</command></entry>
+<entry>&nbsp;&nbsp;set the header character set (section <xref linkend="SECTheaders"/>)</entry>
+</row>
+<row>
+<entry><command>if</command></entry>
+<entry>&nbsp;&nbsp;test condition(s) (section <xref linkend="SECTif"/>)</entry>
+</row>
+<row>
+<entry><command>logfile</command></entry>
+<entry>&nbsp;&nbsp;define log file (section <xref linkend="SECTlog"/>)</entry>
+</row>
+<row>
+<entry><command>logwrite</command></entry>
+<entry>&nbsp;&nbsp;write to log file (section <xref linkend="SECTlog"/>)</entry>
+</row>
+<row>
+<entry><command>mail</command></entry>
+<entry>&nbsp;&nbsp;send a reply message (section <xref linkend="SECTmail"/>)</entry>
+</row>
+<row>
+<entry><command>pipe</command></entry>
+<entry>&nbsp;&nbsp;pipe to a command (section <xref linkend="SECTpipe"/>)</entry>
+</row>
+<row>
+<entry><command>save</command></entry>
+<entry>&nbsp;&nbsp;save to a file (section <xref linkend="SECTsave"/>)</entry>
+</row>
+<row>
+<entry><command>testprint</command></entry>
+<entry>&nbsp;&nbsp;print while testing (section <xref linkend="SECTtestprint"/>)</entry>
+</row>
+<row>
+<entry><command>vacation</command></entry>
+<entry>&nbsp;&nbsp;tailored form of <command>mail</command> (section <xref linkend="SECTmail"/>)</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+<para>
+The <command>headers</command> command has additional parameters that can be used only in a
+system filter. The <command>fail</command> and <command>freeze</command> commands are available only when
+Exim&#x2019;s filtering facilities are being used as a system filter, and are
+therefore usable only by the system administrator and not by ordinary users.
+They are mentioned only briefly in this document; for more information, see the
+main Exim specification.
+</para>
+</section>
+<section id="SECTadd">
+<title>The add command</title>
+<literallayout>
+<literal>     add </literal>&lt;<emphasis>number</emphasis>&gt;<literal> to </literal>&lt;<emphasis>user variable</emphasis>&gt;
+<literal>e.g. add 2 to n3</literal>
+</literallayout>
+<para>
+There are 10 user variables of this type, with names <varname>$n0</varname> &ndash; <varname>$n9</varname>. Their
+values can be obtained by the normal expansion syntax (for example <varname>$n3</varname>) in
+other commands. At the start of filtering, these variables all contain zero.
+Both arguments of the <command>add</command> command are expanded before use, making it
+possible to add variables to each other. Subtraction can be obtained by adding
+negative numbers.
+</para>
+</section>
+<section id="SECTdeliver">
+<title>The deliver command</title>
+<literallayout>
+<literal>     deliver</literal> &lt;<emphasis>mail address</emphasis>&gt;
+<literal>e.g. deliver "Dr Livingstone &lt;David@somewhere.africa.example&gt;"</literal>
+</literallayout>
+<para>
+This command provides a forwarding operation. The delivery that it sets up is
+significant unless the command is preceded by <quote>unseen</quote> (see section
+<xref linkend="SECTsigdel"/>). The message is sent on to the given address, exactly as
+happens if the address had appeared in a traditional <filename>.forward</filename> file. If you
+want to deliver the message to a number of different addresses, you can use
+more than one <command>deliver</command> command (each one may have only one address).
+However, duplicate addresses are discarded.
+</para>
+<para>
+To deliver a copy of the message to your normal mailbox, your login name can be
+given as the address. Once an address has been processed by the filtering
+mechanism, an identical generated address will not be so processed again, so
+doing this does not cause a loop.
+</para>
+<para>
+However, if you have a mail alias, you should <emphasis>not</emphasis> refer to it here. For
+example, if the mail address <emphasis>L.Gulliver</emphasis> is aliased to <emphasis>lg303</emphasis> then all
+references in Gulliver&#x2019;s <filename>.forward</filename> file should be to <emphasis>lg303</emphasis>. A reference
+to the alias will not work for messages that are addressed to that alias,
+since, like <filename>.forward</filename> file processing, aliasing is performed only once on an
+address, in order to avoid looping.
+</para>
+<para>
+Following the new address, an optional second address, preceded by
+<quote>errors_to</quote> may appear. This changes the address to which delivery errors on
+the forwarded message will be sent. Instead of going to the message&#x2019;s original
+sender, they go to this new address. For ordinary users, the only value that is
+permitted for this address is the user whose filter file is being processed.
+For example, the user <emphasis>lg303</emphasis> whose mailbox is in the domain
+<emphasis>lilliput.example</emphasis> could have a filter file that contains
+</para>
+<literallayout class="monospaced">
+deliver jon@elsewhere.example errors_to lg303@lilliput.example
+</literallayout>
+<para>
+Clearly, using this feature makes sense only in situations where not all
+messages are being forwarded. In particular, bounce messages must not be
+forwarded in this way, as this is likely to create a mail loop if something
+goes wrong.
+</para>
+</section>
+<section id="SECTsave">
+<title>The save command</title>
+<literallayout>
+<literal>     save </literal>&lt;<emphasis>file name</emphasis>&gt;
+<literal>e.g. save $home/mail/bookfolder</literal>
+</literallayout>
+<para>
+This command specifies that a copy of the message is to be appended to the
+given file (that is, the file is to be used as a mail folder). The delivery
+that <command>save</command> sets up is significant unless the command is preceded by
+<quote>unseen</quote> (see section <xref linkend="SECTsigdel"/>).
+</para>
+<para>
+More than one <command>save</command> command may be obeyed; each one causes a copy of the
+message to be written to its argument file, provided they are different
+(duplicate <command>save</command> commands are ignored).
+</para>
+<para>
+If the file name does not start with a / character, the contents of the
+<varname>$home</varname> variable are prepended, unless it is empty, or the system
+administrator has disabled this feature. In conventional configurations, this
+variable is normally set in a user filter to the user&#x2019;s home directory, but the
+system administrator may set it to some other path. In some configurations,
+<varname>$home</varname> may be unset, or prepending may be disabled, in which case a
+non-absolute path name may be generated. Such configurations convert this to an
+absolute path when the delivery takes place. In a system filter, <varname>$home</varname> is
+never set.
+</para>
+<para>
+The user must of course have permission to write to the file, and the writing
+of the file takes place in a process that is running as the user, under the
+user&#x2019;s primary group. Any secondary groups to which the user may belong are not
+normally taken into account, though the system administrator can configure Exim
+to set them up. In addition, the ability to use this command at all is
+controlled by the system administrator &ndash; it may be forbidden on some systems.
+</para>
+<para>
+An optional mode value may be given after the file name. The value for the mode
+is interpreted as an octal number, even if it does not begin with a zero. For
+example:
+</para>
+<literallayout class="monospaced">
+save /some/folder 640
+</literallayout>
+<para>
+This makes it possible for users to override the system-wide mode setting for
+file deliveries, which is normally 600. If an existing file does not have the
+correct mode, it is changed.
+</para>
+<para>
+An alternative form of delivery may be enabled on your system, in which each
+message is delivered into a new file in a given directory. If this is the case,
+this functionality can be requested by giving the directory name terminated by
+a slash after the <command>save</command> command, for example
+</para>
+<literallayout class="monospaced">
+save separated/messages/
+</literallayout>
+<para>
+There are several different formats for such deliveries; check with your system
+administrator or local documentation to find out which (if any) are available
+on your system. If this functionality is not enabled, the use of a path name
+ending in a slash causes an error.
+</para>
+</section>
+<section id="SECTpipe">
+<title>The pipe command</title>
+<literallayout>
+<literal>     pipe </literal>&lt;<emphasis>command</emphasis>&gt;
+<literal>e.g. pipe "$home/bin/countmail $sender_address"</literal>
+</literallayout>
+<para>
+This command specifies that the message is to be delivered to the specified
+command using a pipe. The delivery that it sets up is significant unless the
+command is preceded by <quote>unseen</quote> (see section <xref linkend="SECTsigdel"/>). Remember,
+however, that no deliveries are done while the filter is being processed. All
+deliveries happen later on. Therefore, the result of running the pipe is not
+available to the filter.
+</para>
+<para>
+When the deliveries are done, a separate process is run, and a copy of the
+message is passed on its standard input. The process runs as the user, under
+the user&#x2019;s primary group. Any secondary groups to which the user may belong are
+not normally taken into account, though the system administrator can configure
+Exim to set them up. More than one <command>pipe</command> command may appear; each one causes
+a copy of the message to be written to its argument pipe, provided they are
+different (duplicate <command>pipe</command> commands are ignored).
+</para>
+<para>
+When the time comes to transport the message, the command supplied to <command>pipe</command>
+is split up by Exim into a command name and a number of arguments. These are
+delimited by white space except for arguments enclosed in double quotes, in
+which case backslash is interpreted as an escape, or in single quotes, in which
+case no escaping is recognized. Note that as the whole command is normally
+supplied in double quotes, a second level of quoting is required for internal
+double quotes. For example:
+</para>
+<literallayout class="monospaced">
+pipe "$home/myscript \"size is $message_size\""
+</literallayout>
+<para>
+String expansion is performed on the separate components after the line has
+been split up, and the command is then run directly by Exim; it is not run
+under a shell. Therefore, substitution cannot change the number of arguments,
+nor can quotes, backslashes or other shell metacharacters in variables cause
+confusion.
+</para>
+<para>
+Documentation for some programs that are normally run via this kind of pipe
+often suggest that the command should start with
+</para>
+<literallayout class="monospaced">
+IFS=" "
+</literallayout>
+<para>
+This is a shell command, and should <emphasis>not</emphasis> be present in Exim filter files,
+since it does not normally run the command under a shell.
+</para>
+<para>
+However, there is an option that the administrator can set to cause a shell to
+be used. In this case, the entire command is expanded as a single string and
+passed to the shell for interpretation. It is recommended that this be avoided
+if at all possible, since it can lead to problems when inserted variables
+contain shell metacharacters.
+</para>
+<para>
+The default PATH set up for the command is determined by the system
+administrator, usually containing at least <filename>/bin</filename> and <filename>/usr/bin</filename> so that
+common commands are available without having to specify an absolute file name.
+However, it is possible for the system administrator to restrict the pipe
+facility so that the command name must not contain any / characters, and must
+be found in one of the directories in the configured PATH. It is also possible
+for the system administrator to lock out the use of the <command>pipe</command> command
+altogether.
+</para>
+<para>
+When the command is run, a number of environment variables are set up. The
+complete list for pipe deliveries may be found in the Exim reference manual.
+Those that may be useful for pipe deliveries from user filter files are:
+</para>
+<literallayout>
+<literal>DOMAIN            </literal>   the domain of the address
+<literal>HOME              </literal>   your home directory
+<literal>LOCAL_PART        </literal>   see below
+<literal>LOCAL_PART_PREFIX </literal>   see below
+<literal>LOCAL_PART_SUFFIX </literal>   see below
+<literal>LOGNAME           </literal>   your login name
+<literal>MESSAGE_ID        </literal>   the unique id of the message
+<literal>PATH              </literal>   the command search path
+<literal>RECIPIENT         </literal>   the complete recipient address
+<literal>SENDER            </literal>   the sender of the message
+<literal>SHELL             </literal>   <literal>/bin/sh</literal>
+<literal>USER              </literal>   see below
+</literallayout>
+<para>
+LOCAL_PART, LOGNAME, and USER are all set to the same value, namely, your login
+id. LOCAL_PART_PREFIX and LOCAL_PART_SUFFIX may be set if Exim is configured to
+recognize prefixes or suffixes in the local parts of addresses. For example, a
+message addressed to <emphasis>pat-suf2@domain.example</emphasis> may cause the filter for user
+<emphasis>pat</emphasis> to be run. If this sets up a pipe delivery, LOCAL_PART_SUFFIX is
+<literal>-suf2</literal> when the pipe command runs. The system administrator has to configure
+Exim specially for this feature to be available.
+</para>
+<para>
+If you run a command that is a shell script, be very careful in your use of
+data from the incoming message in the commands in your script. RFC 2822 is very
+generous in the characters that are permitted to appear in mail addresses, and
+in particular, an address may begin with a vertical bar or a slash. For this
+reason you should always use quotes round any arguments that involve data from
+the message, like this:
+</para>
+<literallayout class="monospaced">
+/some/command '$SENDER'
+</literallayout>
+<para>
+so that inserted shell meta-characters do not cause unwanted effects.
+</para>
+<para>
+Remember that, as was explained earlier, the pipe command is not run at the
+time the filter file is interpreted. The filter just defines what deliveries
+are required for one particular addressee of a message. The deliveries
+themselves happen later, once Exim has decided everything that needs to be done
+for the message.
+</para>
+<para>
+A consequence of this is that you cannot inspect the return code from the pipe
+command from within the filter. Nevertheless, the code returned by the command
+is important, because Exim uses it to decide whether the delivery has succeeded
+or failed.
+</para>
+<para>
+The command should return a zero completion code if all has gone well. Most
+non-zero codes are treated by Exim as indicating a failure of the pipe. This is
+treated as a delivery failure, causing the message to be returned to its
+sender. However, there are some completion codes that are treated as temporary
+errors. The message remains on Exim&#x2019;s spool disk, and the delivery is tried
+again later, though it will ultimately time out if the delivery failures go on
+too long. The completion codes to which this applies can be specified by the
+system administrator; the default values are 73 and 75.
+</para>
+<para>
+The pipe command should not normally write anything to its standard output or
+standard error file descriptors. If it does, whatever is written is normally
+returned to the sender of the message as a delivery error, though this action
+can be varied by the system administrator.
+</para>
+</section>
+<section id="SECTmail">
+<title>Mail commands</title>
+<para>
+There are two commands that cause the creation of a new mail message, neither
+of which count as a significant delivery unless the command is preceded by the
+word <quote>seen</quote> (see section <xref linkend="SECTsigdel"/>). This is a powerful facility, but
+it should be used with care, because of the danger of creating infinite
+sequences of messages. The system administrator can forbid the use of these
+commands altogether.
+</para>
+<para>
+To help prevent runaway message sequences, these commands have no effect when
+the incoming message is a bounce (delivery error) message, and messages sent by
+this means are treated as if they were reporting delivery errors. Thus, they
+should never themselves cause a bounce message to be returned. The basic
+mail-sending command is
+</para>
+<literallayout>
+<literal>mail [to </literal>&lt;<emphasis>address-list</emphasis>&gt;<literal>]</literal>
+<literal>     [cc </literal>&lt;<emphasis>address-list</emphasis>&gt;<literal>]</literal>
+<literal>     [bcc </literal>&lt;<emphasis>address-list</emphasis>&gt;<literal>]</literal>
+<literal>     [from </literal>&lt;<emphasis>address</emphasis>&gt;<literal>]</literal>
+<literal>     [reply_to </literal>&lt;<emphasis>address</emphasis>&gt;<literal>]</literal>
+<literal>     [subject </literal>&lt;<emphasis>text</emphasis>&gt;<literal>]</literal>
+<literal>     [extra_headers </literal>&lt;<emphasis>text</emphasis>&gt;<literal>]</literal>
+<literal>     [text </literal>&lt;<emphasis>text</emphasis>&gt;<literal>]</literal>
+<literal>     [[expand] file </literal>&lt;<emphasis>filename</emphasis>&gt;<literal>]</literal>
+<literal>     [return message]</literal>
+<literal>     [log </literal>&lt;<emphasis>log file name</emphasis>&gt;<literal>]</literal>
+<literal>     [once </literal>&lt;<emphasis>note file name</emphasis>&gt;<literal>]</literal>
+<literal>     [once_repeat </literal>&lt;<emphasis>time interval</emphasis>&gt;<literal>]</literal>
+<literal>e.g. mail text "Your message about $h_subject: has been received"</literal>
+</literallayout>
+<para>
+Each &lt;<emphasis>address-list</emphasis>&gt; can contain a number of addresses, separated by commas,
+in the format of a <emphasis>To:</emphasis> or <emphasis>Cc:</emphasis> header line. In fact, the text you supply
+here is copied exactly into the appropriate header line. It may contain
+additional information as well as email addresses. For example:
+</para>
+<literallayout class="monospaced">
+mail to "Julius Caesar &lt;jc@rome.example&gt;, \
+         &lt;ma@rome.example&gt; (Mark A.)"
+</literallayout>
+<para>
+Similarly, the texts supplied for <option>from</option> and <option>reply_to</option> are copied into
+their respective header lines.
+</para>
+<para>
+As a convenience for use in one common case, there is also a command called
+<command>vacation</command>. It behaves in the same way as <command>mail</command>, except that the defaults
+for the <option>subject</option>, <option>file</option>, <option>log</option>, <option>once</option>, and <option>once_repeat</option> options
+are
+</para>
+<literallayout class="monospaced">
+subject "On vacation"
+expand file .vacation.msg
+log  .vacation.log
+once .vacation
+once_repeat 7d
+</literallayout>
+<para>
+respectively. These are the same file names and repeat period used by the
+traditional Unix <command>vacation</command> command. The defaults can be overridden by
+explicit settings, but if a file name is given its contents are expanded only
+if explicitly requested.
+</para>
+<para>
+<emphasis role="bold">Warning</emphasis>: The <command>vacation</command> command should always be used conditionally,
+subject to at least the <command>personal</command> condition (see section <xref linkend="SECTpersonal"/>
+below) so as not to send automatic replies to non-personal messages from
+mailing lists or elsewhere. Sending an automatic response to a mailing list or
+a mailing list manager is an Internet Sin.
+</para>
+<para>
+For both commands, the key/value argument pairs can appear in any order. At
+least one of <option>text</option> or <option>file</option> must appear (except with <command>vacation</command>, where
+there is a default for <option>file</option>); if both are present, the text string appears
+first in the message. If <option>expand</option> precedes <option>file</option>, each line of the file is
+subject to string expansion before it is included in the message.
+</para>
+<para>
+Several lines of text can be supplied to <option>text</option> by including the escape
+sequence <quote>\n</quote> in the string wherever a newline is required. If the command is
+output during filter file testing, newlines in the text are shown as <quote>\n</quote>.
+</para>
+<para>
+Note that the keyword for creating a <emphasis>Reply-To:</emphasis> header is <option>reply_to</option>,
+because Exim keywords may contain underscores, but not hyphens. If the <option>from</option>
+keyword is present and the given address does not match the user who owns the
+forward file, Exim normally adds a <emphasis>Sender:</emphasis> header to the message, though it
+can be configured not to do this.
+</para>
+<para>
+The <option>extra_headers</option> keyword allows you to add custom header lines to the
+message. The text supplied must be one or more syntactically valid RFC 2822
+header lines. You can use <quote>\n</quote> within quoted text to specify newlines between
+headers, and also to define continued header lines. For example:
+</para>
+<literallayout class="monospaced">
+extra_headers "h1: first\nh2: second\n continued\nh3: third"
+</literallayout>
+<para>
+No newline should appear at the end of the final header line.
+</para>
+<para>
+If no <option>to</option> argument appears, the message is sent to the address in the
+<varname>$reply_address</varname> variable (see section <xref linkend="SECTfilterstringexpansion"/> above).
+An <emphasis>In-Reply-To:</emphasis> header is automatically included in the created message,
+giving a reference to the message identification of the incoming message.
+</para>
+<para>
+If <option>return message</option> is specified, the incoming message that caused the filter
+file to be run is added to the end of the message, subject to a maximum size
+limitation.
+</para>
+<para>
+If a log file is specified, a line is added to it for each message sent.
+</para>
+<para>
+If a <option>once</option> file is specified, it is used to hold a database for remembering
+who has received a message, and no more than one message is ever sent to any
+particular address, unless <option>once_repeat</option> is set. This specifies a time
+interval after which another copy of the message is sent. The interval is
+specified as a sequence of numbers, each followed by the initial letter of one
+of <quote>seconds</quote>, <quote>minutes</quote>, <quote>hours</quote>, <quote>days</quote>, or <quote>weeks</quote>. For example,
+</para>
+<literallayout class="monospaced">
+once_repeat 5d4h
+</literallayout>
+<para>
+causes a new message to be sent if at least 5 days and 4 hours have elapsed
+since the last one was sent. There must be no white space in a time interval.
+</para>
+<para>
+Commonly, the file name specified for <option>once</option> is used as the base name for
+direct-access (DBM) file operations. There are a number of different DBM
+libraries in existence. Some operating systems provide one as a default, but
+even in this case a different one may have been used when building Exim. With
+some DBM libraries, specifying <option>once</option> results in two files being created,
+with the suffixes <filename>.dir</filename> and <filename>.pag</filename> being added to the given name. With
+some others a single file with the suffix <filename>.db</filename> is used, or the name is used
+unchanged.
+</para>
+<para>
+Using a DBM file for implementing the <option>once</option> feature means that the file
+grows as large as necessary. This is not usually a problem, but some system
+administrators want to put a limit on it. The facility can be configured not to
+use a DBM file, but instead, to use a regular file with a maximum size. The
+data in such a file is searched sequentially, and if the file fills up, the
+oldest entry is deleted to make way for a new one. This means that some
+correspondents may receive a second copy of the message after an unpredictable
+interval. Consult your local information to see if your system is configured
+this way.
+</para>
+<para>
+More than one <command>mail</command> or <command>vacation</command> command may be obeyed in a single filter
+run; they are all honoured, even when they are to the same recipient.
+</para>
+</section>
+<section id="SECTlog">
+<title>Logging commands</title>
+<para>
+A log can be kept of actions taken by a filter file. This facility is normally
+available in conventional configurations, but there are some situations where
+it might not be. Also, the system administrator may choose to disable it. Check
+your local information if in doubt.
+</para>
+<para>
+Logging takes place while the filter file is being interpreted. It does not
+queue up for later like the delivery commands. The reason for this is so that a
+log file need be opened only once for several write operations. There are two
+commands, neither of which constitutes a significant delivery. The first
+defines a file to which logging output is subsequently written:
+</para>
+<literallayout>
+<literal>     logfile </literal>&lt;<emphasis>file name</emphasis>&gt;
+<literal>e.g. logfile $home/filter.log</literal>
+</literallayout>
+<para>
+The file name must be fully qualified. You can use <varname>$home</varname>, as in this
+example, to refer to your home directory. The file name may optionally be
+followed by a mode for the file, which is used if the file has to be created.
+For example,
+</para>
+<literallayout class="monospaced">
+logfile $home/filter.log 0644
+</literallayout>
+<para>
+The number is interpreted as octal, even if it does not begin with a zero.
+The default for the mode is 600. It is suggested that the <command>logfile</command> command
+normally appear as the first command in a filter file. Once a log file has
+been obeyed, the <command>logwrite</command> command can be used to write to it:
+</para>
+<literallayout>
+<literal>     logwrite "</literal>&lt;<emphasis>some text string</emphasis>&gt;<literal>"</literal>
+<literal>e.g. logwrite "$tod_log $message_id processed"</literal>
+</literallayout>
+<para>
+It is possible to have more than one <command>logfile</command> command, to specify writing to
+different log files in different circumstances. Writing takes place at the end
+of the file, and a newline character is added to the end of each string if
+there isn&#x2019;t one already there. Newlines can be put in the middle of the string
+by using the <quote>\n</quote> escape sequence. Lines from simultaneous deliveries may get
+interleaved in the file, as there is no interlocking, so you should plan your
+logging with this in mind. However, data should not get lost.
+</para>
+</section>
+<section id="SECTfinish">
+<title>The finish command</title>
+<para>
+The command <command>finish</command>, which has no arguments, causes Exim to stop
+interpreting the filter file. This is not a significant action unless preceded
+by <quote>seen</quote>. A filter file containing only <quote>seen finish</quote> is a black hole.
+</para>
+</section>
+<section id="SECTtestprint">
+<title>The testprint command</title>
+<para>
+It is sometimes helpful to be able to print out the values of variables when
+testing filter files. The command
+</para>
+<literallayout>
+<literal>     testprint </literal>&lt;<emphasis>text</emphasis>&gt;
+<literal>e.g. testprint "home=$home reply_address=$reply_address"</literal>
+</literallayout>
+<para>
+does nothing when mail is being delivered. However, when the filtering code is
+being tested by means of the <option>-bf</option> option (see section <xref linkend="SECTtesting"/>
+above), the value of the string is written to the standard output.
+</para>
+</section>
+<section id="SECTfail">
+<title>The fail command</title>
+<para>
+When Exim&#x2019;s filtering facilities are being used as a system filter, the
+<command>fail</command> command is available, to force delivery failure. Because this command
+is normally usable only by the system administrator, and not enabled for use by
+ordinary users, it is described in more detail in the main Exim specification
+rather than in this document.
+</para>
+</section>
+<section id="SECTfreeze">
+<title>The freeze command</title>
+<para>
+When Exim&#x2019;s filtering facilities are being used as a system filter, the
+<command>freeze</command> command is available, to freeze a message on the queue. Because this
+command is normally usable only by the system administrator, and not enabled
+for use by ordinary users, it is described in more detail in the main Exim
+specification rather than in this document.
+</para>
+</section>
+<section id="SECTheaders">
+<title>The headers command</title>
+<para>
+The <command>headers</command> command can be used to change the target character set that is
+used when translating the contents of encoded header lines for insertion by the
+<varname>$header_</varname> mechanism (see section <xref linkend="SECTheadervariables"/> above). The
+default can be set in the Exim configuration; if not specified, ISO-8859-1 is
+used. The only currently supported format for the <command>headers</command> command in user
+filters is as in this example:
+</para>
+<literallayout class="monospaced">
+headers charset "UTF-8"
+</literallayout>
+<para>
+That is, <command>headers</command> is followed by the word <quote>charset</quote> and then the name of a
+character set. This particular example would be useful if you wanted to compare
+the contents of a header to a UTF-8 string.
+</para>
+<para>
+In system filter files, the <command>headers</command> command can be used to add or remove
+header lines from the message. These features are described in the main Exim
+specification.
+</para>
+</section>
+<section id="SECTif">
+<title>Obeying commands conditionally</title>
+<para>
+Most of the power of filtering comes from the ability to test conditions and
+obey different commands depending on the outcome. The <command>if</command> command is used to
+specify conditional execution, and its general form is
+</para>
+<literallayout>
+<literal>if    </literal>&lt;<emphasis>condition</emphasis>&gt;
+<literal>then  </literal>&lt;<emphasis>commands</emphasis>&gt;
+<literal>elif  </literal>&lt;<emphasis>condition</emphasis>&gt;
+<literal>then  </literal>&lt;<emphasis>commands</emphasis>&gt;
+<literal>else  </literal>&lt;<emphasis>commands</emphasis>&gt;
+<literal>endif</literal>
+</literallayout>
+<para>
+There may be any number of <command>elif</command> and <command>then</command> sections (including none) and
+the <command>else</command> section is also optional. Any number of commands, including nested
+<command>if</command> commands, may appear in any of the &lt;<emphasis>commands</emphasis>&gt; sections.
+</para>
+<para>
+Conditions can be combined by using the words <command>and</command> and <command>or</command>, and round
+brackets (parentheses) can be used to specify how several conditions are to
+combine. Without brackets, <command>and</command> is more binding than <command>or</command>. For example:
+</para>
+<literallayout class="monospaced">
+if
+$h_subject: contains "Make money" or
+$h_precedence: is "junk" or
+($h_sender: matches ^\\d{8}@ and not personal) or
+$message_body contains "this is not spam"
+then
+seen finish
+endif
+</literallayout>
+<para>
+A condition can be preceded by <command>not</command> to negate it, and there are also some
+negative forms of condition that are more English-like.
+</para>
+</section>
+<section id="SEC23">
+<title>String testing conditions</title>
+<para>
+There are a number of conditions that operate on text strings, using the words
+<quote>begins</quote>, <quote>ends</quote>, <quote>is</quote>, <quote>contains</quote> and <quote>matches</quote>. If you want to
+apply the same test to more than one header line, you can easily concatenate
+them into a single string for testing, as in this example:
+</para>
+<literallayout class="monospaced">
+if "$h_to:, $h_cc:" contains me@domain.example then ...
+</literallayout>
+<para>
+If a string-testing condition name is written in lower case, the testing
+of letters is done without regard to case; if it is written in upper case
+(for example, <quote>CONTAINS</quote>), the case of letters is taken into account.
+</para>
+<literallayout>
+<literal>     </literal>&lt;<emphasis>text1</emphasis>&gt;<literal> begins </literal>&lt;<emphasis>text2</emphasis>&gt;
+<literal>     </literal>&lt;<emphasis>text1</emphasis>&gt;<literal> does not begin </literal>&lt;<emphasis>text2</emphasis>&gt;
+<literal>e.g. $header_from: begins "Friend@"</literal>
+</literallayout>
+<para>
+A <quote>begins</quote> test checks for the presence of the second string at the start of
+the first, both strings having been expanded.
+</para>
+<literallayout>
+<literal>     </literal>&lt;<emphasis>text1</emphasis>&gt;<literal> ends </literal>&lt;<emphasis>text2</emphasis>&gt;
+<literal>     </literal>&lt;<emphasis>text1</emphasis>&gt;<literal> does not end </literal>&lt;<emphasis>text2</emphasis>&gt;
+<literal>e.g. $header_from: ends "public.com.example"</literal>
+</literallayout>
+<para>
+An <quote>ends</quote> test checks for the presence of the second string at the end of
+the first, both strings having been expanded.
+</para>
+<literallayout>
+<literal>     </literal>&lt;<emphasis>text1</emphasis>&gt;<literal> is </literal>&lt;<emphasis>text2</emphasis>&gt;
+<literal>     </literal>&lt;<emphasis>text1</emphasis>&gt;<literal> is not </literal>&lt;<emphasis>text2</emphasis>&gt;
+<literal>e.g. $local_part_suffix is "-foo"</literal>
+</literallayout>
+<para>
+An <quote>is</quote> test does an exact match between the strings, having first expanded
+both strings.
+</para>
+<literallayout>
+<literal>     </literal>&lt;<emphasis>text1</emphasis>&gt;<literal> contains </literal>&lt;<emphasis>text2</emphasis>&gt;
+<literal>     </literal>&lt;<emphasis>text1</emphasis>&gt;<literal> does not contain </literal>&lt;<emphasis>text2</emphasis>&gt;
+<literal>e.g. $header_subject: contains "evolution"</literal>
+</literallayout>
+<para>
+A <quote>contains</quote> test does a partial string match, having expanded both strings.
+</para>
+<literallayout>
+<literal>     </literal>&lt;<emphasis>text1</emphasis>&gt;<literal> matches </literal>&lt;<emphasis>text2</emphasis>&gt;
+<literal>     </literal>&lt;<emphasis>text1</emphasis>&gt;<literal> does not match </literal>&lt;<emphasis>text2</emphasis>&gt;
+<literal>e.g. $sender_address matches "(bill|john)@"</literal>
+</literallayout>
+<para>
+For a <quote>matches</quote> test, after expansion of both strings, the second one is
+interpreted as a regular expression. Exim uses the PCRE regular expression
+library, which provides regular expressions that are compatible with Perl.
+</para>
+<para>
+The match succeeds if the regular expression matches any part of the first
+string. If you want a regular expression to match only at the start or end of
+the subject string, you must encode that requirement explicitly, using the
+<literal>^</literal> or <literal>$</literal> metacharacters. The above example, which is not so constrained,
+matches all these addresses:
+</para>
+<literallayout class="monospaced">
+bill@test.example
+john@some.example
+spoonbill@example.com
+littlejohn@example.com
+</literallayout>
+<para>
+To match only the first two, you could use this:
+</para>
+<literallayout class="monospaced">
+if $sender_address matches "^(bill|john)@" then ...
+</literallayout>
+<para>
+Care must be taken if you need a backslash in a regular expression, because
+backslashes are interpreted as escape characters both by the string expansion
+code and by Exim&#x2019;s normal processing of strings in quotes. For example, if you
+want to test the sender address for a domain ending in <emphasis>.com</emphasis> the regular
+expression is
+</para>
+<literallayout class="monospaced">
+\.com$
+</literallayout>
+<para>
+The backslash and dollar sign in that expression have to be escaped when used
+in a filter command, as otherwise they would be interpreted by the expansion
+code. Thus, what you actually write is
+</para>
+<literallayout class="monospaced">
+if $sender_address matches \\.com\$
+</literallayout>
+<para>
+An alternative way of handling this is to make use of the <literal>\N</literal> expansion
+flag for suppressing expansion:
+</para>
+<literallayout class="monospaced">
+if $sender_address matches \N\.com$\N
+</literallayout>
+<para>
+Everything between the two occurrences of <literal>\N</literal> is copied without change by
+the string expander (and in fact you do not need the final one, because it is
+at the end of the string). If the regular expression is given in quotes
+(mandatory only if it contains white space) you have to write either
+</para>
+<literallayout class="monospaced">
+if $sender_address matches "\\\\.com\\$"
+</literallayout>
+<para>
+or
+</para>
+<literallayout class="monospaced">
+if $sender_address matches "\\N\\.com$\\N"
+</literallayout>
+<para>
+If the regular expression contains bracketed sub-expressions, numeric
+variable substitutions such as <varname>$1</varname> can be used in the subsequent actions
+after a successful match. If the match fails, the values of the numeric
+variables remain unchanged. Previous values are not restored after <command>endif</command>.
+In other words, only one set of values is ever available. If the condition
+contains several sub-conditions connected by <command>and</command> or <command>or</command>, it is the
+strings extracted from the last successful match that are available in
+subsequent actions. Numeric variables from any one sub-condition are also
+available for use in subsequent sub-conditions, because string expansion of a
+condition occurs just before it is tested.
+</para>
+</section>
+<section id="SEC24">
+<title>Numeric testing conditions</title>
+<para>
+The following conditions are available for performing numerical tests:
+</para>
+<literallayout>
+<literal>     </literal>&lt;<emphasis>number1</emphasis>&gt;<literal> is above </literal>&lt;<emphasis>number2</emphasis>&gt;
+<literal>     </literal>&lt;<emphasis>number1</emphasis>&gt;<literal> is not above </literal>&lt;<emphasis>number2</emphasis>&gt;
+<literal>     </literal>&lt;<emphasis>number1</emphasis>&gt;<literal> is below </literal>&lt;<emphasis>number2</emphasis>&gt;
+<literal>     </literal>&lt;<emphasis>number1</emphasis>&gt;<literal> is not below </literal>&lt;<emphasis>number2</emphasis>&gt;
+<literal>e.g. $message_size is not above 10k</literal>
+</literallayout>
+<para>
+The &lt;<emphasis>number</emphasis>&gt; arguments must expand to strings of digits, optionally
+followed by one of the letters K or M (upper case or lower case) which cause
+multiplication by 1024 and 1024x1024 respectively.
+</para>
+</section>
+<section id="SEC25">
+<title>Testing for significant deliveries</title>
+<para>
+You can use the <command>delivered</command> condition to test whether or not any previously
+obeyed filter commands have set up a significant delivery. For example:
+</para>
+<literallayout class="monospaced">
+if not delivered then save mail/anomalous endif
+</literallayout>
+<para>
+<quote>Delivered</quote> is perhaps a poor choice of name for this condition, because the
+message has not actually been delivered; rather, a delivery has been set up for
+later processing.
+</para>
+</section>
+<section id="SEC26">
+<title>Testing for error messages</title>
+<para>
+The condition <command>error_message</command> is true if the incoming message is a bounce
+(mail delivery error) message. Putting the command
+</para>
+<literallayout class="monospaced">
+if error_message then finish endif
+</literallayout>
+<para>
+at the head of your filter file is a useful insurance against things going
+wrong in such a way that you cannot receive delivery error reports. <emphasis role="bold">Note</emphasis>:
+<command>error_message</command> is a condition, not an expansion variable, and therefore is
+not preceded by <literal>$</literal>.
+</para>
+</section>
+<section id="SEC27">
+<title>Testing a list of addresses</title>
+<para>
+There is a facility for looping through a list of addresses and applying a
+condition to each of them. It takes the form
+</para>
+<literallayout>
+<literal>foranyaddress </literal>&lt;<emphasis>string</emphasis>&gt;<literal> (</literal>&lt;<emphasis>condition</emphasis>&gt;<literal>)</literal>
+</literallayout>
+<para>
+where &lt;<emphasis>string</emphasis>&gt; is interpreted as a list of RFC 2822 addresses, as in a
+typical header line, and &lt;<emphasis>condition</emphasis>&gt; is any valid filter condition or
+combination of conditions. The <quote>group</quote> syntax that is defined for certain
+header lines that contain addresses is supported.
+</para>
+<para>
+The parentheses surrounding the condition are mandatory, to delimit it from
+possible further sub-conditions of the enclosing <command>if</command> command. Within the
+condition, the expansion variable <varname>$thisaddress</varname> is set to the non-comment
+portion of each of the addresses in the string in turn. For example, if the
+string is
+</para>
+<literallayout class="monospaced">
+B.Simpson &lt;bart@sfld.example&gt;, lisa@sfld.example (his sister)
+</literallayout>
+<para>
+then <varname>$thisaddress</varname> would take on the values <literal>bart@sfld.example</literal> and
+<literal>lisa@sfld.example</literal> in turn.
+</para>
+<para>
+If there are no valid addresses in the list, the whole condition is false. If
+the internal condition is true for any one address, the overall condition is
+true and the loop ends. If the internal condition is false for all addresses in
+the list, the overall condition is false. This example tests for the presence
+of an eight-digit local part in any address in a <emphasis>To:</emphasis> header:
+</para>
+<literallayout class="monospaced">
+if foranyaddress $h_to: ( $thisaddress matches ^\\d{8}@ ) then ...
+</literallayout>
+<para>
+When the overall condition is true, the value of <varname>$thisaddress</varname> in the
+commands that follow <command>then</command> is the last value it took on inside the loop. At
+the end of the <command>if</command> command, the value of <varname>$thisaddress</varname> is reset to what it
+was before. It is best to avoid the use of multiple occurrences of
+<command>foranyaddress</command>, nested or otherwise, in a single <command>if</command> command, if the
+value of <varname>$thisaddress</varname> is to be used afterwards, because it isn&#x2019;t always
+clear what the value will be. Nested <command>if</command> commands should be used instead.
+</para>
+<para>
+Header lines can be joined together if a check is to be applied to more than
+one of them. For example:
+</para>
+<literallayout class="monospaced">
+if foranyaddress $h_to:,$h_cc: ....
+</literallayout>
+<para>
+This scans through the addresses in both the <emphasis>To:</emphasis> and the <emphasis>Cc:</emphasis> headers.
+</para>
+</section>
+<section id="SECTpersonal">
+<title>Testing for personal mail</title>
+<para>
+A common requirement is to distinguish between incoming personal mail and mail
+from a mailing list, or from a robot or other automatic process (for example, a
+bounce message). In particular, this test is normally required for <quote>vacation
+messages</quote>.
+</para>
+<para>
+The <command>personal</command> condition checks that the message is not a bounce message and
+that the current user&#x2019;s email address appears in the <emphasis>To:</emphasis> header. It also
+checks that the sender is not the current user or one of a number of common
+daemons, and that there are no header lines starting <emphasis>List-</emphasis> in the message.
+Finally, it checks the content of the <emphasis>Precedence:</emphasis> header line, if there is
+one.
+</para>
+<para>
+You should always use the <command>personal</command> condition when generating automatic
+responses. This example shows the use of <command>personal</command> in a filter file that is
+sending out vacation messages:
+</para>
+<literallayout class="monospaced">
+if personal then
+mail to $reply_address
+subject "I am on holiday"
+file $home/vacation/message
+once $home/vacation/once
+once_repeat 10d
+endif
+</literallayout>
+<para>
+It is tempting, when writing commands like the above, to quote the original
+subject in the reply. For example:
+</para>
+<literallayout class="monospaced">
+subject "Re: $h_subject:"
+</literallayout>
+<para>
+There is a danger in doing this, however. It may allow a third party to
+subscribe you to an opt-in mailing list, provided that the list accepts bounce
+messages as subscription confirmations. (Messages sent from filters are always
+sent as bounce messages.) Well-managed lists require a non-bounce message to
+confirm a subscription, so the danger is relatively small.
+</para>
+<para>
+If prefixes or suffixes are in use for local parts &ndash; something which depends
+on the configuration of Exim (see section <xref linkend="SECTmbox"/> below) &ndash; the tests
+for the current user are done with the full address (including the prefix and
+suffix, if any) as well as with the prefix and suffix removed. If the system is
+configured to rewrite local parts of mail addresses, for example, to rewrite
+<literal>dag46</literal> as <literal>Dirk.Gently</literal>, the rewritten form of the address is also used in
+the tests.
+</para>
+</section>
+<section id="SEC28">
+<title>Alias addresses for the personal condition</title>
+<para>
+It is quite common for people who have mail accounts on a number of different
+systems to forward all their mail to one system, and in this case a check for
+personal mail should test all their various mail addresses. To allow for this,
+the <command>personal</command> condition keyword can be followed by
+</para>
+<literallayout>
+<literal>alias </literal>&lt;<emphasis>address</emphasis>&gt;
+</literallayout>
+<para>
+any number of times, for example:
+</para>
+<literallayout class="monospaced">
+if personal alias smith@else.where.example
+            alias jones@other.place.example
+then ...
+</literallayout>
+<para>
+The alias addresses are treated as alternatives to the current user&#x2019;s email
+address when testing the contents of header lines.
+</para>
+</section>
+<section id="SEC29">
+<title>Details of the personal condition</title>
+<para>
+The basic <command>personal</command> test is roughly equivalent to the following:
+</para>
+<literallayout class="monospaced">
+not error_message and
+$message_headers does not contain "\nList-Id:" and
+$message_headers does not contain "\nList-Help:" and
+$message_headers does not contain "\nList-Subscribe:" and
+$message_headers does not contain "\nList-Unsubscribe:" and
+$message_headers does not contain "\nList-Post:" and
+$message_headers does not contain "\nList-Owner:" and
+$message_headers does not contain "\nList-Archive:" and
+(
+"${if def:h_auto-submitted:{present}{absent}}" is "absent" or
+$header_auto-submitted: is "no"
+) and
+$header_precedence: does not contain "bulk" and
+$header_precedence: does not contain "list" and
+$header_precedence: does not contain "junk" and
+foranyaddress $header_to:
+( $thisaddress contains "$local_part$domain" ) and
+not foranyaddress $header_from:
+(
+$thisaddress contains "$local_part@$domain" or
+$thisaddress contains "server@" or
+$thisaddress contains "daemon@" or
+$thisaddress contains "root@" or
+$thisaddress contains "listserv@" or
+$thisaddress contains "majordomo@" or
+$thisaddress contains "-request@" or
+$thisaddress matches  "^owner-[^@]+@"
+)
+</literallayout>
+<para>
+The variable <varname>$local_part</varname> contains the local part of the mail address of
+the user whose filter file is being run &ndash; it is normally your login id. The
+<varname>$domain</varname> variable contains the mail domain. As explained above, if aliases
+or rewriting are defined, or if prefixes or suffixes are in use, the tests for
+the current user are also done with alternative addresses.
+</para>
+</section>
+<section id="SEC30">
+<title>Testing delivery status</title>
+<para>
+There are two conditions that are intended mainly for use in system filter
+files, but which are available in users&#x2019; filter files as well. The condition
+<command>first_delivery</command> is true if this is the first process that is attempting to
+deliver the message, and false otherwise. This indicator is not reset until the
+first delivery process successfully terminates; if there is a crash or a power
+failure (for example), the next delivery attempt is also a <quote>first delivery</quote>.
+</para>
+<para>
+In a user filter file <command>first_delivery</command> will be false if there was previously
+an error in the filter, or if a delivery for the user failed owing to, for
+example, a quota error, or if forwarding to a remote address was deferred for
+some reason.
+</para>
+<para>
+The condition <command>manually_thawed</command> is true if the message was <quote>frozen</quote> for
+some reason, and was subsequently released by the system administrator. It is
+unlikely to be of use in users&#x2019; filter files.
+</para>
+</section>
+<section id="SECTmbox">
+<title>Multiple personal mailboxes</title>
+<titleabbrev>SEC31</titleabbrev>
+<para>
+The system administrator can configure Exim so that users can set up variants
+on their email addresses and handle them separately. Consult your system
+administrator or local documentation to see if this facility is enabled on your
+system, and if so, what the details are.
+</para>
+<para>
+The facility involves the use of a prefix or a suffix on an email address. For
+example, all mail addressed to <emphasis>lg303-</emphasis>&lt;<emphasis>something</emphasis>&gt; would be the property
+of user <emphasis>lg303</emphasis>, who could determine how it was to be handled, depending on
+the value of &lt;<emphasis>something</emphasis>&gt;.
+</para>
+<para>
+There are two possible ways in which this can be set up. The first possibility
+is the use of multiple <filename>.forward</filename> files. In this case, mail to <emphasis>lg303-foo</emphasis>,
+for example, is handled by looking for a file called <filename>.forward-foo</filename> in
+<emphasis>lg303</emphasis>&#x2019;s home directory. If such a file does not exist, delivery fails
+and the message is returned to its sender.
+</para>
+<para>
+The alternative approach is to pass all messages through a single <filename>.forward</filename>
+file, which must be a filter file so that it can distinguish between the
+different cases by referencing the variables <varname>$local_part_prefix</varname> or
+<varname>$local_part_suffix</varname>, as in the final example in section <xref linkend="SECTex"/> below.
+</para>
+<para>
+It is possible to configure Exim to support both schemes at once. In this case,
+a specific <filename>.forward-foo</filename> file is first sought; if it is not found, the basic
+<filename>.forward</filename> file is used.
+</para>
+<para>
+The <command>personal</command> test (see section <xref linkend="SECTpersonal"/>) includes prefixes and
+suffixes in its checking.
+</para>
+</section>
+<section id="SEC43">
+<title>Ignoring delivery errors</title>
+<para>
+As was explained above, filtering just sets up addresses for delivery &ndash; no
+deliveries are actually done while a filter file is active. If any of the
+generated addresses subsequently suffers a delivery failure, an error message
+is generated in the normal way. However, if a filter command that sets up a
+delivery is preceded by the word <quote>noerror</quote>, errors for that delivery,
+and any deliveries consequent on it (that is, from alias, forwarding, or
+filter files it invokes) are ignored.
+</para>
+</section>
+<section id="SECTex">
+<title>Examples of Exim filter commands</title>
+<para>
+Simple forwarding:
+</para>
+<literallayout class="monospaced">
+# Exim filter
+deliver baggins@rivendell.middle-earth.example
+</literallayout>
+<para>
+Vacation handling using traditional means, assuming that the <filename>.vacation.msg</filename>
+and other files have been set up in your home directory:
+</para>
+<literallayout class="monospaced">
+# Exim filter
+unseen pipe "/usr/ucb/vacation \"$local_part\""
+</literallayout>
+<para>
+Vacation handling inside Exim, having first created a file called
+<filename>.vacation.msg</filename> in your home directory:
+</para>
+<literallayout class="monospaced">
+# Exim filter
+if personal then vacation endif
+</literallayout>
+<para>
+File some messages by subject:
+</para>
+<literallayout class="monospaced">
+# Exim filter
+if $header_subject: contains "empire" or
+$header_subject: contains "foundation"
+then
+save $home/mail/f+e
+endif
+</literallayout>
+<para>
+Save all non-urgent messages by weekday:
+</para>
+<literallayout class="monospaced">
+# Exim filter
+if $header_subject: does not contain "urgent" and
+$tod_full matches "^(...),"
+then
+save $home/mail/$1
+endif
+</literallayout>
+<para>
+Throw away all mail from one site, except from postmaster:
+</para>
+<literallayout class="monospaced">
+# Exim filter
+if $reply_address contains "@spam.site.example" and
+$reply_address does not contain "postmaster@"
+then
+seen finish
+endif
+</literallayout>
+<para>
+Handle multiple personal mailboxes:
+</para>
+<literallayout class="monospaced">
+# Exim filter
+if $local_part_suffix is "-foo"
+then
+save $home/mail/foo
+elif $local_part_suffix is "-bar"
+then
+save $home/mail/bar
+endif
+</literallayout>
+</section>
+</chapter>
+
+</book>
