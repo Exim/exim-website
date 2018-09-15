@@ -73,6 +73,27 @@
 				<xsl:text>.</xsl:text>
 			</p>
 
+         <!-- sponsor information -->
+         <div id="sponsors">
+            <xsl:text>The following organizations provide services which help the Exim project:</xsl:text>
+            <ul id="sponsor_list">
+               <li class="sponsor">
+                  <a href="https://www.cam.ac.uk/">
+                     <img src="i/cambridge-150x39.png" width="150" height="39" alt="University of Cambridge" class="sponsor_logo"/>
+                     <xsl:text>The University of Cambridge</xsl:text>
+                  </a>
+                  <xsl:text> hosts the central Exim website and domain.</xsl:text>
+               </li>
+               <li class="sponsor">
+                  <a href="https://www.macstadium.com/">
+                     <img src="i/macstadium-150x61.png" width="150" height="61" alt="MacStadium" class="sponsor_logo"/>
+                     <xsl:text>MacStadium</xsl:text>
+                  </a>
+                  <xsl:text> provide us a Mac Mini for our buildfarm, keeping macOS supported.</xsl:text>
+               </li>
+            </ul>
+         </div>
+
 		</xsl:template>
 
 </xsl:stylesheet>
