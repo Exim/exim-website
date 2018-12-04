@@ -15,6 +15,7 @@ use JavaScript::Minifier::XS;
 use Pod::Usage;
 use XML::LibXML;
 use XML::LibXSLT;
+use FindBin qw'$Bin';
 
 my $canonical_url = 'https://www.exim.org/';
 
@@ -464,7 +465,7 @@ sub error_help {
 ## Parse arguments
 sub parse_arguments {
 
-    my %opt = ( spec => [], filter => [], help => 0, man => 0, web => 0, minify => 1, verbose => 0, localstatic => 0 );
+    my %opt = ( spec => [], filter => [], help => 0, man => 0, web => 0, minify => 1, verbose => 0, localstatic => 0, tmpl => "$Bin/../templates" );
     GetOptions(
         \%opt,      'help|h!', 'man!',      'web!',    'spec=s{1,}', 'filter=s{1,}',
         'latest=s', 'tmpl=s',  'docroot=s', 'minify!', 'verbose!',   'localstatic!'
