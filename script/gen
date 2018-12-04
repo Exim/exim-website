@@ -516,11 +516,11 @@ __END__
 
 =head1 NAME
 
-gen.pl - Generate exim html documentation and website
+gen - Generate exim html documentation and website
 
 =head1 SYNOPSIS
 
-gen.pl [options]
+gen [options]
 
  Options:
    --help              display this help and exits
@@ -600,7 +600,7 @@ Generates the exim website and HTML documentation.
 
 =head1 EXAMPLE
 
-    script/gen.pl \
+    script/gen \
       --web \
       --spec docbook/*/spec.xml \
       --filter  docbook/*/filter.xml \
