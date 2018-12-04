@@ -134,8 +134,17 @@ sub do_doc {
     my $xml = XML::LibXML->new()->parse_file($xml_path) or die $!;
 
     ## Get the version number
-    my $version = $xml->findvalue('/book/bookinfo/revhistory/revision/revnumber');
-    die "Unable to get version number\n" unless defined $version && $version =~ /^\d+(\.\d+)*$/;
+    my $version = do {
+	my $version = $xml->findvalue('/book/bookinfo/revhistory/revision/revnumber');
+	die "Unable to get version number\n"
+	    unless defined $version and $version =~ /^
+		(?<version>
+		    \d+			    # major
+		    (?:\.\d+(?:\.\d+)?)?    # (minor(.patch))
+		)
+		(?:-RC\d+)?$/x;		    # -RCX
+	$+{version};
+    };
 
     ## Prepend chapter filenames?
     my $prepend_chapter = $type eq 'filter' ? 'filter_' : '';
