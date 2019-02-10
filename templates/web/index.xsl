@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	
+
 	<!-- WRAPPER -->
 		<xsl:import href="../wrapper.xsl"/>
 		<xsl:template match="/"> <xsl:apply-imports/> </xsl:template>
-		
+
 		<xsl:variable name="docroot" select="'.'"/>
 
 	<!-- Title -->
@@ -20,7 +20,7 @@
                         <link rel="canonical" href="https://www.exim.org/"/>
 
 	</xsl:variable>
- 
+
 	<!-- CONTENT -->
 		<xsl:template name="content">
 
@@ -54,14 +54,12 @@
             <xsl:value-of select="/content/current_version"/>
          </p>
 
-	 <p>We fixed CVE-2018-6789</p>
-
          <p id="beta_version_info">
             <xsl:text>There may be beta versions available from the ftp sites in the Testing directory. Many people are using these without problems, but they are not recommended unless you are willing to work with beta software.</xsl:text>
          </p>
 
                 <!-- Book Information -->
-                   
+
 			<p id="book_info">
 				<a href="https://www.uit.co.uk/the-exim-smtp-mail-server">
 					<img src="i/exim-book.png" width="74" height="100"/>
