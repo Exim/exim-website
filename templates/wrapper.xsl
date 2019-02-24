@@ -67,12 +67,6 @@
                             <li> <a href="{$docroot}/static/doc/security">Security</a> </li>
                             <li> <a href="{$docroot}/credits.html">Credits</a> </li>
 
-                            <li class="img">
-                               <a href="https://plus.google.com/101257968735428844827/?prsrc=3" title="Google+">
-				       <img src="{$docroot}/i/gplus-32.png" width="16" height="16" alt="G+"/>
-                               </a>
-                            </li>
-
                             <!-- Search Field -->
 
                                <li class="search">
