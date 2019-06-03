@@ -14,13 +14,13 @@
 <title>Exim's interfaces to mail filtering</title>
 <titleabbrev>Exim filtering</titleabbrev>
 <date>
-10 Feb 2019
+18 Feb 2019
 </date>
 <author><firstname>Philip</firstname><surname>Hazel</surname></author>
 <authorinitials>PH</authorinitials>
 <revhistory><revision>
 <revnumber>4.92</revnumber>
-<date>10 Feb 2019</date>
+<date>18 Feb 2019</date>
   <authorinitials>PH</authorinitials>
 </revision></revhistory>
 <copyright><year>
