@@ -80,6 +80,12 @@
                   <xsl:text> hosts the central Exim website and domain.</xsl:text>
                </li>
                <li class="sponsor">
+                  <a href="https://www.bytemark.co.uk/">
+                     <xsl:text>Bytemark</xsl:text>
+                  </a>
+                  <xsl:text> provide us with a VM for running the buildfarm, for the testsuite.</xsl:text>
+               </li>
+               <li class="sponsor">
                   <a href="https://www.macstadium.com/">
                      <img src="i/macstadium-150x61.png" width="150" height="61" alt="MacStadium" class="sponsor_logo"/>
                      <xsl:text>MacStadium</xsl:text>
