@@ -29,7 +29,9 @@
 			<!-- General Mirror Info -->
 				<p>
 					<xsl:text>Exim is available from a number of FTP sites. It may also be supplied on some GNU CDs or with other software distributions. Further information on the binary and OS distributions can be found in the </xsl:text>
-					<a href="http://wiki.exim.org/ObtainingExim">Exim Wiki</a>
+					<a href="https://wiki.exim.org/ObtainingExim">Exim Wiki.</a>
+					If the mirrors do not work for you, you can download the tarballs from the
+					<a href="https://ftp.exim.org/pub/exim/exim4/">origin.</a>.
 					<xsl:text>.</xsl:text>
 				</p>
 
