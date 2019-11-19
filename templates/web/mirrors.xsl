@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	
+
 	<!-- WRAPPER -->
 		<xsl:import href="../wrapper.xsl"/>
 		<xsl:template match="/"> <xsl:apply-imports/> </xsl:template>
-		
+
 		<xsl:variable name="docroot" select="'.'"/>
 
 	<!-- Title -->
@@ -44,6 +44,14 @@
                   <a href="https://www.exim.org/mirmon/www_mirrors.html">Website Mirrors</a>
                </li>
             </ul>
+
+	    <h3>Verification of Downloads</h3>
+
+	    All published Tarballs are signed. The signatures are created with keys belonging to the developers:
+	    <a href="{$staticroot}/keys/jgh@wizmail.org.asc">Jeremy Harris</a>,
+	    <a href="{$staticroot}/keys/phil.pennock@spodhuis.org.asc">Phil Pennock</a>, or
+	    <a href="{$staticroot}/keys/hs@schlittermann.de.asc">Heiko Schlittermann</a>. (Please crosscheck these keys
+	    with keys you can find at other sources.)
 
             <h3>Mirroring Exim</h3>
 
