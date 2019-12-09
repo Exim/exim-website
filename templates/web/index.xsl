@@ -48,7 +48,7 @@
 
          <p id="version_info">
             <xsl:text>The current version is </xsl:text> <xsl:value-of select="/content/current_version"/>
-	    This is a security release.  See <a href="{$staticroot}/doc/security/CVE-2019-16928.txt">CVE-2019-16928</a>.
+	    <!--This is a security release.  See <a href="{$staticroot}/doc/security/CVE-2019-16928.txt">CVE-2019-16928</a>.-->
          </p>
 
          <p id="beta_version_info">
