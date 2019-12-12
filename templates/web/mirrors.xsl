@@ -32,6 +32,8 @@
 					<a href="https://wiki.exim.org/ObtainingExim">Exim Wiki.</a>
 					If the mirrors do not work for you, you can download the tarballs from the
 					<a href="https://ftp.exim.org/pub/exim/exim4/">origin.</a>.
+					If we published maintenance releases you can find the tarballs
+					in the <a href="https://ftp.exim.org/pub/exim4/fixes">fixes</a> directory.
 					<xsl:text>.</xsl:text>
 				</p>
 
@@ -67,6 +69,7 @@
 		<li> Main Git Repository: <code>git://git.exim.org/exim.git</code></li>
 		<li> Mirror at GitHub <a href="https://github.com/Exim/exim.git">https://github.com/Exim/exim.git</a></li>
 	    </ul>
+	    All releases get a signed Git tag.
 	    </p>
 
 	    </xsl:template>
