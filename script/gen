@@ -141,6 +141,7 @@ sub do_doc {
 		(?<version>
 		    \d+			    # major
 		    (?:\.\d+(?:\.\d+)?)?    # (minor(.patch))
+		    (?:\.\d+(?:\.\d+(?:\.\d+)?)?)?    # (minor(.patch.(fixes)))
 		)
 		(?:-RC\d+)?$/x;		    # -RCX
 	$+{version};
