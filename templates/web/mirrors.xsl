@@ -53,11 +53,9 @@
 
 	    <h3>Verification of Downloads</h3>
 
-	    All published Tarballs are signed. The signatures are created with keys belonging to the developers:
-	    <a href="{$staticroot}/keys/jgh@wizmail.org.asc">Jeremy Harris</a>,
-	    <a href="{$staticroot}/keys/phil.pennock@spodhuis.org.asc">Phil Pennock</a>, or
-	    <a href="{$staticroot}/keys/hs@schlittermann.de.asc">Heiko Schlittermann</a>. (Please crosscheck these keys
-	    with keys you can find at other sources.)
+	    All published tarballs are signed. The signatures are created with keys belonging to the developers. They keys
+	    can be found in our <a href="https://ftp.exim.org/pub/exim/Exim-Maintainers-Keyring.asc">maintainers keyring</a>.
+	    (Please crosscheck these keys with keys you can find at other sources.)
 
             <h3>Mirroring Exim</h3>
 
