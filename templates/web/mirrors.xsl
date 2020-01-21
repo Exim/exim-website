@@ -54,7 +54,7 @@
 	    <h3>Verification of Downloads</h3>
 
 	    All published tarballs are signed. The signatures are created with keys belonging to the developers. They keys
-	    can be found in our <a href="https://ftp.exim.org/pub/exim/Exim-Maintainers-Keyring.asc">maintainers keyring</a>.
+	    can be found in our <a href="https://downloads.exim.org/Exim-Maintainers-Keyring.asc">maintainers keyring</a>.
 	    (Please crosscheck these keys with keys you can find at other sources.)
 
             <h3>Mirroring Exim</h3>
