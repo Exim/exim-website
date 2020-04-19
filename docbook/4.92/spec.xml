@@ -53899,8 +53899,8 @@ let the Exim Maintainers know and we&#x2019;ll likely use it).
 </listitem>
 <listitem>
 <para>
-With GnuTLS, if an explicit list is used for the <option>tls_privatekey</option> main option
-main option, it must be ordered to match the <option>tls_certificate</option> list.
+With GnuTLS, if an explicit list is used for the <option>tls_privatekey</option> main option,
+it must be ordered to match the <option>tls_certificate</option> list.
 </para>
 </listitem>
 <listitem>
