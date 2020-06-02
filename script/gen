@@ -131,7 +131,7 @@ sub do_doc {
     my ( $type, $xml_path ) = @_;
 
     ## Read and validate the XML file
-    my $xml = XML::LibXML->new()->parse_file($xml_path) or die $!;
+    my $xml = XML::LibXML->new(expand_entities => 1)->parse_file($xml_path) or die $!;
 
     ## Get the version number
     my $version = do {
@@ -419,7 +419,7 @@ sub transform {
     $xml->documentElement()->appendTextChild( 'old_versions', $_ ) foreach old_docs_versions();
 
     ## Parse the ".xsl" file as XML
-    my $xsl = XML::LibXML->new()->parse_file($xsl_path) or die $!;
+    my $xsl = XML::LibXML->new(expand_entities => 1)->parse_file($xsl_path) or die $!;
 
     ## Generate a stylesheet from the ".xsl" XML.
     my $stylesheet = XML::LibXSLT->new()->parse_stylesheet($xsl);
