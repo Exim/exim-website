@@ -49,7 +49,10 @@
          <p id="version_info">
             <xsl:text>The current version is </xsl:text> <xsl:value-of select="/content/current_version"/><xsl:text>.</xsl:text>
 	    <xsl:text>If necessary, we publish maintenance releases. These releases are mainly intended for package maintainers.</xsl:text>
-	    <!--This is a security release.  See <a href="{$staticroot}/doc/security/CVE-2019-16928.txt">CVE-2019-16928</a>.-->
+
+	    This is a security release.  See <a href="{$staticroot}/doc/security/CVE-2020-qualys">CVE-2020-qualys</a> or
+	    <a href="https://www.qualys.com/2021/05/04/21nails/21nails.txt">at the reporter's (Qualys) site</a>.
+
          </p>
 
          <p id="beta_version_info">
