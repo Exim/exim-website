@@ -47,7 +47,7 @@
          </p>
 
          <p id="version_info">
-            <xsl:text>The current version is </xsl:text> <xsl:value-of select="/content/current_version"/><xsl:text>.</xsl:text> </br>
+            <xsl:text>The current version is </xsl:text> <xsl:value-of select="/content/current_version"/><xsl:text>.</xsl:text> <br/>
 	    <xsl:text>If necessary, we publish maintenance releases. These releases are mainly intended for package maintainers.</xsl:text>
 
 	    <!--
