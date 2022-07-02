@@ -328,6 +328,7 @@ sub build_indexes {
     my ( $xml, $prepend_chapter, $xref ) = @_;
 
     my $index_hash = {};
+    my $seealso_hash = {};
     my $current_id;
     foreach my $node ( $xml->findnodes('//section | //chapter | //indexterm') ) {
         if ( $node->nodeName eq 'indexterm' ) {
@@ -340,30 +341,22 @@ sub build_indexes {
 
             next unless ( $primary || $secondary );    # skip blank entries for now...
 
-	    if ( $see ) {
-	      # not perfect; the whole line ends up bold
-	      if ( $secondary ) {
-		$secondary .= '  see  ' . $see;
-	      } else {
-		$primary .= '  see  ' . $see;
-	      }
-	    } elsif ( $see_also ) {
-	      if ( $secondary ) {
-		$secondary .= '  see also  ' . $see_also;
-	      } else {
-		$primary .= '  see also  ' . $see_also;
-	      }
+            $index_hash->{$role}{$first}{$primary}{$secondary} ||= [];
+	    if ( $see || $see_also ) {
+	      # The scalar value being written here assumes only one seealso on an indeed term
+	      # It would be nice to have the $see displayed in bold rather than in quotes
+	      $seealso_hash->{$role}{$first}{$primary}{$secondary} = 'see "' . $see .'"' if ($see);
+	      $seealso_hash->{$role}{$first}{$primary}{$secondary} = 'see also "' . $see_also .'"' if ($see_also);
 	    }
 
-            $index_hash->{$role}{$first}{$primary}{$secondary} ||= [];
-	    next if ( $see || $see_also );
-
+	    else {
 # JGH 2022/07/01
 # The $current_id being pushed here is presumably the section, given where the
 # hyperlink end up pointing to.  For bug 2889 we'd like to have something more
 # precise; tha presumably requires an anchor at the indexed point?
 
-            push @{ $index_hash->{$role}{$first}{$primary}{$secondary} }, $current_id;
+		push @{ $index_hash->{$role}{$first}{$primary}{$secondary} }, $current_id;
+	    }
         }
         else {
             $current_id = $node->getAttribute('id');
@@ -409,6 +402,10 @@ sub build_indexes {
                         $slist->appendChild($sentry)->appendTextChild( 'term', $secondary );
                         $sentry->appendChild($sitem)->appendChild($para);
                     }
+
+		    my $seealso = $seealso_hash->{$role}{$first}{$primary}{$secondary};
+		    $para->appendText($seealso) if ($seealso);
+
                     my $count = 0;
                     foreach my $ref ( @{ $index_hash->{$role}{$first}{$primary}{$secondary} } ) {
                         $para->appendText(', ')
