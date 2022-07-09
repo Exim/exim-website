@@ -287,6 +287,7 @@ sub xref_fixup {
         my $section_counter = 0;
         foreach my $section ( $chapter->findnodes('section') ) {
             ++$section_counter;
+	    $section->setAttribute( 'sectprefix', $section_counter );
 
             my $section_id = $section->getAttribute('id');
             unless ($section_id) {    # synthesise missing id
@@ -301,6 +302,31 @@ sub xref_fixup {
                 section_id    => $section_counter,
                 section_title => $section_title
             };
+
+	    # 2022/07/07 jgh: added loop for sections under sections, which are resulting from the .subsection macro
+	    # Add a "level" attribute to these nodes
+	    ## Iterate over each subsection
+	    my $subsec_counter = 0;
+	    foreach my $subsection ( $section->findnodes('section') ) {
+	      ++$subsec_counter;
+
+	      $subsection->setAttribute( 'level', "2" );
+	      $subsection->setAttribute( 'sectprefix', sprintf("%d.%d", $section_counter, $subsec_counter) );
+
+	      my $subsec_id = $subsection->getAttribute('id');
+	      unless ($subsec_id) {    # synthesise missing id
+		  $subsec_id = sprintf( 'section_noid_%04d_%04d_%04d', $chapter_counter, $section_counter, $subsec_counter );
+		  $subsection->setAttribute( 'id', $subsec_id );
+	      }
+	      my $subsec_title = $subsection->findvalue('title');
+
+	      $index{$subsec_id} = {
+		  chapter_id    => $chapter_counter,
+		  chapter_title => $chapter_title,
+		  section_id    => $subsec_counter,
+		  section_title => $subsec_title
+	      };
+	    }
         }
     }
     ## Build indexes as new chapters

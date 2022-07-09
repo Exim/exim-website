@@ -80,7 +80,24 @@
       </xsl:template>
 
    <!-- Section -->
-      <xsl:template match="/chapter/section">
+      <xsl:template match="*/section">
+
+	 <!-- Add 2 to the "level" attr for the html header level; default h3 -->
+	 <xsl:variable name="hlevel">
+	   <xsl:choose>
+	      <xsl:when test="@level!=''"><xsl:value-of select="@level + 2"/></xsl:when>
+	      <xsl:otherwise>3</xsl:otherwise>
+	   </xsl:choose>
+	 </xsl:variable>
+
+	 <!-- Take the "sectprefix" attr, default position() -->
+	 <xsl:variable name="sectprefix">
+	   <xsl:choose>
+	      <xsl:when test="@sectprefix!=''"> <xsl:value-of select="@sectprefix"/> </xsl:when>
+	      <xsl:otherwise>                   <xsl:value-of select="position()"/>  </xsl:otherwise>
+	   </xsl:choose>
+	 </xsl:variable>
+
          <!-- Section Wrapper -->
          <div class="section{@class}">
 
@@ -92,9 +109,11 @@
                   </h3>
                </xsl:when>
                <xsl:otherwise>
-                  <h3 id="{@id}" class="{@class}">
-                     <xsl:value-of select="concat(position(),'. ',title)"/>
-                  </h3>
+		  <xsl:element name="h{$hlevel}">
+		    <xsl:attribute name="id">    <xsl:value-of select="@id"/>    </xsl:attribute>
+		    <xsl:attribute name="class"> <xsl:value-of select="@class"/> </xsl:attribute>
+                     <xsl:value-of select="concat($sectprefix,'. ',title)"/>
+		  </xsl:element>
                </xsl:otherwise>
             </xsl:choose>
 
