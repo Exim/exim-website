@@ -130,6 +130,14 @@
          </p>
       </xsl:template>
 
+   <!-- Anchors on varlistitems -->
+      <xsl:template match="*/listitem[@anchorname]">
+	  <a id="{@anchorname}"> </a>
+	  <dd>
+	    <xsl:apply-templates select="*"/>
+	  </dd>
+      </xsl:template>
+
    <!-- Ignore -->
       <xsl:template match="chapter_id|this_url|prev_url|next_url|toc_url|canonical_url|current_url|title_uri|old_versions"/>
 

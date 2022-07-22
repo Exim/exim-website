@@ -335,10 +335,11 @@ sub xref_fixup {
     ## Replace all of the xrefs in the XML
     foreach my $xref ( $xml->findnodes('//xref') ) {
         my $linkend = $xref->getAttribute('linkend');
+
         if ( exists $index{$linkend} ) {
-            $xref->setAttribute( 'chapter_id',    $index{$linkend}{'chapter_id'} );
+            $xref->setAttribute( 'chapter_id',    $index{$linkend}{'chapter_id'} ) if ( $index{$linkend}{'chapter_id'} );
             $xref->setAttribute( 'chapter_title', $index{$linkend}{'chapter_title'} );
-            $xref->setAttribute( 'section_id', $index{$linkend}{'section_id'} ) if ( $index{$linkend}{'section_id'} );
+            $xref->setAttribute( 'section_id',	  $index{$linkend}{'section_id'} ) if ( $index{$linkend}{'section_id'} );
             $xref->setAttribute( 'section_title', $index{$linkend}{'section_title'} )
                 if ( $index{$linkend}{'section_title'} );
             $xref->setAttribute( 'url',
@@ -356,7 +357,9 @@ sub build_indexes {
     my $index_hash = {};
     my $seealso_hash = {};
     my $current_id;
-    foreach my $node ( $xml->findnodes('//section | //chapter | //indexterm') ) {
+    my $verterm_counter = 0;
+
+    foreach my $node ( $xml->findnodes('//section | //chapter | //varlistentry | //indexterm') ) {
         if ( $node->nodeName eq 'indexterm' ) {
             my $role      = $node->getAttribute('role') || 'concept';
             my $primary   = $node->findvalue('child::primary');
@@ -376,14 +379,49 @@ sub build_indexes {
 	    }
 
 	    else {
-# JGH 2022/07/01
-# The $current_id being pushed here is presumably the section, given where the
-# hyperlink end up pointing to.  For bug 2889 we'd like to have something more
-# precise; tha presumably requires an anchor at the indexed point?
-
 		push @{ $index_hash->{$role}{$first}{$primary}{$secondary} }, $current_id;
 	    }
         }
+	elsif ( $node->nodeName eq 'varlistentry' ) {
+
+	  foreach my $vitem ( $node->findnodes('listitem') ) {
+
+	    # Add an anchorname xml attribute.
+	    # chapter.xsl spots this and places a "<a id="{@anchorname}"> </a>"
+
+	    my $anchorname = sprintf("vi%d", $verterm_counter++);
+	    $vitem->setAttribute( 'anchorname', $anchorname );
+	    $current_id = $anchorname;
+
+	    # Set the latest indexable id to be picked up by the next indexterm,
+	    # which should be in the content of the listitem
+
+	    my ($chapter_title, $sec_id, $sec_title);
+
+	    foreach my $chap ( $node->findnodes('ancestor::chapter') ) {
+	      $chapter_title = $chap->findvalue('title');
+	    }
+	    next unless ($chapter_title);
+
+	    # Search upward to find a subsection or section id & title
+	    foreach my $ssec ( $node->findnodes("ancestor::section[\@level='2']") ) {
+	      $sec_id = $ssec->getAttribute('id');
+	      $sec_title = $ssec->findvalue('title');
+	      last;
+	    }
+	    if (!defined($sec_id)) {
+	      foreach my $sec ( $node->findnodes('ancestor::section') ) {
+		$sec_id = $sec->getAttribute('id');
+		$sec_title = $sec->findvalue('title');
+		last;
+	      }
+	    }
+
+	    $xref->{$anchorname}{'chapter_title'} = $chapter_title;
+	    $xref->{$anchorname}{'section_id'} = $sec_id if ($sec_id);
+	    $xref->{$anchorname}{'section_title'} = $sec_title if ($sec_title);
+	  }
+	}
         else {
             $current_id = $node->getAttribute('id');
         }
