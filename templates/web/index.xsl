@@ -78,6 +78,7 @@
          <div id="sponsors">
             <xsl:text>The following organizations provide services which help the Exim project:</xsl:text>
             <ul id="sponsor_list">
+<!-- no longer
                <li class="sponsor">
                   <a href="https://www.cam.ac.uk/">
                      <img src="i/cambridge-150x39.png" width="150" height="39" alt="University of Cambridge" class="sponsor_logo"/>
@@ -85,6 +86,7 @@
                   </a>
                   <xsl:text> hosts the central Exim website and domain.</xsl:text>
                </li>
+-->
                <li class="sponsor">
                   <a href="https://www.bytemark.co.uk/">
                      <xsl:text>Bytemark</xsl:text>
