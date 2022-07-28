@@ -418,7 +418,7 @@ sub build_indexes {
 	    }
 
 	    $xref->{$anchorname}{'chapter_title'} = $chapter_title;
-	    $xref->{$anchorname}{'section_id'} = $sec_id if ($sec_id);
+	    $xref->{$anchorname}{'section_id'} = $anchorname;
 	    $xref->{$anchorname}{'section_title'} = $sec_title if ($sec_title);
 	  }
 	}
