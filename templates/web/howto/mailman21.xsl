@@ -160,8 +160,10 @@ domainlist mm_domains=list.example.com
 MM_WRAP=MM_HOME/mail/mailman
 #
 # The path of the list config file (used as a required file when
-# verifying list addresses)
-MM_LISTCHK=MM_HOME/lists/${lc::$local_part}/config.pck</pre>
+# verifying list addresses).  The option used takes a list
+# which is list-split before string-expansion, so we change the
+# default list-separator.
+MM_LISTCHK=<@ MM_HOME/lists/${lc:$local_part}/config.pck</pre>
 
          <h4><a href="#index" id="roconf">Exim Router</a></h4>
 
@@ -172,6 +174,7 @@ MM_LISTCHK=MM_HOME/lists/${lc::$local_part}/config.pck</pre>
          <pre>mailman_router:
   driver            = accept
   domains           = +mm_domains
+  local_parts       = dsearch,filter=dir;MM_HOME/lists
   require_files     = MM_LISTCHK
   local_part_suffix_optional
   local_part_suffix = -admin     : \
@@ -196,7 +199,7 @@ MM_LISTCHK=MM_HOME/lists/${lc::$local_part}/config.pck</pre>
           '${if def:local_part_suffix \
                 {${sg{$local_part_suffix}{-(\\w+)(\\+.*)?}{\$1}}} \
                 {post}}' \
-          $local_part
+          $local_part_data
   current_directory = MM_HOME
   home_directory    = MM_HOME
   user              = MM_UID
@@ -336,7 +339,7 @@ VERP_DELIVERY_INTERVAL       = 0</pre>
 
          <p>In this case, you must change the MM_HOME macro to something like this:-</p>
 
-         <pre>MM_HOME=/virtual/${lc::$domain}/mailman</pre>
+         <pre>MM_HOME=/virtual/${lc:$domain_data}/mailman</pre>
 
          <p>and modify the mm_domains domain list appropriately.</p>
 
