@@ -78,18 +78,9 @@
          <div id="sponsors">
             <xsl:text>The following organizations provide services which help the Exim project:</xsl:text>
             <ul id="sponsor_list">
-<!-- no longer
                <li class="sponsor">
-                  <a href="https://www.cam.ac.uk/">
-                     <img src="i/cambridge-150x39.png" width="150" height="39" alt="University of Cambridge" class="sponsor_logo"/>
-                     <xsl:text>The University of Cambridge</xsl:text>
-                  </a>
-                  <xsl:text> hosts the central Exim website and domain.</xsl:text>
-               </li>
--->
-               <li class="sponsor">
-                  <a href="https://www.bytemark.co.uk/">
-                     <xsl:text>Bytemark</xsl:text>
+                  <a href="https://www.mythic-beasts.com/">
+                     <xsl:text>Mythic Beasts</xsl:text>
                   </a>
                   <xsl:text> provide us with a VM for running the buildfarm, for the testsuite.</xsl:text>
                </li>
