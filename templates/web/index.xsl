@@ -35,9 +35,8 @@
 				<a href="https://www.cam.ac.uk/" title="University of Cambridge Home page">University of Cambridge</a>
 				<xsl:text> for use on Unix systems connected to the Internet. It is freely available under the terms of the </xsl:text>
 				<a href="https://www.gnu.org/licenses/gpl.html" title="GPL Information">GNU General Public Licence</a>
-				<xsl:text>. In style it is similar to </xsl:text>
-				<a href="http://freecode.com/projects/smail/" rel="nofollow">Smail 3</a>
-				<xsl:text>, but its facilities are more general. There is a great deal of flexibility in the way mail can be routed, and there are extensive facilities for checking incoming mail. Exim can be installed in place of </xsl:text>
+				<xsl:text>. In style it is similar to Smail 3,
+				but its facilities are more general. There is a great deal of flexibility in the way mail can be routed, and there are extensive facilities for checking incoming mail. Exim can be installed in place of </xsl:text>
 				<a href="https://www.proofpoint.com/us/sendmail-open-source" title="Sendmail home page" rel="nofollow">Sendmail</a>
 				<xsl:text>, although the configuration of Exim is quite different.</xsl:text>
 			</p>
@@ -64,11 +63,11 @@
                 <!-- Book Information -->
 
 			<p id="book_info">
-				<a href="https://www.uit.co.uk/the-exim-smtp-mail-server">
+				<a href="https://www.uit.co.uk/all-books/the-exim-smtp-mail-server.html">
 					<img src="i/exim-book.png" width="74" height="100"/>
 				</a>
 				<xsl:text>You may wish to purchase </xsl:text>
-				<a href="https://www.uit.co.uk/the-exim-smtp-mail-server.html">The Exim SMTP Mail Server</a>
+				<a href="https://www.uit.co.uk/all-books/the-exim-smtp-mail-server.html">The Exim SMTP Mail Server</a>
 				<xsl:text> book, written by the original author of Exim, </xsl:text>
 				<a href="https://en.wikipedia.org/wiki/Philip_Hazel">Philip Hazel</a>
 				<xsl:text>.</xsl:text>

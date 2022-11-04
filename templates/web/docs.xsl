@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	
+
 	<!-- WRAPPER -->
 		<xsl:import href="../wrapper.xsl"/>
 		<xsl:template match="/"> <xsl:apply-imports/> </xsl:template>
-		
+
 		<xsl:variable name="docroot" select="'.'"/>
 
 	<!-- Title -->
 		<xsl:variable name="html.head.title" select="'Documentation for Exim'"/>
 
-                
+
 	<xsl:variable name="html.head.append">
 
 		<!-- Canonical -->
@@ -35,7 +35,7 @@
 				</h2>
 
 			<!-- General Doc Info -->
-				<p>Exim has a set of documentation released with it. A text file of the main documentation is released as part of the Exim tar archive. Additionally, postscript and texinfo forms of the documentation are available in separate tar archives on the ftp sites. There is also a <a href="https://www.uit.co.uk/the-exim-smtp-mail-server">book</a>.</p>
+				<p>Exim has a set of documentation released with it. A text file of the main documentation is released as part of the Exim tar archive. Additionally, postscript and texinfo forms of the documentation are available in separate tar archives on the ftp sites. There is also a <a href="https://www.uit.co.uk/all-books/the-exim-smtp-mail-server.html">book</a>.</p>
 
 				<p>User supported documentation, FAQs and hints can be found in the <a href="https://wiki.exim.org/">wiki</a>.</p>
 
@@ -102,7 +102,7 @@
 					<xsl:text> - see the </xsl:text>
 					<a href="{$docroot}/mirrors.html">download</a>
 					<xsl:text> pages.</xsl:text>
-				</p>	
+				</p>
 
 			<!-- Copies -->
 				<h3>Copies of Documentation</h3>
