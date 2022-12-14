@@ -25,6 +25,8 @@
 	 funding, the domain has to be nominally owned for registration purposes
 	 by an individual.  As of 2022-11-22 this is
 	 <a href="mailto:hs@schlittermann.de">Heiko Schlittermann</a>
+	 Neither Heiko Schlittermann nor any of his companies owns any rights
+	 on the exim.org domain.
 
 	</xsl:template>
 </xsl:stylesheet>
