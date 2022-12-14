@@ -37,7 +37,7 @@
                <title>
                   <xsl:value-of select="$html.head.title"/>
                </title>
-            
+
                <xsl:copy-of select="$html.head.append"/>
             </head>
 	    <body class="no-js">
@@ -66,6 +66,7 @@
                             <li> <a href="https://bugs.exim.org/">Bugs</a> </li>
                             <li> <a href="{$docroot}/static/doc/security">Security</a> </li>
                             <li> <a href="{$docroot}/credits.html">Credits</a> </li>
+                            <li> <a href="{$docroot}/legal.html">Legal</a> </li>
 
                             <!-- Search Field -->
 
@@ -114,7 +115,7 @@
 
                 <!-- Local JavaScript -->
                    <script type="text/javascript" src="{$staticroot}/js/common.js"></script>
-                   
+
                    <xsl:copy-of select="$html.body.append"/>
 
              </body>
