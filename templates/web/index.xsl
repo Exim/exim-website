@@ -90,6 +90,12 @@
                   </a>
                   <xsl:text> provide us a Mac Mini for our buildfarm, keeping macOS supported.</xsl:text>
                </li>
+               <li class="sponsor">
+                  <a href="https://schlittermann.de/">
+                     <xsl:text>Schlittermann - Internet &amp; Unix Support</xsl:text>
+                  </a>
+                  <xsl:text> provide us resources for hosting and administering the exim.org infrastructure.</xsl:text>
+               </li>
             </ul>
          </div>
 
