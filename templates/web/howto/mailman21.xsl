@@ -163,7 +163,7 @@ MM_WRAP=MM_HOME/mail/mailman
 # verifying list addresses).  The option used takes a list
 # which is list-split before string-expansion, so we change the
 # default list-separator.
-MM_LISTCHK=MM_HOME/lists/${lc:$local_part}/config.pck</pre>
+MM_LISTCHK=&lt;&commat; MM_HOME/lists/${lc:$local_part}/config.pck</pre>
 
          <h4><a href="#index" id="roconf">Exim Router</a></h4>
 
