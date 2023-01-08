@@ -31,7 +31,7 @@
 				<a href="https://www.exim.org/">
 					<img src="i/exim-blue-ld-87x65.png" alt="Exim Logo" width="87" height="65"/>
 				</a>
-				<xsl:text>Exim is a message transfer agent (MTA) developed at the </xsl:text>
+				<xsl:text>Exim is a message transfer agent (MTA) originally developed at the </xsl:text>
 				<a href="https://www.cam.ac.uk/" title="University of Cambridge Home page">University of Cambridge</a>
 				<xsl:text> for use on Unix systems connected to the Internet. It is freely available under the terms of the </xsl:text>
 				<a href="https://www.gnu.org/licenses/gpl.html" title="GPL Information">GNU General Public Licence</a>
