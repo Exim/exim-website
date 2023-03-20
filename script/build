@@ -1,14 +1,54 @@
 #!/bin/bash
+# Usage: [TARGET=…] $0 [ref]
+# - Build from either the ref (or refs/heads/master) or from the current working directory
+# - Can be used as a post-update hook
+
+set -eu
+shopt -s extglob
 
 [[ -t 0 ]] || exec &>/tmp/website-$(date +%s).log
 
-TARGET=${1:-/srv/www/vhosts/www.exim.org}
-LATEST=`(cd docbook; ls -1dv [0-9].[0-9]* | tail -1)`
+tmp=$(mktemp -d)
+trap "rm -rf '$tmp'" EXIT INT
+
+staging="$tmp/staging"                          # the temporary build dir
+pubdir=${TARGET:-/srv/www/vhosts/www.exim.org}  # publish here
+
+if [[ $(git rev-parse --is-inside-work-tree) != true ]]
+then
+  workdir=$tmp/workdir
+  install -d "$workdir"
+  git --work-tree="$workdir" checkout -f refs/heads/master	# FIXME: use the receiving branch
+  cd "$workdir"
+fi
+
+if ! test -d "$pubdir"
+then
+	echo "Warning: $pubdir does not exist. Did you forget to set the TARGET env in \"local\" mode?" >&2
+	exit 1
+fi
+
+
+if getent group eximdev
+then install -m 02775 -g eximdev -d "$staging"
+else install -d "$staging"
+fi
+
+cp -r --preserve=timestamps "$pubdir"/exim-+(html|pdf)-* "$staging/" ||:
+
+# start working
+latest=$(cd docbook && compgen -G '[45].*' | sort -V | tail -n1)
 
 script/gen \
   --web \
-  --spec docbook/*/spec.xml \
-  --filter  docbook/*/filter.xml \
+  --spec docbook/[45]*/spec.xml \
+  --filter  docbook/[45]*/filter.xml \
   --tmpl templates \
-  --latest "$LATEST" \
-  --docroot "$TARGET"
+  --latest "$latest" \
+  --docroot "$staging"
+
+mv "$staging" "$pubdir.$$"              # may take some time (tmp -> data volume)
+mv "$pubdir" "$pubdir.$(date -Isecond)" # backup
+mv "$pubdir.$$" "$pubdir"               # should be fast
+
+echo "*** updated into $pubdir"
