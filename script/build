@@ -6,8 +6,6 @@
 set -eu
 shopt -s extglob
 
-[[ -t 0 ]] || exec &>/tmp/website-$(date +%s).log
-
 tmp=$(mktemp -d)
 trap "rm -rf '$tmp'" EXIT INT
 
