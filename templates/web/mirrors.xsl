@@ -27,13 +27,19 @@
 
 				<p>
 					<xsl:text>Exim is available as a native package for a number of software distributions. The sources are available as
-					a tarball and from our <a href="https://git.exim.org/exim.git">Git Repo</a>, which is mirrored on <a href="https://github.com/Exim/exim">Github</a>.
-					Further information on the binary and OS distributions can be found in the </xsl:text>
+					a tarball and from our </xsl:text>
+					<a href="https://git.exim.org/exim.git">Git Repo,</a>
+
+					<xsl:text> which is mirrored on </xsl:text>
+					<a href="https://github.com/Exim/exim">Github</a>.
+
+					<xsl:text>Further information on the binary and OS distributions can be found in the </xsl:text>
 					<a href="https://wiki.exim.org/ObtainingExim">Exim Wiki.</a>
 
-					<xsl:text>If we published maintenance releases you can find the tarballs
-					in the </xsl:text>
-					<a href="https://downloads.exim.org/exim4/fixes/">fixes</a><xsl:text> directory</xsl:text>
+					<xsl:text>If we published maintenance releases you can find the tarballs in the </xsl:text>
+					<a href="https://downloads.exim.org/exim4/fixes/">fixes</a>
+
+					<xsl:text> directory</xsl:text>
 				</p>
 
 	    <h3>Verification of Downloads</h3>
