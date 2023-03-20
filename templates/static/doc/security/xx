@@ -1,0 +1,43 @@
+CVE ID:     CVE-2021-38371
+Date:       2021-08-10
+Version(s): up to and including 4.94.2
+Reporter:   Damian Poddebniak, Fabian Ising, Hanno Böck, and Sebastian Schinzel
+Reference:  https://nostarttls.secvuln.info/
+Issue:      Possible MitM attack on STARTTLS when Exim is *sending* email.
+
+** The Exim developers do not consider this issue as a security problem.
+** Additionally, we do not have any feedback about a successful attack
+** using the scenario described below.
+
+
+Conditions to be vulnerable
+===========================
+
+Versions up to (and including) 4.94.2 are vulnerable when
+*sending* emails via a connection encrypted via STARTTLS.
+
+
+Details
+=======
+
+When Exim acting as a mail client wishes to send a message,
+a Meddler-in-the-Middle (MitM) may respond to the STARTTLS command
+by also sending a response to the *next* command, which Exim will
+erroneously treat as a trusted response.
+
+Source fixed by
+https://git.exim.org/exim.git/commit/1b9ab35f323121aabf029f0496c7227818efad14
+commit 1b9ab35f323121aabf029f0496c7227818efad14
+Author: Jeremy Harris
+Date:   Thu Jul 30 20:16:01 2020 +0100
+
+Mitigation
+==========
+
+There is - beside updating the server - no known mitigation.
+
+Fix
+===
+
+Download and build the fixed version 4.95 or a later version
+(4.96 was released in June 2022).

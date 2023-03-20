@@ -34,12 +34,12 @@
 					<a href="https://github.com/Exim/exim">Github</a>.
 
 					<xsl:text>Further information on the binary and OS distributions can be found in the </xsl:text>
-					<a href="https://wiki.exim.org/ObtainingExim">Exim Wiki.</a>
+					<a href="https://wiki.exim.org/ObtainingExim">Exim Wiki</a>.
 
-					<xsl:text>If we published maintenance releases you can find the tarballs in the </xsl:text>
+					<xsl:text>If we published maintenance releases, you can find the tarballs in the </xsl:text>
 					<a href="https://downloads.exim.org/exim4/fixes/">fixes</a>
 
-					<xsl:text> directory</xsl:text>
+					<xsl:text> directory.</xsl:text>
 				</p>
 
 	    <h3>Verification of Downloads</h3>
