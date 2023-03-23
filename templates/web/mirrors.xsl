@@ -28,21 +28,24 @@
 
 			<!-- General Download Info -->
 				<p>
-					<xsl:text>Exim is available as a native package for a number of software distributions.
-					The sources are available as </xsl:text>
-					<a href="https://downloads.exim.org/exim4/">tarballs</a>
+				<xsl:text>Exim is available as a native package for a number of software distributions.
+				The sources are available as </xsl:text>
+				<a href="https://downloads.exim.org/exim4/">tarballs</a>
+				<xsl:text> and as a </xsl:text>
+				<a href="#git">Git Repo (see below).</a>
+				</p>
 
-					<xsl:text> and as a </xsl:text>
-					<a href="#git">Git Repo.</a>
+				<p>
+				<xsl:text>Further information on the binary and OS distributions can be found in the </xsl:text>
+				<a href="https://github.com/Exim/exim.wiki/ObtainingExim">Exim Wiki.</a>
+				</p>
 
-					<xsl:text>Further information on the binary and OS distributions can be found in the </xsl:text>
-					<a href="https://wiki.exim.org/ObtainingExim">Exim Wiki,</a>
-					<xsl:text> which is mirrored on </xsl:text>
-					<a href="https://github.com/Exim/exim">Github</a>.
-
-					<xsl:text>If we published <em>maintenance</em> releases, you can find the tarballs in the </xsl:text>
-					<a href="https://downloads.exim.org/exim4/fixes/">fixes area,</a>
-					<xsl:text> or in indiviual branches suffixed with <em>+fixes</em>.</xsl:text>
+				<p>
+				<xsl:text>If we published </xsl:text><em>maintenance</em><xsl:text> releases, you can find the tarballs in the </xsl:text>
+				<a href="https://downloads.exim.org/exim4/fixes/">fixes area,</a>
+				<xsl:text> and in individual </xsl:text><a href="#git">git branches</a><xsl:text> suffixed with </xsl:text><em>+fixes.</em>
+				<xsl:text> Please note, that we normally we do not publish maintenance releases as tarballs, unless they contain
+				critical changes.</xsl:text>
 				</p>
 
 	    <h3>Verification of Downloads</h3>
@@ -55,6 +58,7 @@
 	    <a href="https://downloads.exim.org/Exim-Maintainers-Keyring.asc">maintainers keyring</a>.
 	    (Please crosscheck these keys with keys you can find at other sources.)
 	    </p>
+
 	    <p>
 	    The exim.org domain supports <a href="https://wiki.gnupg.org/WKD">the WKD mechanism</a> for OpenPGP key retrieval.
 	    </p>
