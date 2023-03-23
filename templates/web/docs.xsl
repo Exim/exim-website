@@ -100,13 +100,13 @@
 					<xsl:text>. The FAQ for the obsolete Exim 3 releases can be found on the </xsl:text>
 					<a href="{$docroot}/ftp/exim3/">FTP site</a>
 					<xsl:text> - see the </xsl:text>
-					<a href="{$docroot}/mirrors.html">download</a>
+					<a href="{$docroot}/download.html">download</a>
 					<xsl:text> pages.</xsl:text>
 				</p>
 
 			<!-- Copies -->
 				<h3>Copies of Documentation</h3>
-				<p>Copies of the main Exim documentation in HTML format as used on this site in a compressed tar file are available from the main ftp site and mirrors (see file exim-html-*).</p>
+				<p>Copies of the main Exim documentation in HTML format as used on this site in a compressed tar file are available from the main download site.(see file exim-html-*).</p>
 
 		</xsl:template>
 

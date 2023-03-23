@@ -13,7 +13,7 @@
 
         <!-- Canonical -->
                 <xsl:variable name="html.head.append">
-                        <link rel="canonical" href="https://www.exim.org/mirrors.html"/>
+                        <link rel="canonical" href="https://www.exim.org/download.html"/>
                 </xsl:variable>
 
 	<!-- CONTENT -->

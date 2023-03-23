@@ -59,7 +59,7 @@
 
                          <ul id="nav_flow" class="nav">
                             <li> <a href="{$docroot}/index.html">Home</a> </li>
-                            <li> <a href="{$docroot}/mirrors.html">Download</a> </li>
+                            <li> <a href="{$docroot}/download.html">Download</a> </li>
                             <li> <a href="{$docroot}/docs.html">Documentation</a> </li>
                             <li> <a href="{$docroot}/maillist.html">Mailing Lists</a> </li>
                             <li> <a href="http://wiki.exim.org/">Wiki</a> </li>
