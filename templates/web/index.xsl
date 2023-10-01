@@ -26,6 +26,10 @@
 
 			<h2>Latest Version: <xsl:value-of select="/content/current_version"/></h2>
 
+			Currently we're working on a security release. This will be 4.96.1. Please
+			see <a href="static/doc/security/CVE-2023-zdi.txt">this document for more detailed information.</a>
+
+
                 <!-- Summary -->
 			<p id="summary">
 				<a href="https://www.exim.org/">
