@@ -55,15 +55,6 @@
 	    <a href="static/doc/security/CVE-2023-zdi.txt">this document for more detailed information.</a>
 	</p>
 
-
-
-	    <!--
-	    This is a security release.  See <a href="{$staticroot}/doc/security/CVE-2020-qualys">CVE-2020-qualys</a> or
-	    <a href="https://www.qualys.com/2021/05/04/21nails/21nails.txt">at the reporter's (Qualys) site</a>.
-	    -->
-
-         </p>
-
          <p id="beta_version_info">
             <xsl:text>There may be beta versions available from the ftp sites in the Testing directory. Many people are using these without problems, but they are not recommended unless you are willing to work with beta software.</xsl:text>
          </p>
