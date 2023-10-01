@@ -26,10 +26,6 @@
 
 			<h2>Latest Version: <xsl:value-of select="/content/current_version"/></h2>
 
-			<xsl:text>Currently we're working on a security release. This will be 4.96.1. Please see</xsl:text>
-			<a href="static/doc/security/CVE-2023-zdi.txt">this document for more detailed information.</a>
-
-
                 <!-- Summary -->
 			<p id="summary">
 				<a href="https://www.exim.org/">
@@ -52,6 +48,14 @@
          <p id="version_info">
             <xsl:text>The current version is </xsl:text> <xsl:value-of select="/content/current_version"/><xsl:text>.</xsl:text> <br/>
 	    <xsl:text>If necessary, we publish maintenance releases. These releases are mainly intended for package maintainers.</xsl:text>
+	</p>
+
+         <p>
+	    <xsl:text>Currently we're working on a security release. This will be 4.96.1. Please see </xsl:text>
+	    <a href="static/doc/security/CVE-2023-zdi.txt">this document for more detailed information.</a>
+	</p>
+
+
 
 	    <!--
 	    This is a security release.  See <a href="{$staticroot}/doc/security/CVE-2020-qualys">CVE-2020-qualys</a> or
