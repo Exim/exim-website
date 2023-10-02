@@ -44,7 +44,7 @@
 				<xsl:text>If we published </xsl:text><em>maintenance</em><xsl:text> releases, you can find the tarballs in the </xsl:text>
 				<a href="https://downloads.exim.org/exim4/fixes/">fixes area,</a>
 				<xsl:text> and in individual </xsl:text><a href="#git">git branches</a><xsl:text> suffixed with </xsl:text><em>+fixes.</em>
-				<xsl:text> Please note, that we normally we do not publish maintenance releases as tarballs, unless they contain
+				<xsl:text> Please note, that we normally do not publish maintenance releases as tarballs, unless they contain
 				critical changes.</xsl:text>
 				</p>
 
