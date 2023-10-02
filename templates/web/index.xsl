@@ -50,10 +50,17 @@
 	    <xsl:text>If necessary, we publish maintenance releases. These releases are mainly intended for package maintainers.</xsl:text>
 	</p>
 
+	<p>
+	<xsl:text>This is a security release. You should upgrade as soon as possible. Please see </xsl:text>
+        <a href="static/doc/security/CVE-2023-zdi.txt">this document for more detailed information.</a>
+	</p>
+
+	 <!--
          <p>
 	    <xsl:text>Currently we're working on a security release. This will be 4.96.1. Please see </xsl:text>
 	    <a href="static/doc/security/CVE-2023-zdi.txt">this document for more detailed information.</a>
 	</p>
+	-->
 
          <p id="beta_version_info">
             <xsl:text>There may be beta versions available from the ftp sites in the Testing directory. Many people are using these without problems, but they are not recommended unless you are willing to work with beta software.</xsl:text>
