@@ -61286,7 +61286,7 @@ to be useful in production.
 </indexterm>
 This control is permitted for any ACL except the one for non-SMTP messages.
 It seems that there are broken clients in use that cannot handle multiline
-SMTP responses, despite the fact that RFC 821 defined them over 20 years ago.
+SMTP responses, despite the fact that RFC 821 defined them over 40 years ago.
 </para>
 <para>
 If this control is set, multiline SMTP responses from ACL rejections are
