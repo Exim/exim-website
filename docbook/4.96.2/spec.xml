@@ -61195,7 +61195,7 @@ use <option>fakedefer</option> if the message is to be delivered normally.
 </indexterm>
 This control is permitted only for the MAIL, RCPT, and DATA ACLs, in other
 words, only when an SMTP message is being received. If Exim accepts the
-message, instead the final 250 response, a 550 rejection message is sent.
+message, instead of the final 250 response, a 550 rejection message is sent.
 However, Exim proceeds to deliver the message as normal. The control applies
 only to the current message, not to any subsequent ones that may be received in
 the same SMTP connection.
